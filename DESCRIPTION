@@ -1,0 +1,25 @@
+Package: MCTestAnalysis
+Type: Package
+Title: Multiple Choice Test Analysis
+Version: 0.0.1
+Author: c( person("Autar", "Kaw", email = "kaw@usf.edu", role = "cre"),
+    person("Garrick", "Aden-Buie", email = "gadenbuie@mail.usf.edu", role = "aut"),
+    person("Alvaro", "Lopez", role = "aut"))
+Description: The purpose of this generated report is to provide the analytical
+    framework proposed in the paper "An Analytic Framework for Evaluating the
+    Validity of Concept Inventory Claims"" (Natalie Jorion et al., 2015) from
+    the University of Chicago, while providing extra statistical routines based
+    on Classical Test Theory. Within the contents of this package, you will find
+    graphical representations such as plots and graphs and tables all intended
+    to validate the 3 claims proposed in Jorion's paper.
+License: Not released yet
+LazyData: TRUE
+RoxygenNote: 5.0.1
+Imports:
+    calibrate,
+    lavaan,
+    ltm,
+    psych,
+    semPlot,
+    GPArotation,
+    psychometric
