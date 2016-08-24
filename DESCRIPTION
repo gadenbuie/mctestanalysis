@@ -22,4 +22,5 @@ Imports:
     psych,
     semPlot,
     GPArotation,
-    psychometric
+    psychometric,
+    shiny
