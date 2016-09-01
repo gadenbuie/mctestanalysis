@@ -74,12 +74,12 @@ shinyServer(function(input, output) {
   output$t_answer_key <- renderDataTable({
     if (is.null(input$f_answer_key)) return(NULL)
     mctd()$AnswerKey
-  })
+  }, options = list('pageLength' = 50))
 
   output$t_test <- renderDataTable({
     if (is.null(input$f_test)) return(NULL)
     mctd()$Test
-  })
+  }, options = list('pageLength' = 10))
 
   output$t_option_pct <- renderDataTable({
     if(is.null(mctd())) return(NULL)
@@ -94,5 +94,5 @@ shinyServer(function(input, output) {
                 'Question' = x[, -2],
                 'Question Title' = x[, -1],
                 'Both' = x)
-  })
+  }, options = list('pageLength' = 10))
 })
