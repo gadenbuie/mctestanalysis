@@ -94,8 +94,12 @@ shinyUI(navbarPage(
                                         '.csv',
                                         '.tsv'
                                       )),
+                            radioButtons('o_import_missing_id',
+                                         label = 'Missing value coded as',
+                                         choices = c('Blank', '0', '-1', '999', '-999'),
+                                         inline = TRUE),
                             checkboxInput('o_import_has_student_id',
-                                          'Test results include student identifier in first column',
+                                          'Student ID in first column',
                                           TRUE),
                             tags$hr(),
                             helpText('The test results data should contain as rows each',

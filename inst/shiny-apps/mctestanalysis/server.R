@@ -14,6 +14,8 @@ shinyServer(function(input, output) {
     loadAllData(answer_file = input$f_answer_key$datapath,
                 test_file      = input$f_test$datapath,
                 has_student_id = input$o_import_has_student_id,
+                na.strings     = ifelse(input$o_import_missing_id == 'Blank',
+                                        'NA', input$o_import_missing_id),
                 header         = input$o_import_header,
                 sep            = input$o_import_sep,
                 quote          = input$o_import_quote)
