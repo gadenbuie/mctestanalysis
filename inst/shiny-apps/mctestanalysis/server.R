@@ -78,7 +78,9 @@ shinyServer(function(input, output) {
 
   output$t_test <- renderDataTable({
     if (is.null(input$f_test)) return(NULL)
-    mctd()$Test
+    mctd()$Test %>%
+      tibble::rownames_to_column('id') %>%
+      select(id, everything())
   }, options = list('pageLength' = 10))
 
   output$t_option_pct <- renderDataTable({

@@ -37,11 +37,10 @@ loadTestData <- function(mctd = NULL, test_file, has_student_id = TRUE, ...) {
 
   q_index <- ifelse(has_student_id, 2, 1)
   if (has_student_id) {
-    colnames(x)[1] <- 'id'
-    x$id <- factor(x$id)
+    x <- tibble::column_to_rownames(x, names(x)[1])
   }
   if ('AnswerKey' %in% names(mctd)) {
-    colnames(x)[q_index:ncol(x)] <- mctd$AnswerKey$Question
+    colnames(x) <- mctd$AnswerKey$Question
   }
   mctd[['Test']] <- x
   mctd[['Test.complete']] <- x[complete.cases(x), ]
