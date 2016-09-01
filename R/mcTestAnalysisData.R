@@ -44,6 +44,7 @@ loadTestData <- function(mctd = NULL, test_file, has_student_id = TRUE, ...) {
     colnames(x)[q_index:ncol(x)] <- mctd$AnswerKey$Question
   }
   mctd[['Test']] <- x
+  mctd[['Test.complete']] <- x[complete.cases(x), ]
   return(mctd)
 }
 
