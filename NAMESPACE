@@ -3,4 +3,5 @@
 export(loadAllData)
 export(loadAnswerKey)
 export(loadTestData)
+export(optionsSelectedPct)
 export(run_app)

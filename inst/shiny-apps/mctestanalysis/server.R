@@ -4,11 +4,13 @@
 # package on your testing data.
 
 library(shiny)
+library(MCTestAnalysis)
 
 shinyServer(function(input, output) {
 
   # Reactive data elements ----
   mctd <- reactive({
+    if (is.null(input$f_test) & is.null(input$f_answer_key)) return(NULL)
     loadAllData(answer_file = input$f_answer_key$datapath,
                 test_file      = input$f_test$datapath,
                 has_student_id = input$o_import_has_student_id,
@@ -22,16 +24,6 @@ shinyServer(function(input, output) {
   # })
 
   # Import Data Outputs ----
-
-  output$t_answer_key <- renderDataTable({
-    if (is.null(input$f_answer_key)) return(NULL)
-    mctd()$AnswerKey
-  })
-
-  output$t_test <- renderDataTable({
-    if (is.null(input$f_test)) return(NULL)
-    mctd()$Test
-  })
 
   output$t_data_check <- renderText({
     summary_text <- c()
@@ -77,4 +69,30 @@ shinyServer(function(input, output) {
     filename = function() {'test_example.csv'},
     content = function(file) {write.csv(test_example, file)}
   )
+
+  # ---- View Test Results ----
+  output$t_answer_key <- renderDataTable({
+    if (is.null(input$f_answer_key)) return(NULL)
+    mctd()$AnswerKey
+  })
+
+  output$t_test <- renderDataTable({
+    if (is.null(input$f_test)) return(NULL)
+    mctd()$Test
+  })
+
+  output$t_option_pct <- renderDataTable({
+    if(is.null(mctd())) return(NULL)
+    x <- optionsSelectedPct(mctd(),
+                            include_title = TRUE,
+                            questions_as_row_names = FALSE,
+                            correct_vs_incorrect = input$o_option_pct_correct == 'Correct v. Incorrect')
+    if (input$o_option_pct_count == 'Percentage') {
+      x[, -1:-2] <- round(x[, -1:-2]/nrow(mctd()$Test)*100, 2)
+    }
+    x <- switch(input$o_option_pct_cols,
+                'Question' = x[, -2],
+                'Question Title' = x[, -1],
+                'Both' = x)
+  })
 })
