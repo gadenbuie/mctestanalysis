@@ -35,7 +35,6 @@ loadTestData <- function(mctd = NULL, test_file, has_student_id = TRUE, ...) {
   if (is.null(mctd)) mctd <- list()
   x <- read.csv(test_file, stringsAsFactors = FALSE, ...)
 
-  q_index <- ifelse(has_student_id, 2, 1)
   if (has_student_id) {
     x <- tibble::column_to_rownames(x, names(x)[1])
   }
