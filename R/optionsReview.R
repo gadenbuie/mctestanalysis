@@ -15,11 +15,8 @@ optionsSelectedPct <- function(mctd,
                                include_title = TRUE,
                                questions_as_row_names = FALSE,
                                correct_vs_incorrect = FALSE) {
-  needs <- c('Test', 'AnswerKey')
-  if (any(needs %in% setdiff(names(mctd), needs))) {
-    warning("Test and AnswerKey data needed")
-    return(NULL)
-  }
+  should_have(mctd, 'Test', 'AnswerKey')
+
   if ('id' %in% names(mctd$Test)) {
     x <- mctd$Test %>% select(-id)
   } else {
