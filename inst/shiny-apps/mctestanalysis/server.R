@@ -48,9 +48,7 @@ shinyServer(function(input, output) {
     if (is_loaded_answer_key & is_loaded_test) {
       add_to_output('Questions:')
       add_to_output('  - In answer key:', length(mctd()$AnswerKey$Question))
-      add_to_output('  - In test data: ', ifelse(input$o_import_has_student_id,
-                                                 ncol(mctd()$Test[, -1]),
-                                                 ncol(mctd()$Test)))
+      add_to_output('  - In test data: ', ncol(mctd()$Test))
       add_to_output('')
       add_to_output('Responses:')
       add_to_output('  - Incomplete:', nrow(mctd()$Test[!complete.cases(mctd()$Test),]))
