@@ -9,6 +9,8 @@ shinyUI(navbarPage(
   title = 'MC Test Analysis',
   tabPanel("Import", {
     fluidPage(
+      theme = 'lumen.css',
+      # ---- Import Data ----
       h3("Import Test Data"),
       tabsetPanel(
         tabPanel("Import Data",
@@ -118,48 +120,48 @@ shinyUI(navbarPage(
       )
     )
   }),
+  # ---- View Test Results ----
+  tabPanel("View",
+           fluidPage(
+             h3("View Test Results"),
+             tabsetPanel(
+               tabPanel("Answer Key",
+                        dataTableOutput('t_answer_key')
+               ),
+               tabPanel("Test Data",
+                        dataTableOutput('t_test')
+               ),
+               tabPanel("Option Selection",
+                        helpText("This table shows the number of students who ",
+                                 "chose a given option for each question."),
+                        fluidRow(
+                          column(4,
+                                 radioButtons('o_option_pct_cols',
+                                              label = 'Show columns',
+                                              choices = c('Question', 'Question Title', 'Both'),
+                                              selected = 'Both',
+                                              inline = TRUE)
+                          ),
+                          column(3,
+                                 radioButtons('o_option_pct_count',
+                                              label = 'Display As',
+                                              choices = c('Count', 'Percentage'),
+                                              inline = TRUE)
+                          ),
+                          column(5,
+                                 radioButtons('o_option_pct_correct',
+                                              label = 'Option Grouping',
+                                              choices = c('All Options', 'Correct v. Incorrect'),
+                                              inline = TRUE)
+                          )
+                        ),
+                        dataTableOutput('t_option_pct'))
+             )
+           )
+  ),
   # ---- Analysis Results Dropdown Menu ----
   navbarMenu(
-    'Analysis Results',
-    # ---- View Test Results ----
-    tabPanel("View Test Results",
-             fluidPage(
-               h3("View Test Results"),
-               tabsetPanel(
-                 tabPanel("Answer Key",
-                          dataTableOutput('t_answer_key')
-                 ),
-                 tabPanel("Test Data",
-                          dataTableOutput('t_test')
-                 ),
-                 tabPanel("Option Selection",
-                          helpText("This table shows the number of students who ",
-                                   "chose a given option for each question."),
-                          fluidRow(
-                            column(4,
-                                   radioButtons('o_option_pct_cols',
-                                                label = 'Show columns',
-                                                choices = c('Question', 'Question Title', 'Both'),
-                                                selected = 'Both',
-                                                inline = TRUE)
-                            ),
-                            column(3,
-                                   radioButtons('o_option_pct_count',
-                                                label = 'Display As',
-                                                choices = c('Count', 'Percentage'),
-                                                inline = TRUE)
-                            ),
-                            column(5,
-                                   radioButtons('o_option_pct_correct',
-                                                label = 'Option Grouping',
-                                                choices = c('All Options', 'Correct v. Incorrect'),
-                                                inline = TRUE)
-                            )
-                          ),
-                          dataTableOutput('t_option_pct'))
-               )
-             )
-    ),
+    'Analysis',
     tabPanel("Concept Inventory"),
     tabPanel("Item Response Theory"),
     tabPanel("Factor Analysis"),
