@@ -2,6 +2,7 @@
 
 export(addItemAnalysis)
 export(addItemScore)
+export(discriminationIndex)
 export(loadAllData)
 export(loadAnswerKey)
 export(loadTestData)

@@ -4,13 +4,15 @@
 \alias{addItemAnalysis}
 \title{Add item analysis to MC Test Data Object}
 \usage{
-addItemAnalysis(mctd)
+addItemAnalysis(mctd, ...)
 }
 \arguments{
 \item{mctd}{Existing mcTestAnalysis data object}
+
+\item{...}{Arguments passed to \code{\link{read.csv}}}
 }
 \description{
 Runs \code{\link{item.exam}} from the \link{psychometric} package and adds
-item analysis results to \link{mcTestAnalysisData} as \item{item.analysis}.
+item analysis results to \link{mcTestAnalysisData} as \link{item.analysis}.
 }
 
