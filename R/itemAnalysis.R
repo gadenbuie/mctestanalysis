@@ -79,13 +79,48 @@ discriminationIndex <- function(mctd, percentile = 0.27) {
   return(mctd)
 }
 
+#' Point-Biserial Correlation Coefficient
+#'
+#' Calculates standard PBCC (or Pearson-moment correlation), in which the
+#' answers to each item are correlated with overall test performance.
+#'
+#' @inheritParams mcTestAnalysisData
+#' @export
+pbcc <- function(mctd) {
+  if (!("item.score" %in% names(mctd))) mctd <- addItemScore(mctd)
+  mctd[['pbcc']] <- cor(mctd$item.score, rowSums(mctd$item.score))[,1]
+  return(mctd)
+}
+
+#' Modified Point-Biserial Correlation Coefficient
+#'
+#' Calculates the modified PBCC for each item.
+#'
+#' @inheritParams mcTestAnalysisData
+#' @export
+pbcc_modified <- function(mctd) {
+  if (!("item.score" %in% names(mctd))) mctd <- addItemScore(mctd)
+  test_scores  <- rowSums(mctd$item.score)
+  N            <- nrow(mctd$Test.complete)
+  mpbcc        <- rep(NA, length(mctd$AnswerKey$Question))
+  names(mpbcc) <- mctd$AnswerKey$Question
+  for (j in 1:length(mctd$AnswerKey$Question)) {
+    item_scores <- mctd$item.score[, j]
+    mpbcc[j] <- (N * item_scores %*% test_scores - sum(item_scores)*sum(test_scores)) /
+      (sqrt((N * item_scores %*% item_scores - sum(item_scores)^2)*
+              (N * test_scores %*% test_scores - sum(test_scores)^2)))
+  }
+  mctd[['pbcc_modified']] <- mpbcc
+  return(mctd)
+}
+
 #' Discrimination To Plot Data
 #'
 #' From Alvaro: We are getting discrimination index with this function. This
 #' function will allow you to obtain the discrimination index at the selected
 #' percentile once the code runs.
 #'
-#' @keywords internal
+#' @export
 discriminationDifficultyPlot <- function(mctd,
                                          type = 'conventional',
                                          show_labels = TRUE,
@@ -93,14 +128,20 @@ discriminationDifficultyPlot <- function(mctd,
                                          show_guidelines = TRUE,
                                          max_limits = 'max_x') {
   if (!('item.analysis' %in% names(mctd))) mctd <- addItemAnalysis(mctd)
+  type <- tolower(type)
   if (is.null(type)) type <- 'conventional'
   if (type == 'conventional') {
     if (!('discrimination_index' %in% names(mctd))) mctd <- discriminationIndex(mctd)
     disc <- mctd$discrimination_index
+    y_label <- 'Discrimination Index'
   } else if (type == 'pbcc') {
-    return(NULL) # pass for now
+    if (!('pbcc' %in% names(mctd))) mctd <- pbcc(mctd)
+    disc <- mctd$pbcc
+    y_label <- 'PBCC'
   } else if (type == 'pbcc_modified') {
-    return(NULL) # pass for now
+    if (!('pbcc_modified' %in% names(mctd))) mctd <- pbcc_modified(mctd)
+    disc <- mctd$pbcc_modified
+    y_label <- 'Modified PBCC'
   } else {
     stop(paste('Unknown discrimination index type', type))
   }
