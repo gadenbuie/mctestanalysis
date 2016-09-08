@@ -162,11 +162,74 @@ shinyUI(navbarPage(
   # ---- Analysis Results Dropdown Menu ----
   navbarMenu(
     'Analysis',
-    tabPanel("Concept Inventory"),
-    tabPanel("Item Response Theory"),
-    tabPanel("Factor Analysis"),
+    tabPanel("Classic Test Theory",
+             fluidPage(
+               h3("Classic Test Theory Results"),
+               tabsetPanel(
+                 tabPanel("Discrimination Index",
+                          helpText("Help text about this plot"),
+                          fluidRow(
+                            column(4,
+                                   selectInput('o_disc_type',
+                                               label = 'Method',
+                                               choices = c("Conventional", "PBCC", "Modified PBCC" = 'pbcc_modified'))
+                            ),
+                            column(4,
+                                   checkboxGroupInput('o_disc_show', 'Show/Hide', choices = c('Labels', 'Legend', 'Guidelines'), selected = c('Labels', 'Guidelines'), inline = TRUE)
+                            ),
+                            column(4,
+                                   radioButtons('o_disc_y_range', label = "Y-Axis", choices = c('Free', 'Positive', 'Full'), inline = TRUE),
+                                   radioButtons('o_disc_x_range', label = 'X-Axis', choices = c('Free', 'Positive'), selected = 'Positive', inline = TRUE)
+                            )
+                          ),
+                          plotOutput('p_discrimination')
+                 ),
+                 tabPanel("Overall vs. Question Score",
+                          helpText("This plot compares the overall test scores against correct selection of individual items."),
+                          fluidRow(
+                            column(9,
+                                   selectizeInput('o_overallbox_concepts', 'Concepts', choices = NULL, multiple = TRUE)
+                            ),
+                            column(3,
+                                   tags$strong('Options'),
+                                   checkboxInput('o_overallbox_facet', 'Group Items by Concept?'))
+                          ),
+                          plotOutput('p_overallbox')
+                 )
+               )
+             )),
+    tabPanel("Item Response Theory",
+             fluidPage(
+               h3("Item Response Theory Results"),
+               tabsetPanel(
+                 tabPanel("Tab 1"),
+                 tabPanel("Tab 2")
+               )
+             )),
+    tabPanel("Factor Analysis",
+             fluidPage(
+               h3("Factor Analysis Results"),
+               tabsetPanel(
+                 tabPanel("Tab 1"),
+                 tabPanel("Tab 2")
+               )
+             )),
     tabPanel("Diagnostic Classification Modeling")
   ),
   tabPanel("About")
   # Page output will go here
 ))
+
+
+# fluidPage(
+#   h3("Page Title"),
+#   tabsetPanel(
+#     tabPanel("Tab Title",
+#              helpText("Tab Help Text"),
+#              fluidRow(
+#                column(4, "Option Panel 1"),
+#                column(4, "Option Panel 2"),
+#                column(4, "Option Panel 3")
+#              ),
+#              # OUTPUT
+#     )

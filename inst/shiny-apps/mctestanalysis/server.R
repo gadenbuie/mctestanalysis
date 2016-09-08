@@ -6,24 +6,36 @@
 library(shiny)
 library(MCTestAnalysis)
 
-shinyServer(function(input, output) {
+shinyServer(function(input, output, session) {
 
   # Reactive data elements ----
   mctd <- reactive({
-    if (is.null(input$f_test) & is.null(input$f_answer_key)) return(NULL)
-    loadAllData(answer_file = input$f_answer_key$datapath,
-                test_file      = input$f_test$datapath,
-                has_student_id = input$o_import_has_student_id,
-                na.strings     = ifelse(input$o_import_missing_id == 'Blank',
-                                        'NA', input$o_import_missing_id),
-                header         = input$o_import_header,
-                sep            = input$o_import_sep,
-                quote          = input$o_import_quote)
+    if (is.null(input$f_test) | is.null(input$f_answer_key)) return(NULL)
+    x <- loadAllData(answer_file    = input$f_answer_key$datapath,
+                     test_file      = input$f_test$datapath,
+                     has_student_id = input$o_import_has_student_id,
+                     na.strings     = ifelse(input$o_import_missing_id == 'Blank',
+                                             'NA', input$o_import_missing_id),
+                     header         = input$o_import_header,
+                     sep            = input$o_import_sep,
+                     quote          = input$o_import_quote)
+    x <- discriminationIndex(x)
+    x <- pbcc(x)
+    x <- pbcc_modified(x)
+    return(x)
   })
 
-  # concepts <- reactive({
-  #   d_answer_key[, 3]
-  # })
+  concepts <- reactive({
+    # Set concepts
+    x <- setNames(mctd()$AnswerKey$Concept, mctd()$AnswerKey$Question)
+    # Make concepts available
+    return(x)
+  })
+
+  observe({
+    x <- concepts()
+    updateSelectizeInput(session, 'o_overallbox_concepts', choices = unique(x), selected = unique(x))
+  })
 
   # Import Data Outputs ----
 
@@ -97,4 +109,31 @@ shinyServer(function(input, output) {
                 'Question Title' = x[, -1],
                 'Both' = x)
   }, options = list('pageLength' = 10))
+
+  # ---- Classic Test Theory ----
+
+  output$p_discrimination <- renderPlot({
+    if (is.null(mctd())) return(NULL)
+    # Parse choices
+    range <- switch(paste0(input$o_disc_y_range, input$o_disc_x_range),
+                    'FreeFree'         = NULL,
+                    'FreePositive'     = 'max_x',
+                    'PositiveFree'     = 'max_y+',
+                    'PositivePositive' = 'max_all+',
+                    'FullFree'         = 'max_y',
+                    'FullPositive'     = 'max_all')
+    discriminationDifficultyPlot(mctd(),
+                                 type = input$o_disc_type,
+                                 show_labels = 'Labels' %in% input$o_disc_show,
+                                 hide_legend = !('Legend' %in% input$o_disc_show),
+                                 show_guidelines = 'Guidelines' %in% input$o_disc_show,
+                                 max_limits = range)
+  })
+
+  output$p_overallbox <- renderPlot({
+    if (is.null(mctd())) return(NULL)
+    testScoreByQuestionPlot(mctd(),
+                            concepts = input$o_overallbox_concepts,
+                            facet_by_concept = input$o_overallbox_facet)
+  })
 })
