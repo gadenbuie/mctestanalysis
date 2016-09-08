@@ -2,6 +2,7 @@
 
 export(addItemAnalysis)
 export(addItemScore)
+export(discriminationDifficultyPlot)
 export(discriminationIndex)
 export(loadAllData)
 export(loadAnswerKey)
@@ -10,3 +11,4 @@ export(optionsSelectedPct)
 export(pbcc)
 export(pbcc_modified)
 export(run_app)
+export(testScoreByQuestionPlot)

@@ -13,5 +13,4 @@ From Alvaro: We are getting discrimination index with this function. This
 function will allow you to obtain the discrimination index at the selected
 percentile once the code runs.
 }
-\keyword{internal}
 
