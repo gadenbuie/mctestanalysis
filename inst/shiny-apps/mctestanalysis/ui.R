@@ -166,6 +166,20 @@ shinyUI(navbarPage(
              fluidPage(
                h3("Classic Test Theory Results"),
                tabsetPanel(
+                 tabPanel("Summary",
+                          withMathJax(),
+                          fluidRow(
+                            column(8, uiOutput('txt_classic_summary')),
+                            column(4,
+                                   wellPanel(
+                                     selectInput('o_classic_summary_table',
+                                                 label = 'Summary View',
+                                                 choices = c('Test Summary', "Item Summary"))
+                                   )
+                            )
+                          ),
+                          DT::dataTableOutput('t_classic_summary', width = 'auto')
+                 ),
                  tabPanel("Discrimination Index",
                           helpText("Help text about this plot"),
                           fluidRow(
@@ -233,3 +247,5 @@ shinyUI(navbarPage(
 #              ),
 #              # OUTPUT
 #     )
+#   )
+# )

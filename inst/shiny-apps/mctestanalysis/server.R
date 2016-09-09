@@ -109,6 +109,63 @@ shinyServer(function(input, output, session) {
 
   # ---- Classic Test Theory ----
 
+  summarize_ctt <- reactive({
+    if(is.null(mctd())) return(NULL)
+    summarizeCTT(mctd(), input$o_classic_summary_table == 'Test Summary')
+  })
+
+  output$t_classic_summary <- DT::renderDataTable(
+    DT::datatable(summarize_ctt(),
+                  filter = ifelse(input$o_classic_summary_table == 'Test Summary', 'none', 'bottom'),
+                  autoHideNavigation = TRUE,
+                  rownames = FALSE,
+                  fillContainer = FALSE,
+                  options = list(
+                    'pageLength' = 10,
+                    # 'autoWidth' = TRUE,
+                    'searching' = !(input$o_classic_summary_table == 'Test Summary'),
+                    'paging' = !(input$o_classic_summary_table == 'Test Summary')
+                  )
+    )
+  )
+
+  output$txt_classic_summary <- renderUI({
+    if (input$o_classic_summary_table == 'Test Summary') {
+      helpText(
+        tags$p(tags$strong("Cronbach's Alpha."),
+               "the parameter cronbach alpha is a measure of internal consistency.",
+               "In other words, how closely related a set of items are as a group.",
+               "It is considered to be a measure of scale reliability.",
+               "Technically speaking, Cronbach’s alpha is not a statistical routine or test;",
+               "instead, it is a coefficient of reliability (or consistency).",
+               tags$a(href="http://www.ats.ucla.edu/stat/spss/faq/alpha.html",
+                      "What Does Cronbach's Alpha Mean?")
+        )
+      )
+    } else {
+      helpText(
+        tags$p(tags$strong("Alpha without item (WOI)"),
+               "provides a coefficient of internal reliability",
+               "of the text were the item excluded."
+        ),
+        tags$p(tags$strong("Difficulty Index"),
+               "is the proportion of students who answered the test item accurately."
+        ),
+        tags$p(tags$strong("Item Variance"),
+               "measures the spread among item responses."
+        ),
+        tags$p(tags$strong("Discrimination Index"),
+               "indicates the ability of the assessment to differentiate between high and low scorers."
+        ),
+        tags$p(
+          tags$strong("Point Biserial Correlation Coefficient"),
+          "(PBCC) measures correlation between correctly answering a given item",
+          "and overall test scores."
+        )
+      )
+    }
+  })
+
   output$p_discrimination <- renderPlot({
     if (is.null(mctd())) return(NULL)
     # Parse choices
