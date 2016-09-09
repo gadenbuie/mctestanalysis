@@ -59,7 +59,7 @@ discriminationIndex <- function(mctd, percentile = 0.27) {
   # H = # of students in upper percentile
   # l = # of students in lower percentile correct on item
   # L = # of students in lower percentile
-  scores <- rowSums(mctd$item.score)
+  scores <- mctd$scores
   cutoff <- quantile(scores, c(percentile, 1 - percentile))
   upper <- which(scores >= cutoff[2])
   lower <- which(scores <= cutoff[1])
@@ -88,7 +88,7 @@ discriminationIndex <- function(mctd, percentile = 0.27) {
 #' @export
 pbcc <- function(mctd) {
   if (!("item.score" %in% names(mctd))) mctd <- addItemScore(mctd)
-  mctd[['pbcc']] <- cor(mctd$item.score, rowSums(mctd$item.score))[,1]
+  mctd[['pbcc']] <- cor(mctd$item.score, mctd$scores)[,1]
   return(mctd)
 }
 
@@ -100,7 +100,7 @@ pbcc <- function(mctd) {
 #' @export
 pbcc_modified <- function(mctd) {
   if (!("item.score" %in% names(mctd))) mctd <- addItemScore(mctd)
-  test_scores  <- rowSums(mctd$item.score)
+  test_scores  <- mctd$scores
   N            <- nrow(mctd$Test.complete)
   mpbcc        <- rep(NA, length(mctd$AnswerKey$Question))
   names(mpbcc) <- mctd$AnswerKey$Question
@@ -194,7 +194,7 @@ testScoreByQuestionPlot <- function(mctd,
   x <- mctd$item.score %>%
     reshape2::melt(variable.name = 'Question', value.name = 'Response') %>%
     left_join(mctd$AnswerKey[, c('Question', 'Concept')], by = 'Question') %>%
-    mutate(Score = rep(rowSums(mctd$item.score), nrow(mctd$AnswerKey)),
+    mutate(Score = rep(mctd$scores, nrow(mctd$AnswerKey)),
            Response = ifelse(Response, 'Correct', 'Incorrect'),
            Response = factor(Response, levels = c('Incorrect', 'Correct'))) %>%
     filter(Concept %in% concepts)
@@ -205,6 +205,7 @@ testScoreByQuestionPlot <- function(mctd,
     ggplot(aes(x = Question, y = Score, fill = Response))+
     geom_boxplot()+
     theme_minimal()+
+    ylim(0, 1)+
     labs(x = '', y = 'Overall Test Score', fill = '')+
     theme(legend.position = 'bottom')
   if (facet_by_concept) {
@@ -216,4 +217,42 @@ testScoreByQuestionPlot <- function(mctd,
       theme(panel.border = element_rect(color = 'grey50', fill=NA))
   }
   return(g)
+}
+
+
+#' Generate Classic Test Theory Results Summary Table
+#'
+#' Summarizes Classic Test Theory results for the loaded test.
+#'
+#' @inheritParams mcTestAnalysisData
+#' @export
+summarizeCTT <- function(mctd,
+                         overall_summary = TRUE) {
+  should_have(mctd, 'alpha', 'discrimination_index', 'pbcc')
+  if (overall_summary) {
+    # Overall Test Summary
+    # Average of: alpha, difficulty index, discrimination index, item variance, pbcc
+    x <- c('Cronbach Alpha'       = mctd$alpha$total$std.alpha,
+           'Difficulty Index'     = mean(mctd$item.analysis$Difficulty),
+           'Discrimination Index' = mean(mctd$discrimination_index),
+           'PBCC'                 = mean(mctd$pbcc),
+           'Item Variance'        = mean(apply(mctd$item.score, 2, sd)^2))
+    x <- round(x, 2)
+    data.frame('Measure' = names(x),
+               'Average' = x)
+  } else {
+    # Individual Item Summary
+    # Columns: Question, Title, Concept, Alpha WOI, Difficulty Index,
+    #          Discrimination Index, Item Variance, PBCC
+    tibble::data_frame('Question'       = mctd$AnswerKey$Question,
+                       'Title'          = mctd$AnswerKey$Title,
+                       'Concept'        = mctd$AnswerKey$Concept,
+                       'Alpha WOI'      = round(mctd$alpha$alpha.drop$std.alpha, 2),
+                       'Difficulty'     = round(mctd$item.analysis$Difficulty, 2),
+                       'Item Var'       = round(apply(mctd$item.score, 2, sd)^2, 2),
+                       'Discrimination' = round(mctd$discrimination_index, 2),
+                       'PBCC'           = round(mctd$pbcc, 2)
+    )
+
+  }
 }

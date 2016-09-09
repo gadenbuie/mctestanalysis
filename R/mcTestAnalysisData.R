@@ -84,6 +84,8 @@ loadAllData <- function(answer_file = NULL,
   if (!is.null(test_file))   mctd <- loadTestData(mctd, test_file, has_student_id, ...)
   if (all(c('AnswerKey', 'Test.complete') %in% names(mctd))) {
     mctd <- addItemAnalysis(mctd, disc = TRUE)
+    mctd[['alpha']] <- psych::alpha(mctd$item.score, warnings = FALSE, check.keys = FALSE)
+    mctd[['scores']] <- mctd$alpha$scores
     mctd <- discriminationIndex(mctd)
     mctd <- pbcc(mctd)
     mctd <- pbcc_modified(mctd)
