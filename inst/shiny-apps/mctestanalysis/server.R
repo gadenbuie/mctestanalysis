@@ -19,9 +19,6 @@ shinyServer(function(input, output, session) {
                      header         = input$o_import_header,
                      sep            = input$o_import_sep,
                      quote          = input$o_import_quote)
-    x <- discriminationIndex(x)
-    x <- pbcc(x)
-    x <- pbcc_modified(x)
     return(x)
   })
 
@@ -47,8 +44,8 @@ shinyServer(function(input, output, session) {
       summary_text <<- c(summary_text, element)
     }
 
-    is_loaded_answer_key <- 'AnswerKey' %in% names(mctd())
-    is_loaded_test <- "Test" %in% names(mctd())
+    is_loaded_answer_key <- !is.null(input$f_answer_key)
+    is_loaded_test <- !is.null(input$f_test)
     if (!is_loaded_answer_key) {
       add_to_output('Please upload answer key.')
     }

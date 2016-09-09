@@ -82,5 +82,11 @@ loadAllData <- function(answer_file = NULL,
   mctd <- NULL
   if (!is.null(answer_file)) mctd <- loadAnswerKey(mctd, answer_file, ...)
   if (!is.null(test_file))   mctd <- loadTestData(mctd, test_file, has_student_id, ...)
+  if (all(c('AnswerKey', 'Test.complete') %in% names(mctd))) {
+    mctd <- addItemAnalysis(mctd, disc = TRUE)
+    mctd <- discriminationIndex(mctd)
+    mctd <- pbcc(mctd)
+    mctd <- pbcc_modified(mctd)
+  }
   return(mctd)
 }
