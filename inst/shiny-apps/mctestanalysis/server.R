@@ -193,4 +193,49 @@ shinyServer(function(input, output, session) {
                             concepts = input$o_overallbox_concepts,
                             facet_by_concept = input$o_overallbox_facet)
   })
+
+  recommend_item_actions <- reactive({
+    if (is.null(mctd())) return(NULL)
+    recommendItemActions(mctd(), input$o_item_review_cols, digits.round = 2)
+  })
+
+  output$t_item_review <- DT::renderDataTable(
+    DT::datatable(recommend_item_actions(),
+                  filter = 'bottom',
+                  autoHideNavigation = TRUE,
+                  rownames = FALSE,
+                  options = list(
+                    'pageLength' = 10
+                  )
+    )
+  )
+
+  output$txt_item_review_help <- renderUI({
+    txt <- list()
+    txt[['Alpha']] <- tags$p("If Cronbach's Alpha for the test with the item deleted",
+                             "is less than the alpha coefficient for the whole test",
+                             "then the recommendation is to",
+                             tags$strong('Keep'), "the item.")
+    txt[['Jorion']] <- tags$p("If the", tags$em('Difficulty Index'),
+                              'is between 0.3 and 0.9, and the',
+                              tags$em('Discrimination Index'),
+                              'is greater than 0.2, then the recommendation is to',
+                              tags$strong('Keep'), 'the item.')
+    txt[['Versatile']] <- tags$p("This recommendation is based on the",
+                                 tags$em("Difficulty Index"), 'and',
+                                 tags$em("PBCC"),
+                                 "and provides a range of recommendations from",
+                                 tags$strong("Remove"), "to",
+                                 tags$strong("Review"), "through",
+                                 tags$strong("Keep"), ",",
+                                 "favoring positive PBCC values near to or greater than 0.3",
+                                 "and higher difficulty values."
+                                 )
+    txt[['Stringent']] <- tags$p("If the", tags$em('Difficulty Index'),
+                                 'is between 0.3 and 0.9, and the',
+                                 tags$em('point-biserial correlation coefficient'),
+                                 'is greater than 0.3, then the recommendation is to',
+                                 tags$strong('Keep'), 'the item.')
+    return(txt[[input$o_item_review_help_group]])
+  })
 })

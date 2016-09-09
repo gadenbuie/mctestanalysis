@@ -209,7 +209,30 @@ shinyUI(navbarPage(
                                    checkboxInput('o_overallbox_facet', 'Group Items by Concept?'))
                           ),
                           plotOutput('p_overallbox')
-                 )
+                 ),
+                 tabPanel("Item Review",
+                          helpText("This table uses a number of heuristics and guidelines ",
+                                   "to guide the user in reviewing individual items",
+                                   "when deciding to keep, modify or discard test items."),
+                          fluidRow(
+                            column(4,
+                                   checkboxGroupInput('o_item_review_cols',
+                                                      label = 'Show columns',
+                                                      choices = c("Title", "Concept", 'Alpha WOI', 'Difficulty', 'Discrimination', 'PBCC'),
+                                                      selected = c("Title", "Concept"),
+                                                      inline = TRUE)
+                            ),
+                            column(8,
+                                   wellPanel(
+                                     radioButtons('o_item_review_help_group',
+                                                 'Description of Review Criteria',
+                                                 choices = c('Alpha', 'Jorion', 'Versatile', 'Stringent'),
+                                                 inline = TRUE),
+                                     uiOutput('txt_item_review_help')
+                                   )
+                            )
+                          ),
+                          DT::dataTableOutput('t_item_review'))
                )
              )),
     tabPanel("Item Response Theory",
