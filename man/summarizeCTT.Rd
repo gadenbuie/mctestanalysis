@@ -8,6 +8,9 @@ summarizeCTT(mctd, overall_summary = TRUE)
 }
 \arguments{
 \item{mctd}{Existing mcTestAnalysis data object}
+
+\item{overall_summary}{Whole test summary (TRUE) or individual item summary
+(FALSE)?}
 }
 \description{
 Summarizes Classic Test Theory results for the loaded test.

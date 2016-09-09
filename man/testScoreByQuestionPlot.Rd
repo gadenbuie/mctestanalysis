@@ -7,6 +7,13 @@
 testScoreByQuestionPlot(mctd, concepts = unique(mctd$AnswerKey$Concept),
   facet_by_concept = FALSE)
 }
+\arguments{
+\item{mctd}{Existing mcTestAnalysis data object}
+
+\item{concepts}{Character vector containing concept groups to be plotted}
+
+\item{facet_by_concept}{Should plot be facetted by concept group?}
+}
 \description{
 Boxplot of test scores compared with question responses.
 }

@@ -2,15 +2,33 @@
 % Please edit documentation in R/itemAnalysis.R
 \name{discriminationDifficultyPlot}
 \alias{discriminationDifficultyPlot}
-\title{Discrimination To Plot Data}
+\title{Plot Discrimination Index vs Difficulty Index}
 \usage{
 discriminationDifficultyPlot(mctd, type = "conventional",
   show_labels = TRUE, hide_legend = TRUE, show_guidelines = TRUE,
   max_limits = "max_x")
 }
+\arguments{
+\item{mctd}{Existing mcTestAnalysis data object}
+
+\item{type}{One of \code{"conventional"}, \code{"pbcc"}, or
+\code{"pbcc_modified"}}
+
+\item{show_labels}{Should the question number be shown next to points?}
+
+\item{hide_legend}{Should the plot legend be hidden?}
+
+\item{show_guidelines}{Should recomended discrimination or difficulty indice
+ranges be shown on the plot as a dotted line?}
+
+\item{max_limits}{Set x- and y-axis limits. One of \code{"max_x"} (x
+positive, y free), \code{"max_y"} (x free, y positive), \code{"max_y+"} (x
+free, y in [-1,1]), \code{"max_all+"} (x positive, y positive),
+\code{"max_all"} (x positive, y in [-1,1]), and \code{NULL} (all free).}
+}
 \description{
-From Alvaro: We are getting discrimination index with this function. This
-function will allow you to obtain the discrimination index at the selected
-percentile once the code runs.
+Plots discrimination index, as calculated using the \code{"conventional"}
+formula, or via \code{"PBCC"}, against difficulty index. Several parameters
+control settings related to the appearance of the final plot.
 }
 

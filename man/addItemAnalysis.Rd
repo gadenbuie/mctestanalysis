@@ -9,7 +9,8 @@ addItemAnalysis(mctd, ...)
 \arguments{
 \item{mctd}{Existing mcTestAnalysis data object}
 
-\item{...}{Arguments passed to \code{\link{read.csv}}}
+\item{...}{Additional parameters passed to
+\code{\link[psychometric]{item.exam}}}
 }
 \description{
 Runs \code{\link{item.exam}} from the \link{psychometric} package and adds

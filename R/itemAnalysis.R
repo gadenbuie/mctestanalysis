@@ -21,6 +21,8 @@ addItemScore <- function(mctd) {
 #' Runs \code{\link{item.exam}} from the \link{psychometric} package and adds
 #' item analysis results to \link{mcTestAnalysisData} as \link{item.analysis}.
 #' @inheritParams mcTestAnalysisData
+#' @param ... Additional parameters passed to
+#'   \code{\link[psychometric]{item.exam}}
 #' @export
 addItemAnalysis <- function(mctd, ...) {
   should_have(mctd, 'Test', 'AnswerKey', 'Test.complete')
@@ -114,12 +116,23 @@ pbcc_modified <- function(mctd) {
   return(mctd)
 }
 
-#' Discrimination To Plot Data
+#' Plot Discrimination Index vs Difficulty Index
 #'
-#' From Alvaro: We are getting discrimination index with this function. This
-#' function will allow you to obtain the discrimination index at the selected
-#' percentile once the code runs.
+#' Plots discrimination index, as calculated using the \code{"conventional"}
+#' formula, or via \code{"PBCC"}, against difficulty index. Several parameters
+#' control settings related to the appearance of the final plot.
 #'
+#' @inheritParams mcTestAnalysisData
+#' @param type One of \code{"conventional"}, \code{"pbcc"}, or
+#'   \code{"pbcc_modified"}
+#' @param show_labels Should the question number be shown next to points?
+#' @param hide_legend Should the plot legend be hidden?
+#' @param show_guidelines Should recomended discrimination or difficulty indice
+#'   ranges be shown on the plot as a dotted line?
+#' @param max_limits Set x- and y-axis limits. One of \code{"max_x"} (x
+#'   positive, y free), \code{"max_y"} (x free, y positive), \code{"max_y+"} (x
+#'   free, y in [-1,1]), \code{"max_all+"} (x positive, y positive),
+#'   \code{"max_all"} (x positive, y in [-1,1]), and \code{NULL} (all free).
 #' @export
 discriminationDifficultyPlot <- function(mctd,
                                          type = 'conventional',
@@ -185,6 +198,9 @@ discriminationDifficultyPlot <- function(mctd,
 #'
 #' Boxplot of test scores compared with question responses.
 #'
+#' @inheritParams mcTestAnalysisData
+#' @param concepts Character vector containing concept groups to be plotted
+#' @param facet_by_concept Should plot be facetted by concept group?
 #' @export
 testScoreByQuestionPlot <- function(mctd,
                                     concepts = unique(mctd$AnswerKey$Concept),
@@ -225,6 +241,8 @@ testScoreByQuestionPlot <- function(mctd,
 #' Summarizes Classic Test Theory results for the loaded test.
 #'
 #' @inheritParams mcTestAnalysisData
+#' @param overall_summary Whole test summary (TRUE) or individual item summary
+#'   (FALSE)?
 #' @export
 summarizeCTT <- function(mctd,
                          overall_summary = TRUE) {
