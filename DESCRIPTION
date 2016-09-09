@@ -1,7 +1,7 @@
 Package: MCTestAnalysis
 Type: Package
 Title: Multiple Choice Test Analysis
-Version: 0.0.7
+Version: 0.0.8
 Author: c( person("Autar", "Kaw", email = "kaw@usf.edu", role = "cre"),
     person("Garrick", "Aden-Buie", email = "gadenbuie@mail.usf.edu", role = "aut"),
     person("Alvaro", "Lopez", role = "aut"))
@@ -16,12 +16,6 @@ License: Not released yet
 LazyData: TRUE
 RoxygenNote: 5.0.1
 Imports:
-    calibrate,
-    lavaan,
-    ltm,
-    psych,
-    semPlot,
-    GPArotation,
     psychometric,
     shiny,
     reshape2,
