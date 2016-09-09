@@ -92,20 +92,23 @@ shinyServer(function(input, output, session) {
       select(id, everything())
   }, options = list('pageLength' = 10))
 
-  output$t_option_pct <- renderDataTable({
+  d_option_pct <- reactive({
     if(is.null(mctd())) return(NULL)
-    x <- optionsSelectedPct(mctd(),
-                            include_title = TRUE,
-                            questions_as_row_names = FALSE,
-                            correct_vs_incorrect = input$o_option_pct_correct == 'Correct v. Incorrect')
-    if (input$o_option_pct_count == 'Percentage') {
-      x[, -1:-2] <- round(x[, -1:-2]/nrow(mctd()$Test)*100, 2)
-    }
-    x <- switch(input$o_option_pct_cols,
-                'Question' = x[, -2],
-                'Question Title' = x[, -1],
-                'Both' = x)
-  }, options = list('pageLength' = 10))
+    optionsSelectedPct(mctd(),
+                       include_columns = input$o_option_pct_cols,
+                       questions_as_row_names = FALSE,
+                       as_percentage = input$o_option_pct_count == 'Percentage',
+                       correct_vs_incorrect = input$o_option_pct_correct == 'Correct v. Incorrect')
+  })
+
+  output$t_option_pct <- DT::renderDataTable(
+    DT::datatable(d_option_pct(),
+                  filter = 'bottom',
+                  rownames = FALSE,
+                  options = list(
+                    'pageLength' = 10
+                  ))
+  )
 
   # ---- Classic Test Theory ----
 

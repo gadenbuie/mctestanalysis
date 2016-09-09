@@ -136,11 +136,11 @@ shinyUI(navbarPage(
                                  "chose a given option for each question."),
                         fluidRow(
                           column(4,
-                                 radioButtons('o_option_pct_cols',
-                                              label = 'Show columns',
-                                              choices = c('Question', 'Question Title', 'Both'),
-                                              selected = 'Both',
-                                              inline = TRUE)
+                                 checkboxGroupInput('o_option_pct_cols',
+                                                    label = 'Show columns',
+                                                    choices = c("Title", "Answer", "Concept"),
+                                                    selected = c("Title", "Answer", "Concept"),
+                                                    inline = TRUE)
                           ),
                           column(3,
                                  radioButtons('o_option_pct_count',
@@ -155,7 +155,7 @@ shinyUI(navbarPage(
                                               inline = TRUE)
                           )
                         ),
-                        dataTableOutput('t_option_pct'))
+                        DT::dataTableOutput('t_option_pct'))
              )
            )
   ),

@@ -4,16 +4,18 @@
 #' the options availble for each question.
 #'
 #' @inheritParams mcTestAnalysisData
-#' @param include_title Include question title column from Answer Key? (Default:
-#'   TRUE)
+#' @param include_columns Vector of column names to include from Answer Key data
+#'   (\code{"Answer"}, \code{"Title"}, \code{"Concept"})
 #' @param questions_as_row_names Move questions column to row name? (Default:
 #'   FALSE)
+#' @param as_percentage Summarize by absolute count or percentage of responses
 #' @param correct_vs_incorrect Group option into correct option vs incorrect
 #'   options? (Default: FALSE)
 #' @export
 optionsSelectedPct <- function(mctd,
-                               include_title = TRUE,
+                               include_columns = c("Title", "Answer", "Concept"),
                                questions_as_row_names = FALSE,
+                               as_percentage = FALSE,
                                correct_vs_incorrect = FALSE) {
   should_have(mctd, 'Test', 'AnswerKey')
 
@@ -42,11 +44,16 @@ optionsSelectedPct <- function(mctd,
   x$Question <- factor(x$Question, levels = mctd$AnswerKey$Question)
   x <- x[order(x$Question), ]
 
+  if (as_percentage) {
+    x[, -1] <- round(x[, -1]/nrow(mctd$Test)*100, 2)
+  }
+
   # Finalize Format
-  if (include_title) {
+  if (!is.null(include_columns)) {
     x <- x %>%
-    left_join(mctd$AnswerKey[, c('Question', 'Title')], by = 'Question') %>%
-    select(Question, Title, everything())
+      left_join(mctd$AnswerKey[, c('Question', include_columns)], by = 'Question')
+    non_meta_cols <- setdiff(colnames(x), c('Question', include_columns))
+    x <- x[, c('Question', include_columns, non_meta_cols)]
   }
   if (questions_as_row_names) x <- tibble::column_to_rownames(x, 'Question')
   return(x)

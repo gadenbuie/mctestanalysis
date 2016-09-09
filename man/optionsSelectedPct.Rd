@@ -4,17 +4,20 @@
 \alias{optionsSelectedPct}
 \title{Option selection per question}
 \usage{
-optionsSelectedPct(mctd, include_title = TRUE,
-  questions_as_row_names = FALSE, correct_vs_incorrect = FALSE)
+optionsSelectedPct(mctd, include_columns = c("Title", "Answer", "Concept"),
+  questions_as_row_names = FALSE, as_percentage = FALSE,
+  correct_vs_incorrect = FALSE)
 }
 \arguments{
 \item{mctd}{Existing mcTestAnalysis data object}
 
-\item{include_title}{Include question title column from Answer Key? (Default:
-TRUE)}
+\item{include_columns}{Vector of column names to include from Answer Key data
+(\code{"Answer"}, \code{"Title"}, \code{"Concept"})}
 
 \item{questions_as_row_names}{Move questions column to row name? (Default:
 FALSE)}
+
+\item{as_percentage}{Summarize by absolute count or percentage of responses}
 
 \item{correct_vs_incorrect}{Group option into correct option vs incorrect
 options? (Default: FALSE)}
