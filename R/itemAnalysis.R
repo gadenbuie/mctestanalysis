@@ -190,13 +190,18 @@ testScoreByQuestionPlot <- function(mctd,
                                     concepts = unique(mctd$AnswerKey$Concept),
                                     facet_by_concept = FALSE) {
   if (!('item.score' %in% names(mctd))) mctd <- addItemScore(mctd)
-  g <- mctd$item.score %>%
+  # Prepare Data
+  x <- mctd$item.score %>%
     reshape2::melt(variable.name = 'Question', value.name = 'Response') %>%
     left_join(mctd$AnswerKey[, c('Question', 'Concept')], by = 'Question') %>%
     mutate(Score = rep(rowSums(mctd$item.score), nrow(mctd$AnswerKey)),
            Response = ifelse(Response, 'Correct', 'Incorrect'),
            Response = factor(Response, levels = c('Incorrect', 'Correct'))) %>%
-    filter(Concept %in% concepts) %>%
+    filter(Concept %in% concepts)
+  x$Question <- factor(x$Question, levels = colnames(mctd$Test.complete))
+
+  # Prepare Plot
+  g <- x %>%
     ggplot(aes(x = Question, y = Score, fill = Response))+
     geom_boxplot()+
     theme_minimal()+
@@ -206,7 +211,9 @@ testScoreByQuestionPlot <- function(mctd,
     concept_title <- function(string) {
       paste("Concept:", string)
     }
-    g <- g + facet_wrap(~ Concept, scales = 'free_x', labeller = labeller(Concept = concept_title))
+    g <- g +
+      facet_wrap(~ Concept, scales = 'free_x', labeller = labeller(Concept = concept_title)) +
+      theme(panel.border = element_rect(color = 'grey50', fill=NA))
   }
   return(g)
 }
