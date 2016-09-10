@@ -2,6 +2,7 @@
 
 export(addItemAnalysis)
 export(addItemScore)
+export(addSubscaleConcept)
 export(discriminationDifficultyPlot)
 export(discriminationIndex)
 export(loadAllData)

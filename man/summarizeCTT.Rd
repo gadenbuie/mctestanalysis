@@ -4,13 +4,16 @@
 \alias{summarizeCTT}
 \title{Generate Classic Test Theory Results Summary Table}
 \usage{
-summarizeCTT(mctd, overall_summary = TRUE)
+summarizeCTT(mctd, summarize_by = "whole",
+  digits.round = getOption("digits"))
 }
 \arguments{
 \item{mctd}{Existing mcTestAnalysis data object}
 
-\item{overall_summary}{Whole test summary (TRUE) or individual item summary
-(FALSE)?}
+\item{summarize_by}{One of \code{"whole"}, \code{"concept"} or \code{"item"}}
+
+\item{digits.round}{Round output to specified number of digits, defaults to
+\code{digits} option (see \code{getOption("digits")})}
 }
 \description{
 Summarizes Classic Test Theory results for the loaded test.

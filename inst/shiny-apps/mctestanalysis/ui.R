@@ -174,7 +174,10 @@ shinyUI(navbarPage(
                                    wellPanel(
                                      selectInput('o_classic_summary_table',
                                                  label = 'Summary View',
-                                                 choices = c('Test Summary', "Item Summary"))
+                                                 choices = c('Test Summary' = 'whole',
+                                                             "Concept Subgroup Summary" = 'concept',
+                                                             "Item Summary" = 'item')
+                                     )
                                    )
                             )
                           ),

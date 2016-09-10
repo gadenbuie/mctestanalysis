@@ -241,13 +241,16 @@ testScoreByQuestionPlot <- function(mctd,
 #' Summarizes Classic Test Theory results for the loaded test.
 #'
 #' @inheritParams mcTestAnalysisData
-#' @param overall_summary Whole test summary (TRUE) or individual item summary
-#'   (FALSE)?
+#' @param summarize_by One of \code{"whole"}, \code{"concept"} or \code{"item"}
+#' @param digits.round Round output to specified number of digits, defaults to
+#'   \code{digits} option (see \code{getOption("digits")})
 #' @export
 summarizeCTT <- function(mctd,
-                         overall_summary = TRUE) {
+                         summarize_by = 'whole',
+                         digits.round = getOption('digits')) {
   should_have(mctd, 'alpha', 'discrimination_index', 'pbcc')
-  if (overall_summary) {
+  summarize_by <- tolower(summarize_by)
+  if (summarize_by == 'whole') {
     # Overall Test Summary
     # Average of: alpha, difficulty index, discrimination index, item variance, pbcc
     x <- c('Cronbach Alpha'       = mctd$alpha$total$raw_alpha,
@@ -255,22 +258,69 @@ summarizeCTT <- function(mctd,
            'Discrimination Index' = mean(mctd$discrimination_index),
            'PBCC'                 = mean(mctd$pbcc),
            'Item Variance'        = mean(apply(mctd$item.score, 2, sd)^2))
-    x <- round(x, 2)
+    x <- round(x, digits.round)
     data.frame('Measure' = names(x),
                'Average' = x)
-  } else {
+  } else if (summarize_by == 'item') {
     # Individual Item Summary
     # Columns: Question, Title, Concept, Alpha WOI, Difficulty Index,
     #          Discrimination Index, Item Variance, PBCC
     tibble::data_frame('Question'       = mctd$AnswerKey$Question,
                        'Title'          = mctd$AnswerKey$Title,
                        'Concept'        = mctd$AnswerKey$Concept,
-                       'Alpha WOI'      = round(mctd$alpha$alpha.drop$raw_alpha, 2),
-                       'Difficulty'     = round(mctd$item.analysis$Difficulty, 2),
-                       'Item Var'       = round(apply(mctd$item.score, 2, sd)^2, 2),
-                       'Discrimination' = round(mctd$discrimination_index, 2),
-                       'PBCC'           = round(mctd$pbcc, 2)
+                       'Alpha WOI'      = round(mctd$alpha$alpha.drop$raw_alpha, digits.round),
+                       'Difficulty'     = round(mctd$item.analysis$Difficulty, digits.round),
+                       'Item Var'       = round(apply(mctd$item.score, 2, sd)^2, digits.round),
+                       'Discrimination' = round(mctd$discrimination_index, digits.round),
+                       'PBCC'           = round(mctd$pbcc, digits.round)
     )
-
+  } else if (summarize_by == 'concept') {
+    if (!('subscale' %in% names(mctd$alpha))) mctd <- addSubscaleConcept(mctd)
+    # Same as overall but grouped by concept
+    x <- tibble::data_frame('Concept' = unique(mctd$AnswerKey$Concept),
+                            'Subscale Alpha'     = NA, #2
+                            'Avg Difficulty'     = NA, #3
+                            'Avg Discrimination' = NA, #4
+                            'Avg PBCC'           = NA, #5
+                            'Avg Item Var'       = NA) #6
+    for (i in 1:nrow(x)) {
+      concept <- x$Concept[i]
+      questions <- which(mctd$AnswerKey$Concept == concept)
+      # Subscale Alpha
+      x[i, 2] <- mctd$alpha$subscale[[concept]]$total$raw_alpha
+      # Average Difficulty Index
+      x[i, 3] <- mean(mctd$item.analysis$Difficulty[questions])
+      # Discrimination Index
+      x[i, 4] <- mean(mctd$discrimination_index[questions])
+      # PBCC
+      x[i, 5] <- mean(mctd$pbcc[questions])
+      # Item Variance
+      x[i, 6] <- mean(apply(mctd$item.score[, questions], 2, sd)^2)
+    }
+    x[, 2:6] <- round(x[, 2:6], digits.round)
+    return(x)
+  } else {
+    stop("summarize_by must be one of 'whole', 'concept' or 'item'")
   }
+}
+
+#' Calculate Subscale Alpha and Scores
+#'
+#' Add subscale alpha and CTT reliability analysis to \link{mcTestAnalysisData}.
+#'
+#' @inheritParams mcTestAnalysisData
+#' @export
+addSubscaleConcept <- function(mctd) {
+  should_have(mctd, 'alpha')
+  if (length(unique(mctd$AnswerKey$Concept)) <= 1) {
+    warning("Only one concept group found, skipping subscale calculations")
+    return(mctd)
+  }
+  mctd$alpha$subscale <- list()
+  for (concept in unique(mctd$AnswerKey$Concept)) {
+    questions <- which(mctd$AnswerKey$Concept == concept)
+    mctd$alpha$subscale[[concept]] <- psych::alpha(mctd$item.score[, questions],
+                                                   warnings = FALSE, check.keys = FALSE)
+  }
+  return(mctd)
 }

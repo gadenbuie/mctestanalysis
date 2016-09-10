@@ -5,6 +5,7 @@
 
 library(shiny)
 library(MCTestAnalysis)
+options(digits = 4)
 
 shinyServer(function(input, output, session) {
 
@@ -114,26 +115,26 @@ shinyServer(function(input, output, session) {
 
   summarize_ctt <- reactive({
     if(is.null(mctd())) return(NULL)
-    summarizeCTT(mctd(), input$o_classic_summary_table == 'Test Summary')
+    summarizeCTT(mctd(), input$o_classic_summary_table)
   })
 
   output$t_classic_summary <- DT::renderDataTable(
     DT::datatable(summarize_ctt(),
-                  filter = ifelse(input$o_classic_summary_table == 'Test Summary', 'none', 'bottom'),
+                  filter = ifelse(input$o_classic_summary_table %in% c('whole', 'concept'), 'none', 'bottom'),
                   autoHideNavigation = TRUE,
                   rownames = FALSE,
                   fillContainer = FALSE,
                   options = list(
                     'pageLength' = 10,
                     # 'autoWidth' = TRUE,
-                    'searching' = !(input$o_classic_summary_table == 'Test Summary'),
-                    'paging' = !(input$o_classic_summary_table == 'Test Summary')
+                    'searching' = !(input$o_classic_summary_table %in% c('whole', 'concept')),
+                    'paging' = !(input$o_classic_summary_table %in% c('whole', 'concept'))
                   )
     )
   )
 
   output$txt_classic_summary <- renderUI({
-    if (input$o_classic_summary_table == 'Test Summary') {
+    if (input$o_classic_summary_table == 'whole') {
       helpText(
         tags$p(tags$strong("Cronbach's Alpha."),
                "the parameter cronbach alpha is a measure of internal consistency.",
@@ -145,7 +146,7 @@ shinyServer(function(input, output, session) {
                       "What Does Cronbach's Alpha Mean?")
         )
       )
-    } else {
+    } else if (input$o_classic_summary_table == 'item') {
       helpText(
         tags$p(tags$strong("Alpha without item (WOI)"),
                "provides a coefficient of internal reliability",
@@ -166,6 +167,8 @@ shinyServer(function(input, output, session) {
           "and overall test scores."
         )
       )
+    } else {
+      helpText()
     }
   })
 
@@ -196,7 +199,7 @@ shinyServer(function(input, output, session) {
 
   recommend_item_actions <- reactive({
     if (is.null(mctd())) return(NULL)
-    recommendItemActions(mctd(), input$o_item_review_cols, digits.round = 2)
+    recommendItemActions(mctd(), input$o_item_review_cols)
   })
 
   output$t_item_review <- DT::renderDataTable(
