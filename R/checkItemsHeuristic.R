@@ -12,7 +12,7 @@ recommendItemActions <- function(mctd,
 
   # Check Alpha ----
   # If: Alpha WOI is < overall alpha, then "Keep", else, "Remove"
-  check_alpha <- mctd$alpha$alpha.drop$std.alpha < mctd$alpha$total$std.alpha
+  check_alpha <- mctd$alpha$alpha.drop$raw_alpha < mctd$alpha$total$raw_alpha
   check_alpha <- c('Remove', 'Keep')[check_alpha + 1]
 
   # Check Jorion ----
@@ -83,7 +83,7 @@ recommendItemActions <- function(mctd,
   if (!is.null(include_columns)) {
     answer_key_columns <- intersect(include_columns, colnames(mctd$AnswerKey))
     if (any(c('alpha', 'alpha woi') %in% tolower(include_columns))) {
-      x <- tibble::add_column(x, 'Alpha WOI' = round(mctd$alpha$alpha.drop$std.alpha, digits.round))
+      x <- tibble::add_column(x, 'Alpha WOI' = round(mctd$alpha$alpha.drop$raw_alpha, digits.round))
     }
     if (any(c('discrimination', 'discrimination index') %in% tolower(include_columns))) {
       x <- tibble::add_column(x, 'Discrimination' = round(mctd$discrimination_index, digits.round))

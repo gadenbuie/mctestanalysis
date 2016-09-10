@@ -250,7 +250,7 @@ summarizeCTT <- function(mctd,
   if (overall_summary) {
     # Overall Test Summary
     # Average of: alpha, difficulty index, discrimination index, item variance, pbcc
-    x <- c('Cronbach Alpha'       = mctd$alpha$total$std.alpha,
+    x <- c('Cronbach Alpha'       = mctd$alpha$total$raw_alpha,
            'Difficulty Index'     = mean(mctd$item.analysis$Difficulty),
            'Discrimination Index' = mean(mctd$discrimination_index),
            'PBCC'                 = mean(mctd$pbcc),
@@ -265,7 +265,7 @@ summarizeCTT <- function(mctd,
     tibble::data_frame('Question'       = mctd$AnswerKey$Question,
                        'Title'          = mctd$AnswerKey$Title,
                        'Concept'        = mctd$AnswerKey$Concept,
-                       'Alpha WOI'      = round(mctd$alpha$alpha.drop$std.alpha, 2),
+                       'Alpha WOI'      = round(mctd$alpha$alpha.drop$raw_alpha, 2),
                        'Difficulty'     = round(mctd$item.analysis$Difficulty, 2),
                        'Item Var'       = round(apply(mctd$item.score, 2, sd)^2, 2),
                        'Discrimination' = round(mctd$discrimination_index, 2),
