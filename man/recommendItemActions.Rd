@@ -10,9 +10,47 @@ recommendItemActions(mctd, include_columns = c("Title", "Concept",
 }
 \arguments{
 \item{mctd}{Existing mcTestAnalysis data object}
+
+\item{include_columns}{Columns to include in recommendation table, can
+include any of the following: \code{'Title'}, \code{'Concept'},
+\code{'Alpha WOI'}, \code{'Difficulty'}, \code{'Discrimination'},
+\code{'PBCC'}}
+
+\item{digits.round}{Round output to specified number of digits, defaults to
+\code{digits} option (see \code{getOption("digits")})}
 }
 \description{
 Recommends review actions for each item based on a set of heuristics or rules
 based on published guidelines.
+}
+\section{Alpha}{
+ If Cronbach's Alpha for the test with the item deleted is
+  less than the alpha coefficient for the whole test then the recommendation
+  is to Keep the item.
+}
+
+\section{Jorion}{
+ Following the recommendations in Jorion (2015), if the
+  Difficulty Index is between 0.3 and 0.9, and the Discrimination Index is
+  greater than 0.2, then the recommendation is to Keep the item.
+}
+
+\section{Versatile}{
+ This recommendation is based on the Difficulty Index and
+  PBCC and provides a range of recommendations from Remove to Review through
+  Keep, favoring positive PBCC values near to or greater than 0.3 and higher
+  difficulty values.
+}
+
+\section{Stringent}{
+ If the Difficulty Index is between 0.3 and 0.9, and the
+  point-biserial correlation coefficient is greater than 0.3, then the
+  recommendation is to Keep the item.
+}
+\references{
+Jorion, N., Gane, B. D., James, K., Schroeder, L., Dibello, L.
+  V., & Pellegrino, J. W. (2015). An Analytic Framework for Evaluating the
+  Validity of Concept Inventory Claims. Journal of Engineering Education,
+  104(4), 454–496. \url{http://doi.org/10.1002/jee.20104}
 }
 
