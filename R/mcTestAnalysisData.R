@@ -86,7 +86,7 @@ loadAllData <- function(answer_file = NULL,
     mctd <- addItemAnalysis(mctd, disc = TRUE)
     mctd[['alpha']] <- psych::alpha(mctd$item.score, warnings = FALSE, check.keys = FALSE)
     mctd[['scores']] <- mctd$alpha$scores
-    mctd <- addSubscaleConcept()
+    mctd <- addSubscaleConcept(mctd)
     mctd <- discriminationIndex(mctd)
     mctd <- pbcc(mctd)
     mctd <- pbcc_modified(mctd)
