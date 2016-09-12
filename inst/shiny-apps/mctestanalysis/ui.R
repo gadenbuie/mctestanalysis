@@ -242,8 +242,34 @@ shinyUI(navbarPage(
              fluidPage(
                h3("Item Response Theory Results"),
                tabsetPanel(
-                 tabPanel("Tab 1"),
-                 tabPanel("Tab 2")
+                 tabPanel("IRT Models",
+                          helpText("These are 1-, 2- and 3-PL IRT models. (More help text needed.)"),
+                          fluidRow(
+                            column(4, selectInput('o_irt_model_summary',
+                                                  'Choose Summary',
+                                                  choices = c('1-PL' = 'PL1',
+                                                              '2-PL' = 'PL2',
+                                                              '3-PL' = 'PL3',
+                                                              'AIC')))
+                          ),
+                          verbatimTextOutput('txt_irt_model')
+                 ),
+                 tabPanel("ICC",
+                          helpText("Choose to plot ICC for 1-, 2- or 3-PL IRT models. (More help text needed.)"),
+                          fluidRow(
+                            column(4, selectInput('o_icc_model',
+                                                  'Choose Model',
+                                                  choices = c('1-PL' = 'PL1',
+                                                              '2-PL' = 'PL2',
+                                                              '3-PL' = 'PL3'))),
+                            column(8, selectizeInput('o_icc_questions',
+                                                     'Choose Questions',
+                                                     choices = NULL,
+                                                     multiple = TRUE,
+                                                     width = '100%'))
+                          ),
+                          plotOutput('p_icc')
+                 )
                )
              )),
     tabPanel("Factor Analysis",

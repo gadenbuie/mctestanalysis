@@ -90,6 +90,7 @@ loadAllData <- function(answer_file = NULL,
     mctd <- discriminationIndex(mctd)
     mctd <- pbcc(mctd)
     mctd <- pbcc_modified(mctd)
+    mctd <- addIRTfits(mctd)
   }
   return(mctd)
 }

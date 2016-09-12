@@ -35,6 +35,11 @@ shinyServer(function(input, output, session) {
     updateSelectizeInput(session, 'o_overallbox_concepts', choices = unique(x), selected = unique(x))
   })
 
+  observe({
+    x <- mctd()$AnswerKey$Question
+    updateSelectizeInput(session, 'o_icc_questions', choices = x, selected = x)
+  })
+
   # Import Data Outputs ----
 
   output$t_data_check <- renderText({
@@ -240,5 +245,28 @@ shinyServer(function(input, output, session) {
                                  'is greater than 0.3, then the recommendation is to',
                                  tags$strong('Keep'), 'the item.')
     return(txt[[input$o_item_review_help_group]])
+  })
+
+  # ---- Item Response Theory ----
+  output$txt_irt_model <- renderPrint({
+    if (is.null(mctd())) return(NULL)
+    if (input$o_irt_model_summary != 'AIC') {
+      print(mctd()$irt_models[[input$o_irt_model_summary]])
+    } else {
+      mctd()$irt_models[['AIC']]
+    }
+  })
+
+  output$p_icc <- renderPlot({
+    if (is.null(mctd())) return(NULL)
+    if (is.null(input$o_icc_questions)) return(NULL)
+    questions <- 1:length(mctd()$AnswerKey$Question)
+    names(questions) <- mctd()$AnswerKey$Question
+    questions <- questions[input$o_icc_questions]
+    switch(input$o_icc_model,
+                'PL1' = ltm::plot.rasch(mctd()$irt_models[['PL1']], type = "ICC", items = questions),
+                'PL2' = ltm::plot.ltm(mctd()$irt_models[['PL2']], type = "ICC", items = questions),
+                'PL3' = ltm::plot.tpm(mctd()$irt_models[['PL3']], type = 'ICC', items = questions)
+    )
   })
 })

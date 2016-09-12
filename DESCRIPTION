@@ -1,7 +1,7 @@
 Package: MCTestAnalysis
 Type: Package
 Title: Multiple Choice Test Analysis
-Version: 0.0.13
+Version: 0.0.14
 Author: c( person("Autar", "Kaw", email = "kaw@usf.edu", role = "cre"),
     person("Garrick", "Aden-Buie", email = "gadenbuie@mail.usf.edu", role = "aut"),
     person("Alvaro", "Lopez", role = "aut"))
