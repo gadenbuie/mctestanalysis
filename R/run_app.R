@@ -9,5 +9,5 @@ run_app <- function() {
     stop("Could not find shiny-apps directory. Try re-installing the MCTestAnalysis package.")
   }
 
-  shiny::runApp(appDir, display.mode = 'normal')
+  suppressWarnings(shiny::runApp(appDir, display.mode = 'normal'))
 }

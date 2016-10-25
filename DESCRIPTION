@@ -16,12 +16,13 @@ License: Not released yet
 LazyData: TRUE
 RoxygenNote: 5.0.1
 Imports:
+    ltm,
     psych,
     psychometric,
-    shiny,
     reshape2,
     tibble,
     DT
 Depends:
     dplyr,
-    ggplot2
+    ggplot2,
+    shiny
