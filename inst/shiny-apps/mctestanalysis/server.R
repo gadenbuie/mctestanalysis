@@ -32,8 +32,13 @@ shinyServer(function(input, output, session) {
 
   observe({
     x <- concepts()
-    updateSelectizeInput(session, 'o_overallbox_concepts', choices = unique(x), selected = unique(x))
-  })
+    updateRadioButtons(session, 'o_overallbox_concepts', choices = c('All', unique(x)), inline = TRUE)
+  }, priority = 10)
+
+  observe({
+    not_all <- input$o_overallbox_concepts != 'All'
+    updateCheckboxInput(session, 'o_overallbox_facet', value = not_all)
+  }, priority = 2)
 
   # Import Data Outputs ----
 
@@ -192,8 +197,10 @@ shinyServer(function(input, output, session) {
 
   output$p_overallbox <- renderPlot({
     if (is.null(mctd())) return(NULL)
+    if (input$o_overallbox_concepts == 'All') concepts <- unique(concepts())
+    else concepts <- input$o_overallbox_concepts
     testScoreByQuestionPlot(mctd(),
-                            concepts = input$o_overallbox_concepts,
+                            concepts = concepts,
                             facet_by_concept = input$o_overallbox_facet)
   })
 

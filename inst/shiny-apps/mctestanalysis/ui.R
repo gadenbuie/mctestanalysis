@@ -205,7 +205,7 @@ shinyUI(navbarPage(
                           helpText("This plot compares the overall test scores against correct selection of individual items."),
                           fluidRow(
                             column(9,
-                                   selectizeInput('o_overallbox_concepts', 'Concepts', choices = NULL, multiple = TRUE)
+                                   radioButtons('o_overallbox_concepts', 'Concepts', choices = 'All', inline = TRUE)
                             ),
                             column(3,
                                    tags$strong('Options'),
