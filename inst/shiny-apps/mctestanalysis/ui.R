@@ -211,7 +211,11 @@ shinyUI(navbarPage(
                                    tags$strong('Options'),
                                    checkboxInput('o_overallbox_facet', 'Group Items by Concept?'))
                           ),
-                          plotOutput('p_overallbox')
+                          fluidRow(
+                            column(8, offset = 2,
+                              plotOutput('p_overallbox')
+                            )
+                          )
                  ),
                  tabPanel("Item Review",
                           helpText("This table uses a number of heuristics and guidelines ",
