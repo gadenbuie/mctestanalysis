@@ -35,11 +35,6 @@ shinyServer(function(input, output, session) {
     updateSelectizeInput(session, 'o_overallbox_concepts', choices = unique(x), selected = unique(x))
   })
 
-  observe({
-    x <- mctd()$AnswerKey$Question
-    updateSelectizeInput(session, 'o_icc_questions', choices = x, selected = x)
-  })
-
   # Import Data Outputs ----
 
   output$t_data_check <- renderText({
@@ -268,5 +263,30 @@ shinyServer(function(input, output, session) {
                 'PL2' = ltm::plot.ltm(mctd()$irt_models[['PL2']], type = "ICC", items = questions),
                 'PL3' = ltm::plot.tpm(mctd()$irt_models[['PL3']], type = 'ICC', items = questions)
     )
+  })
+
+  ## ICC Currves Form Inputs
+  observe({
+    x <- mctd()$AnswerKey$Question
+    updateCheckboxGroupInput(session, 'o_icc_questions', choices = x, selected = x, inline = TRUE)
+  })
+
+  observe({
+    x <- unique(concepts())
+    updateSelectInput(session, 'o_icc_questions_concept', choices = c('', x))
+  })
+
+  observeEvent(input$b_icc_questions_all, {
+    x <- mctd()$AnswerKey$Question
+    updateCheckboxGroupInput(session, 'o_icc_questions', selected = x)
+  })
+
+  observeEvent(input$b_icc_questions_none, {
+    updateCheckboxGroupInput(session, 'o_icc_questions', selected = character(0))
+  })
+
+  observeEvent(input$b_icc_questions_concept, {
+    questions <- concepts()[which(concepts() == input$o_icc_questions_concept)]
+    updateCheckboxGroupInput(session, 'o_icc_questions', selected = names(questions))
   })
 })

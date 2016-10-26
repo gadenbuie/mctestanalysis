@@ -262,13 +262,23 @@ shinyUI(navbarPage(
                                                   choices = c('1-PL' = 'PL1',
                                                               '2-PL' = 'PL2',
                                                               '3-PL' = 'PL3'))),
-                            column(8, selectizeInput('o_icc_questions',
+                            column(6, checkboxGroupInput('o_icc_questions',
                                                      'Choose Questions',
                                                      choices = NULL,
-                                                     multiple = TRUE,
-                                                     width = '100%'))
+                                                     inline = TRUE,
+                                                     width = '100%')),
+                            column(2,
+                              actionButton('b_icc_questions_all', "Select All"),
+                              actionButton('b_icc_questions_none', "Select None"),
+                              selectInput('o_icc_questions_concept', "Concept Group", choices = NULL),
+                              actionButton('b_icc_questions_concept', 'Select Concept')
+                            )
                           ),
-                          plotOutput('p_icc')
+                          fluidRow(
+                            column(8, offset = 2,
+                              plotOutput('p_icc')
+                            )
+                          )
                  )
                )
              )),
