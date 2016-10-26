@@ -199,7 +199,11 @@ shinyUI(navbarPage(
                                    radioButtons('o_disc_x_range', label = 'X-Axis', choices = c('Free', 'Positive'), selected = 'Positive', inline = TRUE)
                             )
                           ),
-                          plotOutput('p_discrimination')
+                          fluidRow(
+                            column(8, offset = 2,
+                              plotOutput('p_discrimination')
+                            )
+                          )
                  ),
                  tabPanel("Overall vs. Question Score",
                           helpText("This plot compares the overall test scores against correct selection of individual items."),
