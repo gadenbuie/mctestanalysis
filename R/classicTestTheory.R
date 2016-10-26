@@ -96,21 +96,20 @@ pbcc <- function(mctd) {
 
 #' Modified Point-Biserial Correlation Coefficient
 #'
-#' Calculates the modified PBCC for each item.
+#' Calculates the modified PBCC for each item, where the item answers are
+#' correlated with overall test performance without considering the given item
+#' in the overall test score.
 #'
 #' @inheritParams mcTestAnalysisData
 #' @export
 pbcc_modified <- function(mctd) {
   if (!("item.score" %in% names(mctd))) mctd <- addItemScore(mctd)
-  test_scores  <- mctd$scores
-  N            <- nrow(mctd$Test.complete)
+  raw_test_scores  <- rowSums(mctd$item.score)
   mpbcc        <- rep(NA, length(mctd$AnswerKey$Question))
   names(mpbcc) <- mctd$AnswerKey$Question
   for (j in 1:length(mctd$AnswerKey$Question)) {
     item_scores <- mctd$item.score[, j]
-    mpbcc[j] <- (N * item_scores %*% test_scores - sum(item_scores)*sum(test_scores)) /
-      (sqrt((N * item_scores %*% item_scores - sum(item_scores)^2)*
-              (N * test_scores %*% test_scores - sum(test_scores)^2)))
+    mpbcc[j] <- cor(item_scores, raw_test_scores - item_scores)
   }
   mctd[['pbcc_modified']] <- mpbcc
   return(mctd)

@@ -10,6 +10,8 @@ pbcc_modified(mctd)
 \item{mctd}{Existing mcTestAnalysis data object}
 }
 \description{
-Calculates the modified PBCC for each item.
+Calculates the modified PBCC for each item, where the item answers are
+correlated with overall test performance without considering the given item
+in the overall test score.
 }
 
