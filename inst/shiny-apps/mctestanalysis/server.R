@@ -278,7 +278,7 @@ shinyServer(function(input, output, session) {
     )
   })
 
-  ## ICC Currves Form Inputs
+  ## ICC Curves Form Inputs
   observe({
     x <- mctd()$AnswerKey$Question
     updateCheckboxGroupInput(session, 'o_icc_questions', choices = x, selected = x, inline = TRUE)
@@ -301,5 +301,11 @@ shinyServer(function(input, output, session) {
   observeEvent(input$b_icc_questions_concept, {
     questions <- concepts()[which(concepts() == input$o_icc_questions_concept)]
     updateCheckboxGroupInput(session, 'o_icc_questions', selected = names(questions))
+  })
+
+  ## Tetrachoric Plot
+  output$p_tetra <- renderPlot({
+    if (is.null(mctd())) return(NULL)
+    plotTetrachoric(mctd(), input$o_tetra_show_concept, TRUE)
   })
 })
