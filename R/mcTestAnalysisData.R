@@ -39,6 +39,7 @@ loadTestData <- function(mctd = NULL, test_file, has_student_id = TRUE, ...) {
     x <- tibble::column_to_rownames(x, names(x)[1])
   }
   if ('AnswerKey' %in% names(mctd)) {
+    check_questions_and_answers(x, mctd$AnswerKey)
     colnames(x) <- mctd$AnswerKey$Question
   }
   mctd[['Test']] <- x
@@ -93,4 +94,12 @@ loadAllData <- function(answer_file = NULL,
     mctd <- addIRTfits(mctd)
   }
   return(mctd)
+}
+
+check_questions_and_answers <- function(test, answer_key) {
+  n.answers <- nrow(answer_key)
+  n.questions <- ncol(test)
+  if (n.answers != n.questions) {
+    stop('Question-Answer mismatch: Answer key has ', n.answers, ' items, but Test contains ', n.questions)
+  }
 }
