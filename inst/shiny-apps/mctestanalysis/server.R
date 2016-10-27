@@ -12,6 +12,11 @@ shinyServer(function(input, output, session) {
   # Reactive data elements ----
   mctd <- reactive({
     if (is.null(input$f_test) | is.null(input$f_answer_key)) return(NULL)
+    showModal(modalDialog(title = 'Loading Data',
+                          paste('Processing test data, please wait.',
+                                'Depending on the number of responses and the size of the test,',
+                                'this should only take a few seconds.'),
+                          footer = NULL))
     x <- loadAllData(answer_file    = input$f_answer_key$datapath,
                      test_file      = input$f_test$datapath,
                      has_student_id = input$o_import_has_student_id,
@@ -20,6 +25,7 @@ shinyServer(function(input, output, session) {
                      header         = input$o_import_header,
                      sep            = input$o_import_sep,
                      quote          = input$o_import_quote)
+    removeModal()
     return(x)
   })
 
