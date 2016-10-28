@@ -256,6 +256,7 @@ summarizeCTT <- function(mctd,
            'Difficulty Index'     = mean(mctd$item.analysis$Difficulty),
            'Discrimination Index' = mean(mctd$discrimination_index),
            'PBCC'                 = mean(mctd$pbcc),
+           'Modified PBCC'        = mean(mctd$pbcc_modified),
            'Item Variance'        = mean(apply(mctd$item.score, 2, sd)^2))
     x <- round(x, digits.round)
     data.frame('Measure' = names(x),
@@ -271,7 +272,8 @@ summarizeCTT <- function(mctd,
                        'Difficulty'     = round(mctd$item.analysis$Difficulty, digits.round),
                        'Item Var'       = round(apply(mctd$item.score, 2, sd)^2, digits.round),
                        'Discrimination' = round(mctd$discrimination_index, digits.round),
-                       'PBCC'           = round(mctd$pbcc, digits.round)
+                       'PBCC'           = round(mctd$pbcc, digits.round),
+                       'MPBCC'          = round(mctd$pbcc_modified, digits.round)
     )
   } else if (summarize_by == 'concept') {
     if (!('subscale' %in% names(mctd$alpha))) mctd <- addSubscaleConcept(mctd)
@@ -281,7 +283,8 @@ summarizeCTT <- function(mctd,
                             'Avg Difficulty'     = NA, #3
                             'Avg Discrimination' = NA, #4
                             'Avg PBCC'           = NA, #5
-                            'Avg Item Var'       = NA) #6
+                            'Avg MPBCC'          = NA, #6
+                            'Avg Item Var'       = NA) #7
     for (i in 1:nrow(x)) {
       concept <- x$Concept[i]
       questions <- which(mctd$AnswerKey$Concept == concept)
@@ -293,8 +296,10 @@ summarizeCTT <- function(mctd,
       x[i, 4] <- mean(mctd$discrimination_index[questions])
       # PBCC
       x[i, 5] <- mean(mctd$pbcc[questions])
+      # MPBCC
+      x[i, 6] <- mean(mctd$pbcc_modified[questions])
       # Item Variance
-      x[i, 6] <- mean(apply(mctd$item.score[, questions], 2, sd)^2)
+      x[i, 7] <- mean(apply(mctd$item.score[, questions], 2, sd)^2)
     }
     x[, 2:6] <- round(x[, 2:6], digits.round)
     return(x)
