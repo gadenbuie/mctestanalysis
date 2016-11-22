@@ -28,4 +28,5 @@ Imports:
 Depends:
     dplyr,
     ggplot2,
-    shiny (>= 0.14.0)
+    shiny (>= 0.14.0),
+    miniUI
