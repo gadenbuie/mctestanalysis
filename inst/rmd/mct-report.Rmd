@@ -1,0 +1,237 @@
+---
+title: "`r ifelse(exists('title'), title, 'MC Test Analysis')`"
+author: "`r ifelse(exists('author'), author, Sys.info()['user'])`"
+date: "`r strftime(Sys.time(), '%B %d, %Y')`"
+toc: true
+bibliography: mctestanalysis.bib
+---
+
+```{r init-opts, message=FALSE, warning=FALSE, include=FALSE}
+knitr::opts_chunk$set(message=FALSE, warning=FALSE, echo=FALSE, results = 'asis')
+as_table <- function(x, pander = TRUE, ...) {
+  if (pander) {
+    pander::pandoc.table(x, split.tables = Inf, ...)
+  } else {
+    knitr::kable(x, row.names = FALSE, ...)
+  }
+}
+
+if (!exists('report_options')) report_options <- list()
+```
+
+```{r check, eval=FALSE, include=FALSE}
+stopifnot(exists('mctd'))
+summary_text <- c()
+
+add_to_output <- function(...) {
+  element <- paste(...)
+  summary_text <<- c(summary_text, element)
+}
+
+add_to_output('Questions:')
+add_to_output('  - In answer key:', length(mctd$AnswerKey$Question))
+add_to_output('  - In test data: ', ncol(mctd$Test))
+add_to_output('')
+add_to_output('Responses:')
+add_to_output('  - Incomplete:', nrow(mctd$Test[!complete.cases(mctd$Test),]))
+add_to_output('  - Total:', nrow(mctd$Test))
+add_to_output('')
+add_to_output('Concepts:', length(unique(mctd$AnswerKey$Concept)))
+
+cat(paste(summary_text, collapse = '\n'))
+```
+
+\clearpage
+
+# Introduction
+
+The purpose of this generated report is to provide the analytical framework proposed in the paper 
+"An Analytic Framework for Evaluating the Validity of Concept Inventory Claims" [@Jorion2015] 
+from the University of Chicago, while providing extra statistical routines based on Classical Test Theory. 
+Within the contents of this report, you will find graphical representations such as plots and graphs and tables all intended to validate the 3 claims proposed in Jorion’s paper.
+
+# Test Overview and Descriptions
+
+## Answer Key
+
+```{r answer-key, results = 'asis'}
+as_table(mctd$AnswerKey)
+```
+
+\clearpage
+
+## Option Selection by Item
+
+The following table presents the percentage of students selecting each option by item.
+
+```{r options-selected}
+optionsSelectedPct(
+  mctd,
+  include_columns = c('Title', 'Answer', 'Concept'),
+  questions_as_row_names = FALSE,
+  as_percentage = TRUE,
+  correct_vs_incorrect = FALSE) %>% 
+  as_table
+```
+
+Table: Option selection by item
+
+
+# Classic Test Theory
+
+## Summary
+
+The following tables provide common statistical parameters used in Classic Test Theory (CTT).
+
+Cronbach Alpha
+:    The coefficient of internal reliability, indicating how closely related the set of items are as a group.
+
+Cronbach Alpha without item (WOI)
+:    The Cronbach Alpha calculated for the test without including the item of interest.
+
+Subscale Alpha
+:    The Cronbach Alpha for the subscale or concept group. The value of alpha is influenced by test length, so it is expected that a low number of items per subscale will result in a lower subscale alpha value.
+
+Difficulty Index
+:    Measures the proportion of students who answered the test item accurately. Higher values close to 1 are indicative of less difficult items (more students answered the item correctly), while lower values close to 0 are associated with more difficult items.
+
+Discrimination Index
+:    Measures the ability of the item to discriminate between high and low scoring students. Positive values indicate that the students who scored well on the overall test tended to answer this question correctly, while students who scored poorly on the overall test were likely to answer this question incorrectly. Negative values indicate the opposite -- low-scoring students were more likely to answer the question correctly, while high-scoring students tended to choose the wrong answer -- and suggest that the item should be reviewed. Values near zero suggest the item does not differentiate between high- and low-performing students.
+
+Item Variance
+:    Measures the spread among item responses.
+
+Point-Biserial Correlation Coefficient
+:    (PBCC) Measures the correlation with the item removed to decrease the influence of the item on the measure of performance.
+
+
+```{r ctt-summary}
+summarizeCTT(mctd) %>% 
+  select(-Measure) %>% 
+  as_table(digits = 4, round = 4)
+```
+
+Table: Classic Test Theory Summary
+
+```{r ctt-summary-concept}
+as_table(summarizeCTT(mctd, 'concept'), digits = 4, round = 4)
+```
+
+Table:: Classic Test Theory Summary by Concept Group
+
+
+\clearpage
+
+## Discrimination Index
+
+**TEXT NEEDED:** DISCRIMINATION INDEX PLOT TEXT
+
+```{r ctt-discrimination-index, fig.width=12, fig.height=12}
+gridExtra::grid.arrange(
+  discriminationDifficultyPlot(mctd, "conventional")+ggtitle('Discrimination Index'),
+  discriminationDifficultyPlot(mctd, "pbcc")+ggtitle("Point-Biserial Correlation Coefficient"),
+  discriminationDifficultyPlot(mctd, "pbcc_modified")+ggtitle("Modified PBCC"),
+  ncol = 2
+)
+```
+
+\clearpage
+
+## Overall Score vs. Question Score
+
+**TEXT NEEDED:** Overall vs Question Score
+
+```{r ctt-overall-vs-question, fig.width = 12, fig.height=12}
+testScoreByQuestionPlot(mctd, facet_by_concept = TRUE)
+```
+
+\clearpage
+
+# Item Review Recommendations
+
+**TEXT NEEDED:** Item review recommendations
+
+## Review Recommendations Criteria
+
+Alpha
+:    If *Cronbach's Alpha* for the test with the item deleted is less than the alpha coefficient for the whole test then the recommendation is to **Keep** the item.
+
+Jorion
+:    If the *Difficulty Index* is between 0.3 and 0.9, and the *Discrimination Index* is greater than 0.2, then the recommendation is to **Keep** the item.
+
+Versatile
+:    This recommendation is based on the *Difficulty Index* and *PBCC* and provides a range of recommendations from **Remove** to **Review** through **Keep**, favoring positive PBCC values near to or greater than 0.3 and higher difficulty values.
+
+Stringent
+:    If the *Difficulty Index* is between 0.3 and 0.9, and the *Point-Biserial Correlation Coefficient* is greater than 0.3, then the recommendation is to **Keep** the item.
+
+
+## Review Recommendations Table
+
+```{r ctt-review-recommendations}
+recommendItemActions(mctd, include_columns = c("Title", "Concept"), digits.round = 2) %>% as_table()
+```
+
+Table: Recommendations for each test item based on the criteria described above.
+
+
+# Item Response Theory
+
+```{r irt-best-model, include=FALSE}
+if ('irt_model_choice' %in% names(report_options)) {
+  pl_number <- report_options$irt_model_choice %>% as.integer
+  flag_model_chosen <- TRUE
+} else {
+  flag_model_chosen <- FALSE
+  pl_number <- which(mctd$irt_models$AIC == min(mctd$irt_models$AIC)) %>% 
+    names() %>% substr(start = 3, stop = 3) %>% as.integer
+}
+number_words <- c('one', 'two', 'three')
+pl_name <- paste0('PL', pl_number)
+```
+
+## Model Summary
+
+One-, two- and three-parameter logistic models were fit to the test results data.
+The model `r ifelse(flag_model_chosen, 'selected', 'chosen')` for the remainder of this analysis was the
+`r number_words[pl_number]`-factor logistic model,
+which had 
+`r ifelse(flag_model_chosen, 'an', 'the lowest')`
+AIC of 
+$`r mctd$irt_models$AIC[pl_number] %>% round(1)`$.
+Note that the rightmost column, $\mathrm{P}(x_i = 1 \vert z = 0)$, indicates the probability that an average student will correctly answer the item.
+
+```{r irt-summary, echo=FALSE}
+irtSummaryTable(mctd, pl_number) %>% as_table()
+```
+
+## Item Characteristic Curves
+
+```{r icc-curves, echo=FALSE, fig.height=6, fig.width=12}
+for (concept in unique(mctd$AnswerKey$Concept)) {
+  cat("\n\n###", concept, "\n\n")
+  questions <- mctd$AnswerKey %>%
+    mutate(n = 1:nrow(.)) %>%
+    filter(Concept == concept) %>% .$n
+  plot_title <- paste0("Item Characteristic Curves: Concept \"", concept, '"')
+  switch(pl_name,
+         'PL1' = ltm::plot.rasch(mctd$irt_models[['PL1']], 
+                                 type = "ICC", items = questions,
+                                 main = plot_title),
+         'PL2' = ltm::plot.ltm(mctd$irt_models[['PL2']], 
+                                 type = "ICC", items = questions,
+                                 main = plot_title),
+         'PL3' = ltm::plot.tpm(mctd$irt_models[['PL3']], 
+                                 type = "ICC", items = questions,
+                                 main = plot_title)
+  )
+}
+```
+
+## Tetrachoric Plot
+
+```{r tetrachoric-plot, fig.height=9, fig.width=9, dev='png'}
+plotTetrachoric(mctd, TRUE, TRUE)
+```
+
+# References

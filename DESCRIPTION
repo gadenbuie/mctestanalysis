@@ -21,7 +21,10 @@ Imports:
     psychometric,
     reshape2,
     tibble,
-    DT
+    DT,
+    rmarkdown,
+    pander,
+    gridExtra
 Depends:
     dplyr,
     ggplot2,
