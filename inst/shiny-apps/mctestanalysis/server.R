@@ -258,10 +258,13 @@ shinyServer(function(input, output, session) {
   # ---- Item Response Theory ----
   output$txt_irt_model <- renderPrint({
     if (is.null(mctd())) return(NULL)
-    if (input$o_irt_model_summary != 'AIC') {
-      print(mctd()$irt_models[[input$o_irt_model_summary]])
-    } else {
+    if (input$o_irt_model_summary == 'AIC') {
       mctd()$irt_models[['AIC']]
+    } else {
+      pl_number <- substr(input$o_irt_model_summary, 3, 3)
+      pander::pandoc.table(irtSummaryTable(mctd(), pl_number, 'Prob'),
+                           split.tables = Inf)
+
     }
   })
 
@@ -272,9 +275,9 @@ shinyServer(function(input, output, session) {
     names(questions) <- mctd()$AnswerKey$Question
     questions <- questions[input$o_icc_questions]
     switch(input$o_icc_model,
-                'PL1' = ltm::plot.rasch(mctd()$irt_models[['PL1']], type = "ICC", items = questions),
-                'PL2' = ltm::plot.ltm(mctd()$irt_models[['PL2']], type = "ICC", items = questions),
-                'PL3' = ltm::plot.tpm(mctd()$irt_models[['PL3']], type = 'ICC', items = questions)
+           'PL1' = ltm::plot.rasch(mctd()$irt_models[['PL1']], type = "ICC", items = questions),
+           'PL2' = ltm::plot.ltm(mctd()$irt_models[['PL2']], type = "ICC", items = questions),
+           'PL3' = ltm::plot.tpm(mctd()$irt_models[['PL3']], type = 'ICC', items = questions)
     )
   })
 
