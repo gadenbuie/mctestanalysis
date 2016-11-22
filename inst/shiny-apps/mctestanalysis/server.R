@@ -256,16 +256,67 @@ shinyServer(function(input, output, session) {
   })
 
   # ---- Item Response Theory ----
-  output$txt_irt_model <- renderPrint({
-    if (is.null(mctd())) return(NULL)
+  output$irt_models_helptext <- renderUI({
+    irt_help_text <- list(
+      tags$p(
+        tags$strong("Difficulty."),
+        paste(
+          "The difficulty parameter, \\(\\beta\\), sometimes",
+          "called the threshold parameter, describes the difficulty of a given item.",
+          "It is the only parameter estimated in the 1-PL (Rasch) model.")
+      ),
+      tags$p(
+        tags$strong("Discrimination."),
+        paste(
+          "The discrimination parameter, \\(\\alpha\\),",
+          "reflects the effectiveness of the item in differentiating between high- and",
+          "low-performing students. This parameter is estimated in the 2-PL model, in",
+          "addition to difficulty.")
+      ),
+      tags$p(
+        tags$strong("Guessing."),
+        paste(
+          "The guessing parameter, \\(\\gamma\\), is included in the",
+          "3-PL model, in addition the previous parameters, and reflects the influence",
+          "of guessing for each item.")
+      ),
+      tags$p(
+        tags$stron("Prob."),
+        paste("The probability column gives the probability that an average",
+              "student will correctly answer the item, i.e.",
+              "\\(\\mathrm{P}(x_i = 1 \\vert z = 0)\\).")
+      )
+    )
     if (input$o_irt_model_summary == 'AIC') {
-      mctd()$irt_models[['AIC']]
+      helpText('The following table shows the',
+               tags$a('Akaike information criterion (AIC)', href = 'https://en.wikipedia.org/wiki/Akaike_information_criterion'),
+               'for each of the three models.',
+               'In general, a lower AIC value relative to the other model values indicates better model performance.',
+               'However, you should be careful to review the model parameter to ensure that model assumptions are valid and appropriate.'
+      )
     } else {
       pl_number <- substr(input$o_irt_model_summary, 3, 3)
-      pander::pandoc.table(irtSummaryTable(mctd(), pl_number, 'Prob'),
-                           split.tables = Inf)
-
+      withMathJax(helpText(irt_help_text[c(1:pl_number, 4)]))
     }
+  })
+
+  output$t_irt_model <- DT::renderDataTable({
+    if (is.null(mctd())) return(NULL)
+    if (input$o_irt_model_summary == 'AIC') {
+      x <- mctd()$irt_models[['AIC']] %>% round(digits = 2)
+      x <- data.frame('Model' = names(x), 'AIC' = x)
+    } else {
+      pl_number <- substr(input$o_irt_model_summary, 3, 3)
+      x <- irtSummaryTable(mctd(), pl_number, 'Prob')
+    }
+    DT::datatable(x,
+                  filter = 'bottom',
+                  autoHideNavigation = TRUE,
+                  rownames = FALSE,
+                  options = list(
+                    'pageLength' = 10
+                  )
+    )
   })
 
   output$p_icc <- renderPlot({

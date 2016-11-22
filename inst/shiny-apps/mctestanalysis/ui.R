@@ -251,23 +251,28 @@ shinyUI(navbarPage(
                h3("Item Response Theory Results"),
                tabsetPanel(
                  tabPanel("IRT Models",
-                          helpText("These are 1-, 2- and 3-PL IRT models. (More help text needed.)"),
+                          withMathJax(),
+                          uiOutput('irt_models_helptext'),
                           fluidRow(
                             column(4, selectInput('o_irt_model_summary',
                                                   'Choose Summary',
-                                                  choices = c('1-PL' = 'PL1',
+                                                  choices = c('1-PL (Rasch)' = 'PL1',
                                                               '2-PL' = 'PL2',
                                                               '3-PL' = 'PL3',
                                                               'AIC')))
                           ),
-                          verbatimTextOutput('txt_irt_model')
+                          fluidRow(
+                            column(8, offset = 2,
+                                   DT::dataTableOutput('t_irt_model')
+                            )
+                          )
                  ),
                  tabPanel("ICC",
                           helpText("Choose to plot ICC for 1-, 2- or 3-PL IRT models. (More help text needed.)"),
                           fluidRow(
                             column(4, selectInput('o_icc_model',
                                                   'Choose Model',
-                                                  choices = c('1-PL' = 'PL1',
+                                                  choices = c('1-PL (Rasch)' = 'PL1',
                                                               '2-PL' = 'PL2',
                                                               '3-PL' = 'PL3'))),
                             column(6, checkboxGroupInput('o_icc_questions',
