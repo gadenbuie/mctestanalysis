@@ -109,3 +109,37 @@ plotTetrachoric <- function(mctd, group_by_concept = TRUE, equal_coords = FALSE)
   if (equal_coords) g <- g + coord_equal()
   g
 }
+
+#' Create IRT Summary Table
+#'
+#' Creates summary table of coefficients for the IRT models.
+#'
+#' @seealso \code{\link{addIRTfits}}
+#'
+#' @inheritParams mcTestAnalysisData
+#' @param model_params One of \code{1, 2} or \code{3}, indicating number of 1-,
+#'   2- or 3-PL model. Can be integer or character.
+#' @param probcolname Column name for probability column, defaults to
+#'   mathematical expression.
+#' @export
+irtSummaryTable <- function(mctd,
+                            model_params = 1,
+                            probcolname = '$\\mathrm{P}(x_i = 1 \\vert z = 0)$'){
+  should_have(mctd, 'irt_models')
+  stopifnot(as.integer(model_params) %in% 1:3)
+  pl_name <- paste0('PL', model_params)
+  irt_colnames <- list(
+    'PL1' = c('Question', 'Difficulty', 'Discrimination', probcolname),
+    'PL2' = c('Question', 'Difficulty', 'Discrimination', probcolname),
+    'PL3' = c('Question', 'Guessing', 'Difficulty', 'Discrimination', probcolname)
+  )
+
+  irt_summary <- mctd$irt_models[[pl_name]] %>%
+    coef(prob = TRUE) %>%
+    round(4) %>%
+    as.data.frame() %>%
+    tibble::rownames_to_column('Question')
+  colnames(irt_summary) <- irt_colnames[[pl_name]]
+
+  return(irt_summary)
+}
