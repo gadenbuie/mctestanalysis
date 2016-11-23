@@ -36,7 +36,8 @@
 recommendItemActions <- function(mctd,
                                  include_columns = c("Title", "Concept", 'Alpha WOI', 'Difficulty', 'Discrimination', 'PBCC'),
                                  digits.round = getOption('digits')) {
-  should_have(mctd, 'item.analysis', 'item.score', 'alpha')
+  mctd <- requires(mctd, c('alpha', 'item.analysis', 'discrimination_index', 'pbcc'))
+  should_have(mctd, 'alpha', 'item.analysis', 'discrimination_index', 'pbcc', 'AnswerKey')
 
   # Check Alpha ----
   # If: Alpha WOI is < overall alpha, then "Keep", else, "Remove"

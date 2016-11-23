@@ -26,9 +26,7 @@ addItemScore <- function(mctd) {
 #' @export
 addItemAnalysis <- function(mctd, ...) {
   should_have(mctd, 'Test', 'AnswerKey', 'Test.complete')
-  if (!("item.score" %in% names(mctd))) {
-    mctd <- addItemScore(mctd)
-  }
+  mctd <- requires(mctd, 'item.score')
   mctd[['item.analysis']] <- psychometric::item.exam(mctd$item.score, ...)
   return(mctd)
 }
@@ -66,8 +64,9 @@ addAlpha <- function(mctd) {
 #' @param percentile Percentile defining upper and lower groups (standard is
 #'   0.27)
 #' @export
-  if (!("item.score" %in% names(mctd))) mctd <- addItemScore(mctd)
 addDiscriminationIndex <- function(mctd, percentile = 0.27) {
+  mctd <- requires(mctd, c('scores', 'item.score'))
+  should_have(mctd, 'Test.complete', 'item.score', 'scores')
   n_students <- nrow(mctd$Test.complete)
   n_items <- ncol(mctd$Test.complete)
 
@@ -103,8 +102,8 @@ addDiscriminationIndex <- function(mctd, percentile = 0.27) {
 #'
 #' @inheritParams mcTestAnalysisData
 #' @export
-  if (!("item.score" %in% names(mctd))) mctd <- addItemScore(mctd)
 addPBCC <- function(mctd) {
+  mctd <- requires(mctd, c('item.score', 'scores'))
   mctd[['pbcc']] <- cor(mctd$item.score, mctd$scores)[,1]
   return(mctd)
 }
@@ -117,8 +116,10 @@ addPBCC <- function(mctd) {
 #'
 #' @inheritParams mcTestAnalysisData
 #' @export
-  if (!("item.score" %in% names(mctd))) mctd <- addItemScore(mctd)
 addPBCCmodified <- function(mctd) {
+  mctd <- requires(mctd, 'item.score')
+  should_have(mctd, 'AnswerKey', 'item.score')
+
   raw_test_scores  <- rowSums(mctd$item.score)
   mpbcc        <- rep(NA, length(mctd$AnswerKey$Question))
   names(mpbcc) <- mctd$AnswerKey$Question
@@ -154,19 +155,21 @@ discriminationDifficultyPlot <- function(mctd,
                                          hide_legend = TRUE,
                                          show_guidelines = TRUE,
                                          max_limits = 'max_x') {
-  if (!('item.analysis' %in% names(mctd))) mctd <- addItemAnalysis(mctd)
+  mctd <- requires(mctd, c('discrimination_index', 'pbcc', 'pbcc_modified', 'item.analysis'))
+  should_have(mctd, 'Test.complete', 'discrimination_index', 'pbcc', 'pbcc_modified', 'item.analysis')
+
   type <- tolower(type)
   if (is.null(type)) type <- 'conventional'
   if (type == 'conventional') {
-    if (!('discrimination_index' %in% names(mctd))) mctd <- discriminationIndex(mctd)
+    mctd <- requires(mctd, 'discrimination_index')
     disc <- mctd$discrimination_index
     y_label <- 'Discrimination Index'
   } else if (type == 'pbcc') {
-    if (!('pbcc' %in% names(mctd))) mctd <- pbcc(mctd)
+    mctd <- requires(mctd, 'pbcc')
     disc <- mctd$pbcc
     y_label <- 'PBCC'
   } else if (type == 'pbcc_modified') {
-    if (!('pbcc_modified' %in% names(mctd))) mctd <- pbcc_modified(mctd)
+    mctd <- requires(mctd, 'pbcc_modified')
     disc <- mctd$pbcc_modified
     y_label <- 'Modified PBCC'
   } else {
@@ -219,7 +222,8 @@ discriminationDifficultyPlot <- function(mctd,
 testScoreByQuestionPlot <- function(mctd,
                                     concepts = unique(mctd$AnswerKey$Concept),
                                     facet_by_concept = FALSE) {
-  if (!('item.score' %in% names(mctd))) mctd <- addItemScore(mctd)
+  mctd <- requires(mctd, c('scores', 'item.score'))
+  should_have(mctd, 'item.score', 'scores', 'AnswerKey', 'Test.complete')
   # Prepare Data
   x <- mctd$item.score %>%
     reshape2::melt(variable.name = 'Question', value.name = 'Response', id.vars = character(0)) %>%
@@ -262,7 +266,10 @@ testScoreByQuestionPlot <- function(mctd,
 summarizeCTT <- function(mctd,
                          summarize_by = 'whole',
                          digits.round = getOption('digits')) {
-  should_have(mctd, 'alpha', 'discrimination_index', 'pbcc')
+  mctd <- requires(mctd, c('item.score', 'item.analysis', 'alpha',
+                            'discrimination_index', 'pbcc', 'pbcc_modified'))
+  should_have(mctd, 'AnswerKey', 'alpha', 'item.analysis', 'discrimination_index',
+              'pbcc', 'pbcc_modified', 'item.score')
   summarize_by <- tolower(summarize_by)
   if (summarize_by == 'whole') {
     # Overall Test Summary
@@ -291,7 +298,8 @@ summarizeCTT <- function(mctd,
                        'MPBCC'          = round(mctd$pbcc_modified, digits.round)
     )
   } else if (summarize_by == 'concept') {
-    if (!('subscale' %in% names(mctd$alpha))) mctd <- addSubscaleConcept(mctd)
+    mctd <- requires(mctd, 'alpha')
+    should_have(mctd$alpha, 'subscale')
     # Same as overall but grouped by concept
     x <- tibble::data_frame('Concept' = unique(mctd$AnswerKey$Concept),
                             'Subscale Alpha'     = NA, #2
@@ -330,7 +338,8 @@ summarizeCTT <- function(mctd,
 #' @inheritParams mcTestAnalysisData
 #' @export
 addSubscaleConcept <- function(mctd) {
-  should_have(mctd, 'alpha')
+  mctd <- requires(mctd, c('alpha', 'item.score'))
+  should_have(mctd, 'AnswerKey', 'alpha', 'item.score')
   if (length(unique(mctd$AnswerKey$Concept)) <= 1) {
     warning("Only one concept group found, skipping subscale calculations")
     return(mctd)

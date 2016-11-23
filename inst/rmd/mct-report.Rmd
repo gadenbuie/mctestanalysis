@@ -17,10 +17,11 @@ as_table <- function(x, pander = TRUE, ...) {
 }
 
 if (!exists('report_options')) report_options <- list()
+stopifnot(exists('mctd'))
+mctd <- requires(mctd, c('item.score', 'item.analysis', 'alpha', 'irt_models'))
 ```
 
 ```{r check, eval=FALSE, include=FALSE}
-stopifnot(exists('mctd'))
 summary_text <- c()
 
 add_to_output <- function(...) {

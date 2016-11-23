@@ -20,7 +20,8 @@
 #' @inheritParams mcTestAnalysisData
 #' @export
 addIRTfits <- function(mctd) {
-  should_have(mctd, 'item.score')
+  mctd <- requires(mctd, 'item.score')
+  should_have(mctd, 'item.score', 'AnswerKey')
   irt_models <- list()
 
   # 1-PL Fit
@@ -53,6 +54,7 @@ addIRTfits <- function(mctd) {
 #'   to be equal (square plot).
 #' @export
 plotTetrachoric <- function(mctd, group_by_concept = TRUE, equal_coords = FALSE) {
+  mctd <- requires(mctd, 'item.score')
   should_have(mctd, 'item.score', 'AnswerKey')
 
   if (group_by_concept) {
@@ -125,6 +127,7 @@ plotTetrachoric <- function(mctd, group_by_concept = TRUE, equal_coords = FALSE)
 irtSummaryTable <- function(mctd,
                             model_params = 1,
                             probcolname = '$\\mathrm{P}(x_i = 1 \\vert z = 0)$'){
+  mctd <- requires(mctd, 'irt_models')
   should_have(mctd, 'irt_models')
   stopifnot(as.integer(model_params) %in% 1:3)
   pl_name <- paste0('PL', model_params)
