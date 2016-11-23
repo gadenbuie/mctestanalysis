@@ -33,6 +33,21 @@ addItemAnalysis <- function(mctd, ...) {
   return(mctd)
 }
 
+#' Add Cronbach Alpha to MC Test Data Object
+#'
+#' Runs \code{\link[psych]{alpha}} from the \link{psych} package and adds
+#' Cronbach alpha and overall student test score results to
+#' \link{mcTestAnalysisData} as \code{alpha} and \code{scores}.
+#' @inheritParams mcTestAnalysisData
+#' @export
+addAlpha <- function(mctd) {
+  mctd <- requires(mctd, 'item.score')
+  mctd[['alpha']] <- psych::alpha(mctd$item.score, warnings = FALSE, check.keys = FALSE)
+  mctd[['scores']] <- mctd$alpha$scores
+  mctd <- addSubscaleConcept(mctd)
+  return(mctd)
+}
+
 
 #' Calculate Conventional Item Discrimination Index
 #'
