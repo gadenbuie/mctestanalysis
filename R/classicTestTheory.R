@@ -207,7 +207,7 @@ testScoreByQuestionPlot <- function(mctd,
   if (!('item.score' %in% names(mctd))) mctd <- addItemScore(mctd)
   # Prepare Data
   x <- mctd$item.score %>%
-    reshape2::melt(variable.name = 'Question', value.name = 'Response') %>%
+    reshape2::melt(variable.name = 'Question', value.name = 'Response', id.vars = character(0)) %>%
     left_join(mctd$AnswerKey[, c('Question', 'Concept')], by = 'Question') %>%
     mutate(Score = rep(mctd$scores, nrow(mctd$AnswerKey)),
            Response = ifelse(Response, 'Correct', 'Incorrect'),
