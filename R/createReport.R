@@ -23,15 +23,22 @@ createReport <- function(answer_file = file.choose(),
   title <- paste('MC Test Analysis Report:', test_title)
   author <- author
 
+  cat("Loading data...")
   mctd <- loadAllData(answer_file, test_file, ...)
+  mctd <- requires(mctd, c('item.analysis', 'irt_models'))
+  cat('done.\n')
 
-  output_file <- rmarkdown::render(
-    system.file('rmd/mct-report.Rmd', package = 'MCTestAnalysis'),
-    output_format = 'pdf_document',
-    output_file = out_file,
-    output_dir = out_path,
-    quiet = TRUE
+  cat("Creating report...")
+  suppressWarnings(
+    output_file <- rmarkdown::render(
+      system.file('rmd/mct-report.Rmd', package = 'MCTestAnalysis'),
+      output_format = 'pdf_document',
+      output_file = out_file,
+      output_dir = out_path,
+      quiet = TRUE
+    )
   )
+  cat('done.\n')
 
   tryCatch({
     rstudioapi::verifyAvailable()
