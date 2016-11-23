@@ -36,6 +36,28 @@ loadDataGadget <- function() {
             )
           )
         )
+      ),
+      miniTabPanel(
+        "Processing",
+        miniContentPanel(
+          tags$h4("Processing Options"),
+          tags$p(
+            'Choose which analysis items should be calculated and stored in the data object that will be returned.',
+            "If any of these are items are needed later, they will be calculated by the package's functions",
+            "when they are needed."
+          ),
+          checkboxGroupInput('opts_require', 'Include the following',
+                             choices = c('Item Score' = 'item.score',
+                                         'Item Analysis' = 'item.analysis',
+                                         'Cronbach Alpha' = 'alpha',
+                                         "Discrimination Index" = 'discrimination_index',
+                                         "Point-Biserial Correlation" = 'pbcc',
+                                         "PBCC (Modified)" = 'pbcc_modified',
+                                         "IRT Models" = 'irt_models'),
+                             selected = c('item.score', 'item.analysis', 'alpha',
+                                          'discrimination_index', 'pbcc', 'pbcc_modified')
+          )
+        )
       )
     )
   )
@@ -303,6 +325,9 @@ load_data_shiny <- function(input) {
                      header         = input$o_import_header,
                      sep            = input$o_import_sep,
                      quote          = input$o_import_quote)
+    if ('opts_require' %in% names(input)) {
+      x <- requires(x, input$opts_require)
+    }
     removeModal()
     summary_text <- c()
 
