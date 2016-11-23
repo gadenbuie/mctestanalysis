@@ -51,8 +51,8 @@ addItemAnalysis <- function(mctd, ...) {
 #' @param percentile Percentile defining upper and lower groups (standard is
 #'   0.27)
 #' @export
-discriminationIndex <- function(mctd, percentile = 0.27) {
   if (!("item.score" %in% names(mctd))) mctd <- addItemScore(mctd)
+addDiscriminationIndex <- function(mctd, percentile = 0.27) {
   n_students <- nrow(mctd$Test.complete)
   n_items <- ncol(mctd$Test.complete)
 
@@ -88,8 +88,8 @@ discriminationIndex <- function(mctd, percentile = 0.27) {
 #'
 #' @inheritParams mcTestAnalysisData
 #' @export
-pbcc <- function(mctd) {
   if (!("item.score" %in% names(mctd))) mctd <- addItemScore(mctd)
+addPBCC <- function(mctd) {
   mctd[['pbcc']] <- cor(mctd$item.score, mctd$scores)[,1]
   return(mctd)
 }
@@ -102,8 +102,8 @@ pbcc <- function(mctd) {
 #'
 #' @inheritParams mcTestAnalysisData
 #' @export
-pbcc_modified <- function(mctd) {
   if (!("item.score" %in% names(mctd))) mctd <- addItemScore(mctd)
+addPBCCmodified <- function(mctd) {
   raw_test_scores  <- rowSums(mctd$item.score)
   mpbcc        <- rep(NA, length(mctd$AnswerKey$Question))
   names(mpbcc) <- mctd$AnswerKey$Question

@@ -88,9 +88,9 @@ loadAllData <- function(answer_file = NULL,
     mctd[['alpha']] <- psych::alpha(mctd$item.score, warnings = FALSE, check.keys = FALSE)
     mctd[['scores']] <- mctd$alpha$scores
     mctd <- addSubscaleConcept(mctd)
-    mctd <- discriminationIndex(mctd)
-    mctd <- pbcc(mctd)
-    mctd <- pbcc_modified(mctd)
+    mctd <- addDiscriminationIndex(mctd)
+    mctd <- addPBCC(mctd)
+    mctd <- addPBCCmodified(mctd)
     mctd <- addIRTfits(mctd)
   }
   return(mctd)
