@@ -192,14 +192,56 @@ pl_name <- paste0('PL', pl_number)
 
 ## Model Summary
 
-One-, two- and three-parameter logistic models were fit to the test results data.
-The model `r ifelse(flag_model_chosen, 'selected', 'chosen')` for the remainder of this analysis was the
+`r ifelse(flag_model_chosen, 'The model selected by the user for', "One-, two- and three-parameter logistic models were fit to the test results data. The model chosen for the remained of")` 
+this analysis was the
 `r number_words[pl_number]`-factor logistic model,
 which had 
 `r ifelse(flag_model_chosen, 'an', 'the lowest')`
 AIC of 
 $`r mctd$irt_models$AIC[pl_number] %>% round(1)`$.
-Note that the rightmost column, $\mathrm{P}(x_i = 1 \vert z = 0)$, indicates the probability that an average student will correctly answer the item.
+
+**Model Parameters**
+
+```{r irt-model-param-text}
+irt_help_text <- list(
+  paste(
+    "Difficulty\n:   ",
+    "The difficulty parameter, \\(\\beta\\), sometimes",
+    "called the threshold parameter, describes the difficulty of a given item.",
+    "It is the only parameter estimated in the 1-PL (Rasch) model.\n\n"
+  ),
+  paste(
+    "Discrimination\n:   ",
+    "The discrimination parameter, \\(\\alpha\\),",
+    "reflects the effectiveness of the item in differentiating between high- and",
+    "low-performing students. This parameter is estimated in the 2-PL model, in",
+    "addition to difficulty.\n\n"
+  ),
+  paste(
+    "Guessing\n:   ",
+    "The guessing parameter, \\(\\gamma\\), is included in the",
+    "3-PL model, in addition the previous parameters, and reflects the influence",
+    "of guessing for each item.\n\n"
+  ),
+  paste(
+    "Prob.\n:   ",
+    "The probability column gives the probability that an average",
+    "student will correctly answer the item, i.e.",
+    "\\(\\mathrm{P}(x_i = 1 \\vert z = 0)\\).\n\n"
+  ),
+  # Discrimination description for Rasch model
+  paste(
+    "Discrimination\n:  ",
+    "In the 1-PL Rasch model, the discrimination parameter is assumed to be equivalent across all items.",
+    "This assumption leads to consistent ICC curves where more difficult questions are always less easy",
+    "for all students. When the discrimination parameter is allowed to vary, for two items of similar",
+    "difficulty one item can be both easier for low-performing students and harder for high-performing",
+    "students when compared with the second item (or vice-versa).\n\n"
+  )
+)
+# Print out IRT model parameter text
+do.call('cat', irt_help_text[c(1:pl_number, if(pl_number == 1) 5, 4)])
+```
 
 ```{r irt-summary, echo=FALSE}
 irtSummaryTable(mctd, pl_number) %>% as_table()

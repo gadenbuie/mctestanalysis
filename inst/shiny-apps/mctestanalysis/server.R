@@ -281,7 +281,7 @@ shinyServer(function(input, output, session) {
           "of guessing for each item.")
       ),
       tags$p(
-        tags$stron("Prob."),
+        tags$strong("Prob."),
         paste("The probability column gives the probability that an average",
               "student will correctly answer the item, i.e.",
               "\\(\\mathrm{P}(x_i = 1 \\vert z = 0)\\).")
