@@ -14,7 +14,6 @@ shinyUI(navbarPage(
       h3("Import Test Data"),
       tabsetPanel(
         tabPanel("Import Data",
-                 p(),
                  fluidRow(
                    column(4,
                           wellPanel(
@@ -114,7 +113,12 @@ shinyUI(navbarPage(
                             downloadLink('down_test_example', 'Download an example test data file.')
                           )
                    )
-                 )),
+                 ),
+                 tags$div(
+                   class = 'text-right',
+                   actionButton('b_load_data', 'Load Data', class = 'btn-primary')
+                 )
+        ),
         tabPanel("Check Data", p(),
                  verbatimTextOutput('t_data_check'))
       )

@@ -10,7 +10,7 @@ options(digits = 4)
 shinyServer(function(input, output, session) {
 
   # Reactive data elements ----
-  mctd <- reactive({
+  mctd <- eventReactive(input$b_load_data, {
     if (is.null(input$f_test) | is.null(input$f_answer_key)) return(NULL)
     showModal(modalDialog(title = 'Loading Data',
                           paste('Processing test data, please wait.',
