@@ -12,7 +12,7 @@ loadTestData(mctd = NULL, test_file, has_student_id = TRUE, ...)
 loadAnswerKey(mctd = NULL, answer_file, ...)
 
 loadAllData(answer_file = NULL, test_file = NULL, has_student_id = TRUE,
-  ...)
+  force_load = FALSE, ...)
 }
 \arguments{
 \item{mctd}{Existing mcTestAnalysis data object}

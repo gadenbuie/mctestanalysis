@@ -79,11 +79,12 @@ loadAnswerKey <- function(mctd = NULL, answer_file, ...) {
 #' @describeIn mcTestAnalysisData Read answer_key and test data from CSV or TSV files
 #' @export
 loadAllData <- function(answer_file = NULL,
-                        test_file = NULL, has_student_id = TRUE, ...) {
+                        test_file = NULL, has_student_id = TRUE,
+                        force_load = FALSE, ...) {
   mctd <- NULL
   if (!is.null(answer_file)) mctd <- loadAnswerKey(mctd, answer_file, ...)
   if (!is.null(test_file))   mctd <- loadTestData(mctd, test_file, has_student_id, ...)
-  if (all(c('AnswerKey', 'Test.complete') %in% names(mctd))) {
+  if (all(c('AnswerKey', 'Test.complete') %in% names(mctd)) && force_load) {
     mctd <- addItemAnalysis(mctd, disc = TRUE)
     mctd[['alpha']] <- psych::alpha(mctd$item.score, warnings = FALSE, check.keys = FALSE)
     mctd[['scores']] <- mctd$alpha$scores
@@ -102,4 +103,25 @@ check_questions_and_answers <- function(test, answer_key) {
   if (n.answers != n.questions) {
     stop('Question-Answer mismatch: Answer key has ', n.answers, ' items, but Test contains ', n.questions)
   }
+}
+
+
+requires <- function(mctd, required, verbose = FALSE) {
+  for (requirement in required) {
+    if (!(requirement %in% names(mctd))) {
+      if (verbose) warning('Adding ', requirement, ' to MCTD')
+      mctd <- switch(
+        requirement,
+        'item.score'           = addItemScore(mctd),
+        'item.analysis'        = addItemAnalysis(mctd, disc = TRUE),
+        'alpha'                = addAlpha(mctd),
+        'scores'               = addAlpha(mctd),
+        'discrimination_index' = addDiscriminationIndex(mctd),
+        'pbcc'                 = addPBCC(mctd),
+        'pbcc_modified'        = addPBCCmodified(mctd),
+        'irt_models'           = addIRTfits(mctd)
+      )
+    }
+  }
+  return(mctd)
 }
