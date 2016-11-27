@@ -100,7 +100,9 @@ distractorPlot <- function(mctd, pct = 0.33, pct_relative = FALSE, use_title = F
       scale_alpha_discrete(range = c(0.7, 1)) +
       theme(panel.border = element_rect(color = 'grey50', fill=NA),
             strip.background = element_rect(color = 'grey50', fill = 'grey85'),
-            legend.position = 'bottom') +
+            legend.position = 'bottom',
+            panel.grid.major.x = element_blank(),
+            panel.grid.minor.y = element_blank()) +
       labs(x = 'Selected Option', y = y_lab)
 
   if (use_title) g <- g + facet_wrap(~ paste(Question, Title, sep = ' - '))
