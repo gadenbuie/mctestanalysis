@@ -363,4 +363,94 @@ shinyServer(function(input, output, session) {
     if (is.null(mctd())) return(NULL)
     plotTetrachoric(mctd(), input$o_tetra_show_concept, TRUE)
   })
+
+  # ---- Distractor Analysis ----
+  distractor.data <- reactive({
+    if (is.null(mctd())) return(NULL)
+    distractorTable(mctd(), input$o_distractor_pct)
+  })
+
+  output$txt_distractor <- renderUI({
+    if (is.null(mctd())) return(NULL)
+
+    q1 <- distractor.data()[1, 3]
+    distractor.data.counts <- distractor.data() %>%
+      filter(Question == q1) %>%
+      group_by(Group) %>%
+      summarize(total = sum(count))
+    distractor.data.counts <- setNames(distractor.data.counts$total,
+                                       distractor.data.counts$Group)
+
+    # For turning percentile into words
+    percentile_abreviation <- c('th', 'st', 'nd', 'rd', rep('th', 6))
+    first_digit <- function(x) round(x %% 10, 0)
+    pct_to_text <- function(x) {
+      paste0(round(x * 100, 0), percentile_abreviation[first_digit(x*100) + 1])
+    }
+
+    tags$p(class = 'help-block',
+           "Repondents are grouped into the upper and lower",
+           pct_to_text(input$o_distractor_pct),
+           "percentiles by overall test score.",
+           "For this report, there were",
+           distractor.data.counts['high'],
+           "respondents in the upper",
+           pct_to_text(input$o_distractor_pct), "percentile and",
+           distractor.data.counts['low'],
+           "repondents in the lower",
+           pct_to_text(input$o_distractor_pct), "percentile.",
+           "Percentages are calculated relative to the total number of respondents, in this case",
+           nrow(mctd()$Test.complete),
+           "students."
+    )
+  })
+
+  output$t_distractor <- DT::renderDataTable({
+    if (is.null(mctd())) return(NULL)
+    embolden <- function(x, type = 'html') {
+      switch(
+        type,
+        'markdown' = paste0('**', x, '**'),
+        'html' = paste0('<strong>', x, '</strong>')
+      )
+    }
+
+    x <- distractor.data() %>%
+      {
+        if(input$o_distractor_pct_relative == 'group') mutate(., pct = pct.group)
+        else .
+      } %>%
+      mutate(pct = sprintf("%0.2f", pct*100),
+             pct = ifelse(Correct, embolden(pct), pct),
+             Group = c('high' = 'H', 'low' = 'L')[Group],
+             OptionGroup = paste(Option, Group, sep = '')) %>%
+      select(Question, Title, OptionGroup, pct) %>%
+      reshape2::dcast(Question + Title ~ OptionGroup, value.var = 'pct')
+
+    x <- suppressWarnings(
+      left_join(x,
+                mctd()$AnswerKey[, c('Question', "Concept")],
+                by = 'Question')
+    ) %>% select(Question, Title, Concept, everything())
+
+    DT::datatable(x,
+                  filter = 'bottom',
+                  autoHideNavigation = TRUE,
+                  rownames = FALSE,
+                  options = list(
+                    'pageLength' = 50
+                  ),
+                  escape = FALSE
+    )
+  })
+
+  output$p_distractor <- renderPlot({
+    if (is.null(mctd())) return(NULL)
+    distractorPlot(
+      mctd(),
+      pct = input$o_distractor_pct,
+      pct_relative = input$o_distractor_pct_relative == 'group',
+      use_title = input$o_distractor_show_title
+    )
+  })
 })

@@ -320,7 +320,51 @@ shinyUI(navbarPage(
                  tabPanel("Tab 2")
                )
              )),
-    tabPanel("Diagnostic Classification Modeling")
+    # tabPanel("Diagnostic Classification Modeling")
+    tabPanel("Distractor Analysis",
+             fluidPage(
+               h3("Distractor Analysis Results"),
+               fluidRow(
+                 column(6,
+                   helpText(
+                     "The following plot and table compare the percentage of all respondents who select a given option for each item.",
+                     "These tables allow the test administrator to analize the performance of item options and to determine if the choice of distracting items reveals information about the misconceptions in students' knowledge."
+                   ),
+                   uiOutput('txt_distractor')
+                 ),
+                 column(6,
+                   h4('Options'),
+                   sliderInput(
+                     'o_distractor_pct',
+                     'Percentile for performance group',
+                     min = 0, max = 0.5, step = 0.01, value = 0.33),
+                   radioButtons(
+                     'o_distractor_pct_relative',
+                     'Show percentage relative to',
+                     inline = TRUE,
+                     choices = c("All respondents" = 'total', "Within group" = 'group')
+                   ),
+                   checkboxInput(
+                     'o_distractor_show_title',
+                     'Include question title in plot?'
+                   )
+                 )
+               ),
+               tabsetPanel(
+                 tabPanel("Table",
+                   fluidRow(
+                     DT::dataTableOutput('t_distractor')
+                   )
+                 ),
+                 tabPanel("Plot",
+                   fluidRow(
+                     column(10, offset = 1,
+                            plotOutput('p_distractor', height = '500')
+                     )
+                   )
+                 )
+               )
+             ))
   ),
   tabPanel("About")
   # Page output will go here
