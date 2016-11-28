@@ -117,7 +117,8 @@ requires <- function(mctd, required, verbose = FALSE) {
         'discrimination_index' = addDiscriminationIndex(mctd),
         'pbcc'                 = addPBCC(mctd),
         'pbcc_modified'        = addPBCCmodified(mctd),
-        'irt_models'           = addIRTfits(mctd)
+        'irt_models'           = addIRTfits(mctd),
+        'tetrachoric'          = addTetrachoric(mctd)
       )
     }
   }

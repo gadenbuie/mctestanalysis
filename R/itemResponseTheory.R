@@ -41,6 +41,19 @@ addIRTfits <- function(mctd) {
   return(mctd)
 }
 
+#' Add Tetrachoric Correlation
+#'
+#' Adds tetrachoric correlation to the \link{mcTestAnalysisData} object.
+#'
+#' @inheritParams mcTestAnalysisData
+#' @export
+addTetrachoric <- function(mctd) {
+  mctd <- requires(mctd, 'item.score')
+  should_have(mctd, 'item.score')
+  mctd[['tetrachoric']] <- psych::tetrachoric(mctd$item.score)$rho
+  return(mctd)
+}
+
 
 #' Plot Tetrachoric Correlations
 #'
@@ -54,8 +67,8 @@ addIRTfits <- function(mctd) {
 #'   to be equal (square plot).
 #' @export
 plotTetrachoric <- function(mctd, group_by_concept = TRUE, equal_coords = FALSE) {
-  mctd <- requires(mctd, 'item.score')
-  should_have(mctd, 'item.score', 'AnswerKey')
+  mctd <- requires(mctd, c('item.score', 'tetrachoric'))
+  should_have(mctd, 'item.score', 'tetrachoric', 'AnswerKey')
 
   if (group_by_concept) {
     concepts <- unique(mctd$AnswerKey$Concept)
@@ -81,8 +94,7 @@ plotTetrachoric <- function(mctd, group_by_concept = TRUE, equal_coords = FALSE)
     question_order <- mctd$AnswerKey$Question
   }
 
-  tetra <- psych::tetrachoric(mctd$item.score)$rho
-  tetra <- tetra %>%
+  tetra <- mctd$tetrachoric %>%
     as.data.frame() %>%
     tibble::rownames_to_column(var = 'Question') %>%
     reshape2::melt(id.vars = 'Question', variable.name = 'Question2', value.name = 'rho')
