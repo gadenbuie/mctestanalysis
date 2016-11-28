@@ -146,7 +146,11 @@ createReportGadget <- function() {
           radioButtons('test_pl_number', 'IRT Model',
                        choices = c('Lowest AIC' = 'Auto', 'Rasch (1 PL)' = 1, '2 PL' = 2, '3 PL' = 3),
                        selected = 1,
-                       inline = TRUE)
+                       inline = TRUE),
+          sliderInput(
+            'distractor.pct',
+            'Distractor Analysis: Percentile for high/low performance group',
+            min = 0, max = 0.5, step = 0.01, value = 0.33)
         )
       )
     )
@@ -189,7 +193,11 @@ createReportGadget <- function() {
                        header         = input$o_import_header,
                        sep            = input$o_import_sep,
                        quote          = input$o_import_quote,
-                       report_options = list('irt_model_choice' = if (input$test_pl_number != 'Auto') input$test_pl_number))
+                       report_options = list(
+                         'irt_model_choice' = if (input$test_pl_number != 'Auto') input$test_pl_number,
+                         'distractor.pct' = input$distractor.pct
+                       )
+          )
         }
       )
     })

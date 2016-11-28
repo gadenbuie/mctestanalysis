@@ -288,8 +288,10 @@ plotTetrachoric(mctd, TRUE, TRUE)
 # Distractor Analysis
 
 ```{r distractor-table-data, include = FALSE}
-distractor.pct <- ifelse('distractor.pct' %in% names(report_options),
-                         report_options$disctractor.pct, 0.33)
+if ('distractor.pct' %in% names(report_options)) {
+  distractor.pct <- report_options$distractor.pct
+} else distractor.pct <- 0.33
+
 distractor.data <- distractorTable(mctd, distractor.pct)
 distractor.data.counts <- distractor.data %>% 
   filter(Question == distractor.data[1, 'Question']) %>% 
@@ -338,6 +340,6 @@ distractor.data %>%
   as_table(justify = col_justifications)
 ```
 
-Table: Percentage of total respondents ($N=$ `r nrow(mctd$Test.complete)`) from upper (*High*, $N=$ `r distractor.data.counts %>% filter(Group == 'high') %>% .$total`) and lower (*Low*, $N=$ `r distractor.data.counts %>% filter(Group == 'low') %>% .$total`) `r pct_to_text(distractor.pct)` percentiles having chosen each item option.
+Table: Percentage of total respondents ($N=$ `r nrow(mctd$Test.complete)`) from upper (*High*, $N=$ `r distractor.data.counts %>% filter(Group == 'high') %>% .$total`) and lower (*Low*, $N=$ `r distractor.data.counts %>% filter(Group == 'low') %>% .$total`) `r pct_to_text(distractor.pct)` percentiles having chosen each item option. The percentage of students choosing the correct option for each item are highlighted in bold.
 
 # References
