@@ -106,7 +106,6 @@ loadDataGadget <- function() {
 #' @import shiny
 #' @import miniUI
 #' @name report
-#' @export
 createReportGadget <- function() {
   requireNamespace('shiny', quietly = TRUE)
   requireNamespace('miniUI', quietly= TRUE)
@@ -208,6 +207,7 @@ createReportGadget <- function() {
 
 
 #' @rdname report
+#' @export
 report <- function() {
   createReportGadget()
 }
