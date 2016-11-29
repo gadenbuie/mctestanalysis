@@ -358,10 +358,38 @@ shinyServer(function(input, output, session) {
     updateCheckboxGroupInput(session, 'o_icc_questions', selected = names(questions))
   })
 
+
+  # --- Factor Analysis ----
   ## Tetrachoric Plot
   output$p_tetra <- renderPlot({
     if (is.null(mctd())) return(NULL)
     plotTetrachoric(mctd(), input$o_tetra_show_concept, TRUE)
+  })
+
+  scree <- reactiveValues('factors' = NULL)
+
+  output$p_scree <- renderPlot({
+    if (is.null(mctd())) return(NULL)
+    scree$factors <- screePlot(mctd(), TRUE)
+  })
+
+  output$txt_scree <- renderUI({
+    tagList(
+      tags$p(
+        "The scree plot shows the eigenvalues of the tetrachoric correlation matrix of the test responses.",
+        "Look for a sharp break in the slope of the line between the eigenvalues of the correlation matrix.",
+        "In parallel analysis, the scree of factors from the observed data is compared to a random data matrix of the same size as the observed.",
+        "Factors from the original data with eigenvalues greater than those of the random data are kept."
+      ), if (!is.null(scree$factors)) tags$p(
+        "Parallel analysis for the test results in this report suggest that the number of factors is",
+        tags$strong(scree$factors['nfact']),
+        "and the number of components is",
+        tags$strong(paste0(scree$factors['ncomp'], '.')),
+        "Note that there are",
+        tags$strong(length(unique(mctd()$AnswerKey$Concept))),
+        "concept groups in the test design."
+      )
+    )
   })
 
   # ---- Distractor Analysis ----

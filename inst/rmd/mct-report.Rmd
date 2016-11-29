@@ -85,6 +85,7 @@ optionsSelectedPct(
 
 Table: Option selection by item
 
+\clearpage
 
 # Classic Test Theory
 
@@ -183,6 +184,7 @@ recommendItemActions(mctd, include_columns = c("Title", "Concept"), digits.round
 
 Table: Recommendations for each test item based on the criteria described above.
 
+\clearpage
 
 # Item Response Theory
 
@@ -279,11 +281,33 @@ for (concept in unique(mctd$AnswerKey$Concept)) {
 }
 ```
 
+\clearpage
+
+# Factor Analysis
+
 ## Tetrachoric Plot
 
 ```{r tetrachoric-plot, fig.height=9, fig.width=9, dev='png'}
 plotTetrachoric(mctd, TRUE, TRUE)
 ```
+
+## Scree Plot
+
+```{r scree-plot}
+scree_factors <- screePlot(mctd, TRUE)
+```
+
+A method for determining the number of factors or components in the tetrachoric correlation matrix of the test responses is to examine the scree plot of the eigenvalues of the correlation matrix.
+Typically, when using a scree plot, the analist is looking for a sharp break in the slope of the line between the eigenvalues of the correlation matrix.
+In parallel analysis, the scree of factors from the observed data is compared to that of a random data matrix of the same size as the observed.
+Parallel analysis suggests a number of factors/components by comparing the eigenvalues of the factors/components of the observed data to the random data and keeping those that are greater than the random data.
+
+Parallel analysis for the test results in this report suggest that the number of factors is
+`r scree_factors['nfact']`
+and the number of components is
+`r scree_factors['ncomp']`.
+
+\clearpage
 
 # Distractor Analysis
 

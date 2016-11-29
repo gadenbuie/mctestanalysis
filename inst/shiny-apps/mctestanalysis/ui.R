@@ -300,19 +300,6 @@ shinyUI(navbarPage(
                               plotOutput('p_icc')
                             )
                           )
-                 ),
-                 tabPanel("Tetrachoric Plot",
-                          helpText("Provides tetrachoric plot"),
-                          fluidRow(
-                            column(4,
-                              checkboxInput('o_tetra_show_concept', 'Show Concept Groups', value = TRUE)
-                            )
-                          ),
-                          fluidRow(
-                            column(8, offset = 2,
-                              plotOutput('p_tetra', height = '600px')
-                            )
-                          )
                  )
                )
              )),
@@ -320,7 +307,30 @@ shinyUI(navbarPage(
              fluidPage(
                h3("Factor Analysis Results"),
                tabsetPanel(
-                 tabPanel("Tab 1"),
+                 tabPanel("Tetrachoric Plot",
+                          helpText("Provides tetrachoric plot"),
+                          fluidRow(
+                            column(4,
+                                   checkboxInput('o_tetra_show_concept', 'Show Concept Groups', value = TRUE)
+                            )
+                          ),
+                          fluidRow(
+                            column(8, offset = 2,
+                                   plotOutput('p_tetra', height = '600px')
+                            )
+                          )
+                 ),
+                 tabPanel(
+                   "Scree Plot",
+                   sidebarLayout(
+                     sidebarPanel(
+                       uiOutput('txt_scree')
+                     ),
+                     mainPanel(
+                       plotOutput('p_scree')
+                     )
+                   )
+                 ),
                  tabPanel("Tab 2")
                )
              )),
