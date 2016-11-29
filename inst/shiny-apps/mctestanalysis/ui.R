@@ -365,16 +365,16 @@ shinyUI(navbarPage(
                  )
                ),
                tabsetPanel(
-                 tabPanel("Table",
-                   fluidRow(
-                     DT::dataTableOutput('t_distractor')
-                   )
-                 ),
                  tabPanel("Plot",
                    fluidRow(
                      column(10, offset = 1,
                             plotOutput('p_distractor', height = '500')
                      )
+                   )
+                 ),
+                 tabPanel("Table",
+                   fluidRow(
+                     DT::dataTableOutput('t_distractor')
                    )
                  )
                )
