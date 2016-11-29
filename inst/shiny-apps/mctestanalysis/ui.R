@@ -10,6 +10,10 @@ shinyUI(navbarPage(
   tabPanel("Import", {
     fluidPage(
       theme = 'lumen.css',
+      # Give a little space beteen tabs and tab-content
+      tags$head(tags$style(HTML(
+        ".tab-content { padding-top: 10px; }"
+      ))),
       # ---- Import Data ----
       h3("Import Test Data"),
       tabsetPanel(
