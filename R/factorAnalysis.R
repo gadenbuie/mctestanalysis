@@ -22,3 +22,55 @@ screePlot <- function(mctd, return_nfactcomp = FALSE) {
   # Plot is printed by default
   if (return_nfactcomp) return(c('nfact' = x$nfact, 'ncomp' = x$ncomp))
 }
+
+
+#' Exploratory Factor Analysis
+#'
+#' Wraps \code{\link[psych]{fa}} function, see \code{\link[psych]{fa}} for more
+#' information.
+#'
+#' @inheritParams mcTestAnalysisData
+#' @inheritParams psych::fa
+#' @param ... Passed to \code{\link[psych]{fa}}
+#' @export
+addEFA <- function(mctd,
+                nfactors = length(unique(mctd$AnswerKey$Concept)),
+                n.obs = nrow(mctd$Test.complete),
+                rotate = 'oblimin',
+                fm = 'minres',
+                ...) {
+  mctd <- requires(mctd, 'tetrachoric')
+  should_have(mctd, 'tetrachoric', 'AnswerKey', 'Test.complete')
+
+  mctd[['efa']] <- psych::fa(mctd$tetrachoric, nfactors, n.obs, rotate = rotate, fm = fm, warnings = FALSE, ...)
+
+  return(mctd)
+}
+
+
+#' Exploratory Factor Table
+#'
+#' Prints EFA factor loadings.
+#'
+#' @inheritParams addEFA
+#' @param ... Passed to \code{\link{addEFA}}.
+#' @export
+efaTable <- function(mctd, cut = 0.3, ...) {
+  if (!('efa' %in% names(mctd))) {
+    mctd <- addEFA(mctd, ...)
+  }
+
+  x <- mctd$efa$loadings %>%
+    unclass %>%
+    reshape2::melt() %>%
+    rename(Question = Var1, Factor = Var2) %>%
+    mutate(Factor = as.character(Factor),
+           Factor = factor(Factor, levels = sort(unique(Factor)))) %>%
+    filter(abs(value) >= cut) %>%
+    reshape2::dcast(Question ~ Factor) %>%
+    full_join(., mctd$AnswerKey[, c('Question', 'Concept')], by = 'Question') %>%
+    select(Question, Concept, everything())
+  x$Question <- as.character(x$Question)
+  x$Question <- factor(x$Question, levels = mctd$AnswerKey$Question)
+  x %>% arrange(Question)
+}

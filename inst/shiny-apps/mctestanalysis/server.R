@@ -335,18 +335,24 @@ shinyServer(function(input, output, session) {
 
   ## ICC Curves Form Inputs
   observe({
-    x <- mctd()$AnswerKey$Question
-    updateCheckboxGroupInput(session, 'o_icc_questions', choices = x, selected = x, inline = TRUE)
+    if (!is.null(mctd())) {
+      x <- mctd()$AnswerKey$Question
+      updateCheckboxGroupInput(session, 'o_icc_questions', choices = x, selected = x, inline = TRUE)
+    }
   })
 
   observe({
-    x <- unique(concepts())
-    updateSelectInput(session, 'o_icc_questions_concept', choices = c('', x))
+    if (!is.null(mctd())) {
+      x <- unique(concepts())
+      updateSelectInput(session, 'o_icc_questions_concept', choices = c('', x))
+    }
   })
 
   observeEvent(input$b_icc_questions_all, {
-    x <- mctd()$AnswerKey$Question
-    updateCheckboxGroupInput(session, 'o_icc_questions', selected = x)
+    if (!is.null(mctd())) {
+      x <- mctd()$AnswerKey$Question
+      updateCheckboxGroupInput(session, 'o_icc_questions', selected = x)
+    }
   })
 
   observeEvent(input$b_icc_questions_none, {
@@ -366,11 +372,11 @@ shinyServer(function(input, output, session) {
     plotTetrachoric(mctd(), input$o_tetra_show_concept, TRUE)
   })
 
-  scree <- reactiveValues('factors' = NULL)
+  efa <- reactiveValues('screefactors' = NULL, 'mctd' = NULL)
 
   output$p_scree <- renderPlot({
     if (is.null(mctd())) return(NULL)
-    scree$factors <- screePlot(mctd(), TRUE)
+    efa$screefactors <- screePlot(mctd(), TRUE)
   })
 
   output$txt_scree <- renderUI({
@@ -380,17 +386,59 @@ shinyServer(function(input, output, session) {
         "Look for a sharp break in the slope of the line between the eigenvalues of the correlation matrix.",
         "In parallel analysis, the scree of factors from the observed data is compared to a random data matrix of the same size as the observed.",
         "Factors from the original data with eigenvalues greater than those of the random data are kept."
-      ), if (!is.null(scree$factors)) tags$p(
+      ), if (!is.null(efa$screefactors)) tags$p(
         "Parallel analysis for the test results in this report suggest that the number of factors is",
-        tags$strong(scree$factors['nfact']),
+        tags$strong(efa$screefactors['nfact']),
         "and the number of components is",
-        tags$strong(paste0(scree$factors['ncomp'], '.')),
+        tags$strong(paste0(efa$screefactors['ncomp'], '.')),
         "Note that there are",
         tags$strong(length(unique(mctd()$AnswerKey$Concept))),
         "concept groups in the test design."
       )
     )
   })
+
+  ## EFA
+  observeEvent(input$b_run_efa, {
+    if (input$o_efa_nfactors == 0) nfactors <- length(unique(concepts()))
+    else nfactors <- input$o_efa_nfactors
+
+    efa$mctd <- addEFA(mctd(), nfactors,
+                      rotate = input$o_efa_rotate,
+                      fm = input$o_efa_fm)
+  })
+
+  output$t_efa_out <- renderPrint({
+    if (!is.null(efa$mctd)) {
+      psych::print.psych(efa$mctd$efa, cut = input$o_efa_cut)
+    }
+  })
+
+  # output$t_efa_factor_loadings <- DT::renderDataTable({
+  #   if (!is.null(efa$mctd)) {
+  #     x <- efaTable(efa$mctd, cut = input$o_efa_cut) %>%
+  #       mutate_if(is.numeric, round, digits = 2)
+  #     if (nrow(x) > 0) {
+  #       DT::datatable(x,
+  #                     filter = 'bottom',
+  #                     autoHideNavigation = TRUE,
+  #                     rownames = FALSE,
+  #                     options = list(
+  #                       'pageLength' = 50
+  #                     )
+  #       )
+  #     } else return(NULL)
+  #   }
+  # })
+
+  output$t_efa_factor_loadings <- renderTable({
+    if (!is.null(efa$mctd)) {
+      x <- efaTable(efa$mctd, cut = input$o_efa_cut) %>%
+        mutate_if(is.numeric, round, digits = 2)
+      if (nrow(x) > 0) x
+      else NULL
+    }
+  }, na = "")
 
   # ---- Distractor Analysis ----
   distractor.data <- reactive({

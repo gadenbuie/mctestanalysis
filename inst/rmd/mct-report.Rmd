@@ -307,6 +307,46 @@ Parallel analysis for the test results in this report suggest that the number of
 and the number of components is
 `r scree_factors['ncomp']`.
 
+## Exploratory Factor Analysis
+
+```{r efa-options, include = FALSE}
+flag_nfactors_chosen_by_user <- FALSE
+if ('efa.nfactors' %in% names(report_options)) {
+  flag_nfactors_chosen_by_user <- TRUE
+  efa.nfactors <- report_options$efa.nfactors
+  if (efa.nfactors == 0) efa.nfactors <- length(unique(mctd$AnswerKey$Concept))
+  else if (efa.nfactors == -1) efa.nfactors <- scree_factors['nfact']
+} else efa.nfactors <- length(unique(mctd$AnswerKey$Concept))
+
+efa.cut <- ifelse('efa.cut' %in% names(report_options), report_options$efa.cut, 0.3)
+efa.n.obs <- nrow(mctd$Test.complete)
+efa.rotate <- ifelse('efa.rotate' %in% names(report_options), report_options$efa.rotate, 'varimax')
+efa.rotate.text <- paste0("`'", efa.rotate, "'`")
+efa.fm <- ifelse('efa.fm' %in% names(report_options), report_options$efa.fm, 'minres')
+efa.fm.text <- paste0("`'", efa.fm, "'`")
+```
+
+The table below presents the factor loadings, where
+`r efa.nfactors`
+were explored, using the `fa()` function from the [`psych` package](https://cran.r-project.org/web/packages/psych/) (see @Psych2016 for more information on the options available for this function).
+In this report, the EFA used the
+`r efa.rotate.text` rotation method and the 
+`r efa.fm.text` factoring method.
+Factors with absolute value loadings less than
+`r efa.cut`
+were suppressed.
+
+
+```{r efa}
+efaTable(mctd,
+         cut = efa.cut,
+         nfactors = efa.nfactors, 
+         n.obs = efa.n.obs,
+         rotate = efa.rotate,
+         fm = efa.fm) %>% 
+  as_table(missing = '')
+```
+
 \clearpage
 
 # Distractor Analysis

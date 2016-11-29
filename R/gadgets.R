@@ -140,16 +140,68 @@ createReportGadget <- function() {
         "Report Settings",
         miniContentPanel(
           tags$p('Enter test details below, and then click the "Done" button to generate the report.'),
-          textInput('test_title', 'Test Title'),
-          textInput('test_author', 'Author'),
-          radioButtons('test_pl_number', 'IRT Model',
-                       choices = c('Lowest AIC' = 'Auto', 'Rasch (1 PL)' = 1, '2 PL' = 2, '3 PL' = 3),
-                       selected = 1,
-                       inline = TRUE),
-          sliderInput(
-            'distractor.pct',
-            'Distractor Analysis: Percentile for high/low performance group',
-            min = 0, max = 0.5, step = 0.01, value = 0.33)
+          tags$hr(),
+          fillCol(
+            fillRow(
+              fillCol(
+                tagList(
+                  textInput('test_title', 'Test Title'),
+                  textInput('test_author', 'Author'),
+                  tags$strong("IRT Settings"),
+                  radioButtons('test_pl_number', 'IRT Model',
+                               choices = c('Lowest AIC' = 'Auto', 'Rasch (1 PL)' = 1, '2 PL' = 2, '3 PL' = 3),
+                               selected = 1,
+                               inline = TRUE),
+                  tags$strong("Distractor Analysis Settings"),
+                  sliderInput(
+                    'distractor.pct',
+                    'Percentile for high/low performance group',
+                    min = 0, max = 0.5, step = 0.01, value = 0.33)
+                )
+              ),
+              fillCol(
+                tagList(
+                  tags$strong("Exploratory Factor Analysis"),
+                  helpText(
+                    "See the",
+                    tags$a(href = 'https://cran.r-project.org/web/packages/psych/',
+                           tags$code("psych"), "package documentation"),
+                    "for more information about these options."
+                  ),
+                  selectInput(
+                    'o_efa_nfactors',
+                    'Number of Factors',
+                    choices = c('# of Concepts' = 0, 'Auto (Scree Recommendation)' = -1, 1:15)
+                  ),
+                  selectInput(
+                    'o_efa_rotate',
+                    'Rotation Method',
+                    choices = list(
+                      'None' = 'none',
+                      'Orthogonal' = c("varimax", "quartimax", "bentlerT", "equamax", "varimin", "geominT", "bifactor"),
+                      'Oblique' = c("promax", "oblimin", "simplimax", "bentlerQ", "geominQ", "biquartimin", "cluster" )
+                    ),
+                    selected = 'varimax'
+                  ),
+                  selectInput(
+                    'o_efa_fm',
+                    'Factor Method',
+                    choices = c('Minimum Residual' = 'minres',
+                                'Weighted Least Squares' = 'wls',
+                                'Generalized WLS' = 'gls',
+                                'Principal Factor' = 'pa',
+                                'Maximimum Likelihood' = 'ml',
+                                'Minimixed Weighted Chi Square' = 'minchi')
+                  ),
+                  sliderInput(
+                    'o_efa_cut',
+                    'Factor Loading Cutoff',
+                    min = 0, max = 1, value = 0.3, step = 0.05
+                  )
+                )
+              )
+            )
+          )
         )
       )
     )
@@ -194,7 +246,11 @@ createReportGadget <- function() {
                        quote          = input$o_import_quote,
                        report_options = list(
                          'irt_model_choice' = if (input$test_pl_number != 'Auto') input$test_pl_number,
-                         'distractor.pct' = input$distractor.pct
+                         'distractor.pct'   = input$distractor.pct,
+                         'efa.nfactors'     = input$o_efa_nfactors,
+                         'efa.rotate'       = input$o_efa_rotate,
+                         'efa.fm'           = input$o_efa_fm,
+                         'efa.cut'          = input$o_efa_cut
                        )
           )
         }

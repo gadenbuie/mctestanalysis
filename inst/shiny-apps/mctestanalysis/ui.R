@@ -331,7 +331,61 @@ shinyUI(navbarPage(
                      )
                    )
                  ),
-                 tabPanel("Tab 2")
+                 tabPanel(
+                   "Exploratory Factor Analysis",
+                   sidebarLayout(
+                     sidebarPanel(
+                       tags$h4("Options"),
+                       selectInput(
+                         'o_efa_nfactors',
+                         'Number of Factors',
+                         choices = c('# of Concepts' = 0, 1:15)
+                       ),
+                       selectInput(
+                         'o_efa_rotate',
+                         'Rotation Method',
+                         choices = list(
+                           'None' = 'none',
+                           'Orthogonal' = c("varimax", "quartimax", "bentlerT", "equamax", "varimin", "geominT", "bifactor"),
+                           'Oblique' = c("promax", "oblimin", "simplimax", "bentlerQ", "geominQ", "biquartimin", "cluster" )
+                         ),
+                         selected = 'varimax'
+                       ),
+                       selectInput(
+                         'o_efa_fm',
+                         'Factor Method',
+                         choices = c('Minimum Residual' = 'minres',
+                                     'Weighted Least Squares' = 'wls',
+                                     'Generalized WLS' = 'gls',
+                                     'Principal Factor' = 'pa',
+                                     'Maximimum Likelihood' = 'ml',
+                                     'Minimixed Weighted Chi Square' = 'minchi')
+                       ),
+                       sliderInput(
+                         'o_efa_cut',
+                         'Factor Loading Cutoff',
+                         min = 0, max = 1, value = 0.3, step = 0.05
+                       ),
+                       actionButton('b_run_efa', 'Run Factor Analysis', class = 'btn-primary')
+                     ),
+                     mainPanel(
+                       tabsetPanel(
+                         # tabPanel(
+                         #   "Factor Loadings",
+                         #   DT::dataTableOutput('t_efa_factor_loadings')
+                         # ),
+                         tabPanel(
+                           "Factor Loadings",
+                           tableOutput('t_efa_factor_loadings')
+                         ),
+                         tabPanel(
+                           "Model Output",
+                           verbatimTextOutput('t_efa_out')
+                         )
+                       )
+                     )
+                   )
+                 )
                )
              )),
     # tabPanel("Diagnostic Classification Modeling")
