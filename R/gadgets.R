@@ -145,23 +145,28 @@ createReportGadget <- function() {
             fillRow(
               fillCol(
                 tagList(
+                  tags$h4("Test Information"),
                   textInput('test_title', 'Test Title'),
                   textInput('test_author', 'Author'),
-                  tags$strong("IRT Settings"),
-                  radioButtons('test_pl_number', 'IRT Model',
-                               choices = c('Lowest AIC' = 'Auto', 'Rasch (1 PL)' = 1, '2 PL' = 2, '3 PL' = 3),
-                               selected = 1,
-                               inline = TRUE),
-                  tags$strong("Distractor Analysis Settings"),
-                  sliderInput(
-                    'distractor.pct',
-                    'Percentile for high/low performance group',
-                    min = 0, max = 0.5, step = 0.01, value = 0.33)
+                  selectInput('o_out_fmt', 'Output Format', choices = c('PDF' = 'pdf', 'HTML' = 'html'))
                 )
               ),
               fillCol(
                 tagList(
-                  tags$strong("Exploratory Factor Analysis"),
+                  tags$h4("IRT Settings"),
+                  radioButtons('test_pl_number', 'IRT Model',
+                               choices = c('Lowest AIC' = 'Auto', 'Rasch (1 PL)' = 1, '2 PL' = 2, '3 PL' = 3),
+                               selected = 1,
+                               inline = TRUE),
+                  tags$hr(),
+                  tags$h4("Distractor Analysis Settings"),
+                  sliderInput(
+                    'distractor.pct',
+                    'Percentile for high/low performance group',
+                    min = 0, max = 0.5, step = 0.01, value = 0.33
+                  ),
+                  tags$hr(),
+                  tags$h4("Exploratory Factor Analysis"),
                   helpText(
                     "See the",
                     tags$a(href = 'https://cran.r-project.org/web/packages/psych/',
@@ -238,6 +243,7 @@ createReportGadget <- function() {
                        test_file = input$f_test$datapath,
                        test_title = input$test_title,
                        author = input$test_author,
+                       out_fmt = input$o_out_fmt,
                        has_student_id = input$o_import_has_student_id,
                        na.strings     = ifelse(input$o_import_missing_id == 'Blank',
                                                'NA', input$o_import_missing_id),
