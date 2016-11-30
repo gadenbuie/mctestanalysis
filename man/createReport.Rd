@@ -8,13 +8,35 @@ createReport(answer_file = file.choose(), test_file = file.choose(),
   test_title = ifelse(interactive(), readline("Test title: "),
   "MC Test Analysis"), author = ifelse(interactive(),
   readline("Test author: "), Sys.info()["user"]), out_file = paste0("Report",
-  " - ", test_title, ".pdf"), out_path = getwd(), open_file = TRUE,
-  report_options = list(), ...)
+  " - ", test_title), out_path = getwd(), out_fmt = "pdf",
+  open_file = TRUE, report_options = list(), ...)
 }
 \arguments{
 \item{answer_file}{Path to the answer key data file}
 
 \item{test_file}{Path to the test results data file}
+
+\item{test_title}{Title of the test being analyzed}
+
+\item{author}{Name of the test administrator(s)}
+
+\item{out_file}{Desired name of report file when saved}
+
+\item{out_path}{Directory where report file should be saved, defaults to
+current working directory}
+
+\item{out_fmt}{Either \code{'pdf'} or \code{'html'}, indicating format of
+report file. PDF files will be smaller and better typset, HTML files may be
+easier to navigate. Note that \code{pdflatex} is required to be installed.
+If \code{pdflatex} is not found, the report will fall back to HTML output.}
+
+\item{open_file}{Should the report file be opened automatically once
+generated?}
+
+\item{report_options}{A list of options that affect analysis parameters and
+results displayed inside the report. Report options include
+\code{irt_model_choice}, \code{efa.nfactors}, \code{efa.cut},
+\code{efa.rotate}, \code{efa.fm} and \code{distractor.pct}.}
 
 \item{...}{Arguments passed to \code{\link{read.csv}}}
 }

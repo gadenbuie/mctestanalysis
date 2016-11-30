@@ -2,7 +2,6 @@
 title: "`r ifelse(exists('title'), title, 'MC Test Analysis')`"
 author: "`r ifelse(exists('author'), author, Sys.info()['user'])`"
 date: "`r strftime(Sys.time(), '%B %d, %Y')`"
-toc: true
 bibliography: mctestanalysis.bib
 ---
 
