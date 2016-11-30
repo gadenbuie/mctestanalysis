@@ -9,6 +9,8 @@ efaTable(mctd, cut = 0.3, ...)
 \arguments{
 \item{mctd}{Existing mcTestAnalysis data object}
 
+\item{cut}{Suppress factor loadings not greater than this value}
+
 \item{...}{Passed to \code{\link{addEFA}}.}
 }
 \description{

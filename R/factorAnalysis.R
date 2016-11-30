@@ -53,6 +53,7 @@ addEFA <- function(mctd,
 #' Prints EFA factor loadings.
 #'
 #' @inheritParams addEFA
+#' @param cut Suppress factor loadings not greater than this value
 #' @param ... Passed to \code{\link{addEFA}}.
 #' @export
 efaTable <- function(mctd, cut = 0.3, ...) {

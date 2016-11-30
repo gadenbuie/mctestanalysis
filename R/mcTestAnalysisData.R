@@ -50,7 +50,6 @@ loadTestData <- function(mctd = NULL, test_file, has_student_id = TRUE, ...) {
 #' @describeIn mcTestAnalysisData Reads answer_key data from CSV or TSV file and applies basic preprocessing.
 #' @inheritParams mcTestAnalysisData
 #' @param answer_file Path to the answer key data file
-#' @param ... Arguments passed to \code{\link{read.csv}}
 #' @export
 loadAnswerKey <- function(mctd = NULL, answer_file, ...) {
   if (is.null(mctd)) mctd <- list()
@@ -76,7 +75,11 @@ loadAnswerKey <- function(mctd = NULL, answer_file, ...) {
 }
 
 
-#' @describeIn mcTestAnalysisData Read answer_key and test data from CSV or TSV files
+#' @describeIn mcTestAnalysisData Read answer_key and test data from CSV or TSV
+#'   files
+#' @param force_load Force calculation of test analysis items (may be slow).
+#'   Default is \code{FALSE} as individual analysis will calculate needed
+#'   analysis portions on the fly when called.
 #' @export
 loadAllData <- function(answer_file = NULL,
                         test_file = NULL, has_student_id = TRUE,

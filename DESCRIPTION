@@ -1,10 +1,11 @@
 Package: MCTestAnalysis
 Type: Package
 Title: Multiple Choice Test Analysis
-Version: 0.0.19
+Version: 0.0.50
 Author: c( person("Autar", "Kaw", email = "kaw@usf.edu", role = "cre"),
     person("Garrick", "Aden-Buie", email = "gadenbuie@mail.usf.edu", role = "aut"),
     person("Alvaro", "Lopez", role = "aut"))
+Maintainer: Garrick Aden-Buie <gadenbuie@mail.usf.edu>
 Description: The purpose of this generated report is to provide the analytical
     framework proposed in the paper "An Analytic Framework for Evaluating the
     Validity of Concept Inventory Claims"" (Natalie Jorion et al., 2015) from
@@ -24,7 +25,8 @@ Imports:
     DT,
     rmarkdown,
     pander,
-    gridExtra
+    gridExtra,
+    rstudioapi
 Depends:
     dplyr,
     ggplot2,

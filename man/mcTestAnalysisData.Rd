@@ -25,7 +25,9 @@ loadAllData(answer_file = NULL, test_file = NULL, has_student_id = TRUE,
 
 \item{answer_file}{Path to the answer key data file}
 
-\item{...}{Arguments passed to \code{\link{read.csv}}}
+\item{force_load}{Force calculation of test analysis items (may be slow).
+Default is \code{FALSE} as individual analysis will calculate needed
+analysis portions on the fly when called.}
 }
 \description{
 Load test and answer key data with \code{\link{loadTestData}} and
@@ -37,7 +39,8 @@ Load test and answer key data with \code{\link{loadTestData}} and
 
 \item \code{loadAnswerKey}: Reads answer_key data from CSV or TSV file and applies basic preprocessing.
 
-\item \code{loadAllData}: Read answer_key and test data from CSV or TSV files
+\item \code{loadAllData}: Read answer_key and test data from CSV or TSV
+files
 }}
 \section{Answer Key Data Format}{
 
