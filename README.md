@@ -6,7 +6,8 @@ This [R] package provides a nice set of interfaces via [Shiny] for the analysis 
 
 ## Required Software
 
-You need to download and install the latest version of the following software:
+You need to download and install the latest version of the following software.
+If you already have recent versions of R, RStudio and LaTeX (optional) installed, you can skip ahead to the section on [installing the MCTestAnalysis library](#install-mctestanalysis).
 
 ### R 
 
