@@ -50,7 +50,7 @@ createReport <- function(answer_file = file.choose(),
   if (out_fmt == 'pdf') {
     # Check that pdflatex is installed, default to html otherwise
     if (.Platform$OS.type == 'windows') {
-      pdflatex_found <- system('pdflatex.exe --version', ignore.stdout = TRUE, ignore.stderr = TRUE) == 0
+      pdflatex_found <- system2('pdflatex.exe', '--version', stdout = NULL) == 0
     } else {
       pdflatex_found <- system('pdflatex -v', ignore.stdout = TRUE, ignore.stderr = TRUE) == 0
     }
