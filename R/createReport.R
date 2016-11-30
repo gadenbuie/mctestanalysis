@@ -49,7 +49,11 @@ createReport <- function(answer_file = file.choose(),
   # Handle output format decisions
   if (out_fmt == 'pdf') {
     # Check that pdflatex is installed, default to html otherwise
-    pdflatex_found <- system('pdflatex -v', ignore.stdout = TRUE, ignore.stderr = TRUE) == 0
+    if (.Platform$OS.type == 'windows') {
+      pdflatex_found <- system('pdflatex.exe --version', ignore.stdout = TRUE, ignore.stderr = TRUE) == 0
+    } else {
+      pdflatex_found <- system('pdflatex -v', ignore.stdout = TRUE, ignore.stderr = TRUE) == 0
+    }
     if (!pdflatex_found) {
       out_fmt <- 'html'
       warning('pdflatex not found, defaulting to HTML output.',
