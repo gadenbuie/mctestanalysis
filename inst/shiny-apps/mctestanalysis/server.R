@@ -25,7 +25,7 @@ shinyServer(function(input, output, session) {
                      header         = input$o_import_header,
                      sep            = input$o_import_sep,
                      quote          = input$o_import_quote)
-    x <- requires(x, 'irt_models')
+    x <- MCTestAnalysis:::requires(x, 'irt_models')
     removeModal()
     return(x)
   })
