@@ -49,7 +49,7 @@ To install:
 
 - Windows (MiKTeX)
      - Install the "Basic MiKTeX Installer" from <https://miktex.org/download>.
-     - After installation, run [the update wizard](https://miktex.org/howto/update-miktex) by running "MiKTeX Update" from the Windows start menu.
+     - *Optional*: After installation, run [the update wizard](https://miktex.org/howto/update-miktex) by running "MiKTeX Update" from the Windows start menu.
 
 - Mac OS X (MacTeX)
     - Install the full MacTeX installation from <http://www.tug.org/mactex/>. (Warning: the download is big!)
