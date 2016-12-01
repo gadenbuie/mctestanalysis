@@ -9,5 +9,9 @@ explore <- function() {
     stop("Could not find shiny-apps directory. Try re-installing the MCTestAnalysis package.")
   }
 
-  suppressWarnings(shiny::runApp(appDir, display.mode = 'normal'))
+  if (.Platform$OS.type == 'windows') {
+    suppressWarnings(shiny::runApp(appDir, launch.browser = TRUE))
+  } else {
+    suppressWarnings(shiny::runApp(appDir, display.mode = 'normal'))
+  }
 }

@@ -8,6 +8,10 @@ library(MCTestAnalysis)
 options(digits = 4)
 
 shinyServer(function(input, output, session) {
+  if (interactive()) {
+    cat('Running in interactive mode, so will stop session at end.')
+    session$onSessionEnded(stopApp)
+  }
 
   # Reactive data elements ----
   mctd <- eventReactive(input$b_load_data, {
