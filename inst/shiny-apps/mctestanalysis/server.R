@@ -88,12 +88,12 @@ shinyServer(function(input, output, session) {
 
   output$down_answer_key_example <- downloadHandler(
     filename = function() {'answer_key_example.csv'},
-    content = function(file) {write.csv(answer_key_example, file)}
+    content = function(file) {write.csv(answer_key_example, file, row.names = FALSE)}
   )
 
   output$down_test_example <- downloadHandler(
     filename = function() {'test_example.csv'},
-    content = function(file) {write.csv(test_example, file)}
+    content = function(file) {write.csv(test_example, file, row.names = FALSE)}
   )
 
   # ---- View Test Results ----
