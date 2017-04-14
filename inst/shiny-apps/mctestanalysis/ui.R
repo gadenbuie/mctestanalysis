@@ -285,7 +285,7 @@ shinyUI(navbarPage(
                                                               '3-PL' = 'PL3'))),
                             column(6, checkboxGroupInput('o_icc_questions',
                                                      'Choose Questions',
-                                                     choices = NULL,
+                                                     choices = character(0),
                                                      inline = TRUE,
                                                      width = '100%')),
                             column(2,
