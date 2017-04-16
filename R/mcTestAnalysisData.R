@@ -102,7 +102,7 @@ check_questions_and_answers <- function(test, answer_key) {
   n.answers <- nrow(answer_key)
   n.questions <- ncol(test)
   if (n.answers != n.questions) {
-    stop('Question-Answer mismatch: Answer key has ', n.answers, ' items, but Test contains ', n.questions)
+    stop('Question-Answer mismatch: Answer key has ', n.answers, ' items, but Test contains ', n.questions, call. = FALSE)
   }
 }
 
