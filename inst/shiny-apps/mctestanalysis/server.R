@@ -21,27 +21,61 @@ shinyServer(function(input, output, session) {
                                 'Depending on the number of responses and the size of the test,',
                                 'this should only take a few seconds.'),
                           footer = NULL))
-    x <- loadAllData(answer_file    = input$f_answer_key$datapath,
-                     test_file      = input$f_test$datapath,
-                     has_student_id = input$o_import_has_student_id,
-                     na.strings     = ifelse(input$o_import_missing_id == 'Blank',
-                                             'NA', input$o_import_missing_id),
-                     header         = input$o_import_header,
-                     sep            = input$o_import_sep,
-                     quote          = input$o_import_quote)
-    x <- MCTestAnalysis:::requires(x, 'irt_models')
+    x <- NULL
+    messages <- c()
+    data_loaded <- FALSE
+    tryCatch({
+      x <- loadAllData(answer_file    = input$f_answer_key$datapath,
+                       test_file      = input$f_test$datapath,
+                       has_student_id = input$o_import_has_student_id,
+                       na.strings     = ifelse(input$o_import_missing_id == 'Blank',
+                                               'NA', input$o_import_missing_id),
+                       header         = input$o_import_header,
+                       sep            = input$o_import_sep,
+                       quote          = input$o_import_quote)
+      data_loaded <- TRUE
+    }, 'error' = function(e) {messages <<- c(messages, paste(e))})
+    if (!is.null(x)) {
+      withCallingHandlers({
+        x <- addIRTfits(x)
+      },
+      'warning' = function(w) {messages <<- c(messages, paste(w))},
+      'error' = function(e) {messages <<- c(messages, paste(e))})
+    }
     removeModal()
+    if (length(messages)) {
+      messages <- sub("simpleWarning[[:alnum:][:blank:]]*(in|:) ","", messages)
+      messages <- unique(messages)
+      messages <- strwrap(messages, 60, exdent = 4)
+      if (data_loaded) {
+        error_modal_body <- tagList(
+          tags$p('There were warnings and/or errors during the IRT model fitting.',
+                 'The messages below may provide some assistance in diagnosing the problem.',
+                 'For more information, please refer to the', tags$code('ltm'), 'package documentation.')
+        )
+      } else {
+        error_modal_body <- tags$p("Unable to load test and answer key data. Please check your data format by comparing with the example CSV files and try again.")
+      }
+      showModal(modalDialog(title = 'Warning',
+                            error_modal_body,
+                            tags$pre(paste(messages, collapse = '\n')),
+                            footer = modalButton('Ok')))
+    }
     return(x)
   })
 
   concepts <- reactive({
     # Set concepts
-    x <- setNames(mctd()$AnswerKey$Concept, mctd()$AnswerKey$Question)
-    # Make concepts available
-    return(x)
+    if (!is.null(mctd())) {
+      x <- setNames(mctd()$AnswerKey$Concept, mctd()$AnswerKey$Question)
+      return(x)
+    } else {
+      return(NULL)
+    }
   })
 
   observe({
+    req(concepts())
     x <- concepts()
     updateRadioButtons(session, 'o_overallbox_concepts', choices = c('All', unique(x)), inline = TRUE)
   }, priority = 10)
