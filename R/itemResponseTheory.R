@@ -26,13 +26,31 @@ addIRTfits <- function(mctd) {
 
   # 1-PL Fit
   data('gh', package = 'ltm')
-  irt_models[['PL1']] <- ltm::rasch(mctd$item.score, constraint = cbind(length(mctd$AnswerKey$Question)+1, 1))
+  irt_models[['PL1']] <- tryCatch({
+    withCallingHandlers({
+      err <- list()
+      ltm::rasch(mctd$item.score, constraint = cbind(length(mctd$AnswerKey$Question)+1, 1))
+    },
+    error = function(e) {warning(paste(e))}
+    )}, error = function(e) {})
 
   # 2-PL Fit
-  irt_models[['PL2']] <- ltm::ltm(mctd$item.score ~ z1)
+  irt_models[['PL2']] <- tryCatch({
+    withCallingHandlers({
+      err <- list()
+      ltm::ltm(mctd$item.score ~ z1)
+    },
+    error = function(e) {warning(paste(e))}
+    )}, error = function(e) {})
 
   # 3-PL Fit
-  irt_models[['PL3']] <- ltm::tpm(mctd$item.score, type = 'latent.trait', max.guessing = 1)
+  irt_models[['PL3']] <- tryCatch({
+    withCallingHandlers({
+      err <- list()
+      ltm::tpm(mctd$item.score, type = 'latent.trait', max.guessing = 1)
+    },
+    error = function(e) {warning(paste(e))}
+    )}, error = function(e) {})
 
   # Calculate AIC for each model
   irt_models[['AIC']] <- unlist(lapply(irt_models, AIC))
@@ -142,7 +160,16 @@ irtSummaryTable <- function(mctd,
   mctd <- requires(mctd, 'irt_models')
   should_have(mctd, 'irt_models')
   stopifnot(as.integer(model_params) %in% 1:3)
+  if (length(model_params) > 1) {
+    model_params <- model_params[1]
+    warning("model_params must be only one of 1, 2 or 3, choosing first entry (", model_params, ")")
+  }
   pl_name <- paste0('PL', model_params)
+  mctd_irt_has <- names(mctd$irt_models)
+  if (!(pl_name %in% mctd_irt_has)) {
+    warning('No IRT fit for ', pl_name, ' model.')
+    return(NULL)
+  }
   irt_colnames <- list(
     'PL1' = c('Question', 'Difficulty', 'Discrimination', probcolname),
     'PL2' = c('Question', 'Difficulty', 'Discrimination', probcolname),
