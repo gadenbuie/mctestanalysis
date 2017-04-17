@@ -312,19 +312,19 @@ summarizeCTT <- function(mctd,
       concept <- x$Concept[i]
       questions <- which(mctd$AnswerKey$Concept == concept)
       # Subscale Alpha
-      x[i, 2] <- mctd$alpha$subscale[[concept]]$total$raw_alpha
+      if (!is.null(mctd$alpha$subscale[[concept]])) x[i, 2] <- mctd$alpha$subscale[[concept]]$total$raw_alpha
       # Average Difficulty Index
-      x[i, 3] <- mean(mctd$item.analysis$Difficulty[questions])
+      if (!is.null(mctd$item.analysis)) x[i, 3] <- mean(mctd$item.analysis$Difficulty[questions])
       # Discrimination Index
-      x[i, 4] <- mean(mctd$discrimination_index[questions])
+      if (!is.null(mctd$discrimination_index)) x[i, 4] <- mean(mctd$discrimination_index[questions])
       # PBCC
-      x[i, 5] <- mean(mctd$pbcc[questions])
+      if (!is.null(mctd$pbcc)) x[i, 5] <- mean(mctd$pbcc[questions])
       # MPBCC
-      x[i, 6] <- mean(mctd$pbcc_modified[questions])
+      if (!is.null(mctd$pbcc_modified)) x[i, 6] <- mean(mctd$pbcc_modified[questions])
       # Item Variance
-      x[i, 7] <- mean(apply(mctd$item.score[, questions], 2, sd)^2)
+      if (!is.null(mctd$item.score)) x[i, 7] <- mean(apply(mctd$item.score[, questions], 2, sd)^2)
     }
-    x[, 2:6] <- round(x[, 2:6], digits.round)
+    x[, 2:6] <- try(round(x[, 2:6], digits.round))
     return(x)
   } else {
     stop("summarize_by must be one of 'whole', 'concept' or 'item'")

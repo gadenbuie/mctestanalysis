@@ -8,7 +8,7 @@ Author: c( person("Autar", "Kaw", email = "kaw@usf.edu", role = "cre"),
 Maintainer: Garrick Aden-Buie <gadenbuie@mail.usf.edu>
 Description: The purpose of this generated report is to provide the analytical
     framework proposed in the paper "An Analytic Framework for Evaluating the
-    Validity of Concept Inventory Claims"" (Natalie Jorion et al., 2015) from
+    Validity of Concept Inventory Claims" (Natalie Jorion et al., 2015) from
     the University of Chicago, while providing extra statistical routines based
     on Classical Test Theory. Within the contents of this package, you will find
     graphical representations such as plots and graphs and tables all intended
