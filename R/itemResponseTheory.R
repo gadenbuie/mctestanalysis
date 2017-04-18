@@ -18,9 +18,6 @@
 #'   of guessing for each item.
 #'
 #' @inheritParams mcTestAnalysisData
-#' @importFrom ltm rasch
-#' @importFrom ltm ltm
-#' @importFrom ltm tpm
 #' @export
 addIRTfits <- function(mctd) {
   mctd <- requires(mctd, 'item.score')
@@ -28,7 +25,7 @@ addIRTfits <- function(mctd) {
   irt_models <- list()
 
   # 1-PL Fit
-  # data('gh', package = 'ltm')
+  data('gh', package = 'ltm')
   tryCatch({
     irt_models[['PL1']] <- ltm::rasch(mctd$item.score, constraint = cbind(length(mctd$AnswerKey$Question)+1, 1))
   },
