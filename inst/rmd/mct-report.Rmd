@@ -68,6 +68,21 @@ as_table(mctd$AnswerKey)
 
 \clearpage
 
+## Overall Score Histogram
+
+```{r overall-histogram, fig.height=3, fig.width=9}
+data.frame(ids = names(mctd$scores), overall = mctd$scores) %>% 
+  ggplot(aes(x = overall)) +
+  geom_histogram(bins = 25, aes(y = ..density..), color = 'white')+
+  stat_function(fun=dnorm, args=list(mean = mean(mctd$scores, na.rm = TRUE),
+                                     sd = sd(mctd$scores, na.rm = TRUE)),
+                color = 'red')+
+  xlim(0, 1)+
+  theme_minimal()+
+  labs(y = "Density", x = "Overall Score")+
+  ggtitle("Histogram of Overall Test Scores")
+```
+
 ## Option Selection by Item
 
 The following table presents the percentage of students selecting each option by item.
@@ -78,8 +93,8 @@ optionsSelectedPct(
   include_columns = c('Title', 'Answer', 'Concept'),
   questions_as_row_names = FALSE,
   as_percentage = TRUE,
-  correct_vs_incorrect = FALSE) %>% 
-  as_table
+  correct_vs_incorrect = FALSE
+) %>% as_table
 ```
 
 Table: Option selection by item
