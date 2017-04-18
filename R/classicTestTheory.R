@@ -299,7 +299,7 @@ summarizeCTT <- function(mctd,
     )
   } else if (summarize_by == 'concept') {
     mctd <- requires(mctd, 'alpha')
-    should_have(mctd$alpha, 'subscale')
+    has_subscale <- !is.null(mctd$alpha$subscale)
     # Same as overall but grouped by concept
     x <- tibble::data_frame('Concept' = unique(mctd$AnswerKey$Concept),
                             'Subscale Alpha'     = NA, #2
@@ -312,7 +312,7 @@ summarizeCTT <- function(mctd,
       concept <- x$Concept[i]
       questions <- which(mctd$AnswerKey$Concept == concept)
       # Subscale Alpha
-      if (!is.null(mctd$alpha$subscale[[concept]])) x[i, 2] <- mctd$alpha$subscale[[concept]]$total$raw_alpha
+      if (has_subscale && !is.null(mctd$alpha$subscale[[concept]])) x[i, 2] <- mctd$alpha$subscale[[concept]]$total$raw_alpha
       # Average Difficulty Index
       if (!is.null(mctd$item.analysis)) x[i, 3] <- mean(mctd$item.analysis$Difficulty[questions])
       # Discrimination Index
@@ -324,7 +324,8 @@ summarizeCTT <- function(mctd,
       # Item Variance
       if (!is.null(mctd$item.score)) x[i, 7] <- mean(apply(mctd$item.score[, questions], 2, sd)^2)
     }
-    x[, 2:6] <- try(round(x[, 2:6], digits.round))
+    if (!has_subscale) x <- x[, -2]
+    x[, 2:ncol(x)] <- try(round(x[, 2:ncol(x)], digits.round))
     return(x)
   } else {
     stop("summarize_by must be one of 'whole', 'concept' or 'item'")
