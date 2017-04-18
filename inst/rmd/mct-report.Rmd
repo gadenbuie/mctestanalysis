@@ -113,6 +113,7 @@ Item Variance
 Point-Biserial Correlation Coefficient
 :    (PBCC) Measures the correlation with the item removed to decrease the influence of the item on the measure of performance.
 
+### Test Summary
 
 ```{r ctt-summary}
 summarizeCTT(mctd) %>% 
@@ -122,11 +123,23 @@ summarizeCTT(mctd) %>%
 
 Table: Classic Test Theory Summary
 
+
+### Test Summary by Concept Group
+
 ```{r ctt-summary-concept}
 as_table(summarizeCTT(mctd, 'concept'), digits = 4, round = 4)
 ```
 
-Table:: Classic Test Theory Summary by Concept Group
+Table: Classic Test Theory Summary by Concept Group
+
+
+### Test Summary by Item
+
+```{r ctt-summary-items}
+as_table(summarizeCTT(mctd, 'item'), digits = 4, round = 4)
+```
+
+Table: Classic Test Theory Summary by Item
 
 
 \clearpage
