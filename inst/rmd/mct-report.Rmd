@@ -302,6 +302,21 @@ if ('irt_model_choice' %in% names(report_options)) {
 }
 number_words <- c('one', 'two', 'three')
 pl_name <- paste0('PL', pl_number)
+# Check that chosen PL actually worked and is available
+pl_changed <- FALSE
+if (is.null(mctd$irt_models[[pl_name]])) {
+  pl_others <- c(1:3)[-pl_number]
+  pl_new <- c()
+  for (i in pl_number) {
+    if (!length(pl_new) && !is.null(mctd$irt_models[[paste0("PL", i)]])) {
+      pl_new <- i
+      pl_changed <- TRUE
+    } else next
+  }
+  pl_old <- pl_number
+  pl_number <- pl_new
+  pl_name <- paste0('PL', pl_number)
+}
 ```
 
 ## Model Summary
@@ -313,6 +328,13 @@ which had
 `r ifelse(flag_model_chosen, 'an', 'the lowest')`
 AIC of 
 $`r mctd$irt_models$AIC[pl_number] %>% round(1)`$.
+
+```{r irt-model-pl-changed}
+if (pl_changed) {
+  cat('\n*Note that the ', pl_old, '-parameter model failed to fit, so the ',
+      pl_number, '-paramter model was used instead.*\n', sep = '')
+}
+```
 
 **Model Parameters**
 
