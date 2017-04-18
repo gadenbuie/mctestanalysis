@@ -124,7 +124,7 @@ requires <- function(mctd, required, verbose = FALSE) {
         'item.score'           = addItemScore(mctd),
         'item.analysis'        = addItemAnalysis(mctd, disc = TRUE),
         'alpha'                = addAlpha(mctd),
-        'scores'               = addAlpha(mctd),
+        'scores'               = addItemScore(mctd),
         'discrimination_index' = addDiscriminationIndex(mctd),
         'pbcc'                 = addPBCC(mctd),
         'pbcc_modified'        = addPBCCmodified(mctd),

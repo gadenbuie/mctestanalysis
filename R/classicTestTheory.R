@@ -13,6 +13,7 @@ addItemScore <- function(mctd) {
   x <- as.data.frame(t(x))
   names(x) <- names(mctd$Test.complete)
   mctd[['item.score']] <- x
+  mctd[['scores']] <- rowSums(x)/ncol(x)
   return(mctd)
 }
 
@@ -41,7 +42,6 @@ addItemAnalysis <- function(mctd, ...) {
 addAlpha <- function(mctd) {
   mctd <- requires(mctd, 'item.score')
   mctd[['alpha']] <- psych::alpha(mctd$item.score, warnings = FALSE, check.keys = FALSE)
-  mctd[['scores']] <- mctd$alpha$scores
   mctd <- addSubscaleConcept(mctd)
   return(mctd)
 }
