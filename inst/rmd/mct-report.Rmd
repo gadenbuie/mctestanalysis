@@ -3,6 +3,10 @@ title: "`r ifelse(exists('title'), title, 'MC Test Analysis')`"
 author: "`r ifelse(exists('author'), author, Sys.info()['user'])`"
 date: "`r strftime(Sys.time(), '%B %d, %Y')`"
 bibliography: mctestanalysis.bib
+header-includes:
+- \usepackage{pdflscape}
+- \newcommand{\blandscape}{\begin{landscape}}
+- \newcommand{\elandscape}{\end{landscape}}
 ---
 
 ```{r init-opts, message=FALSE, warning=FALSE, include=FALSE}
@@ -135,6 +139,9 @@ Item Variance
 Point-Biserial Correlation Coefficient
 :    (PBCC) Measures the correlation with the item removed to decrease the influence of the item on the measure of performance.
 
+
+\newpage
+
 ### Test Summary
 
 ```{r ctt-summary}
@@ -149,21 +156,23 @@ Table: Classic Test Theory Summary
 ### Test Summary by Concept Group
 
 ```{r ctt-summary-concept}
-as_table(summarizeCTT(mctd, 'concept'), digits = 4, round = 4)
+as_table(summarizeCTT(mctd, 'concept', digits.round = 3), digits = 4, round = 4)
 ```
 
 Table: Classic Test Theory Summary by Concept Group
 
+\newpage
+\blandscape
 
 ### Test Summary by Item
 
 ```{r ctt-summary-items}
-as_table(summarizeCTT(mctd, 'item'), digits = 4, round = 4)
+as_table(summarizeCTT(mctd, 'item', digits.round = 3), digits = 4, round = 4)
 ```
 
 Table: Classic Test Theory Summary by Item
 
-
+\elandscape
 \clearpage
 
 ## Discrimination Index
@@ -209,6 +218,7 @@ Versatile
 Stringent
 :    If the *Difficulty Index* is between 0.3 and 0.9, and the *Point-Biserial Correlation Coefficient* is greater than 0.3, then the recommendation is to **Keep** the item.
 
+\clearpage
 
 ## Review Recommendations Table
 
@@ -352,12 +362,12 @@ if ('efa.nfactors' %in% names(report_options)) {
   else if (efa.nfactors == -1) efa.nfactors <- scree_factors['nfact']
 } else efa.nfactors <- length(unique(mctd$AnswerKey$Concept))
 
-efa.cut <- ifelse('efa.cut' %in% names(report_options), report_options$efa.cut, 0.3)
-efa.n.obs <- nrow(mctd$Test.complete)
-efa.rotate <- ifelse('efa.rotate' %in% names(report_options), report_options$efa.rotate, 'varimax')
+efa.cut         <- ifelse('efa.cut' %in% names(report_options), report_options$efa.cut, 0.3)
+efa.n.obs       <- nrow(mctd$Test.complete)
+efa.rotate      <- ifelse('efa.rotate' %in% names(report_options), report_options$efa.rotate, 'varimax')
 efa.rotate.text <- paste0("`'", efa.rotate, "'`")
-efa.fm <- ifelse('efa.fm' %in% names(report_options), report_options$efa.fm, 'minres')
-efa.fm.text <- paste0("`'", efa.fm, "'`")
+efa.fm          <- ifelse('efa.fm' %in% names(report_options), report_options$efa.fm, 'minres')
+efa.fm.text     <- paste0("`'", efa.fm, "'`")
 ```
 
 The table below presents the factor loadings, where
@@ -370,15 +380,23 @@ Factors with absolute value loadings less than
 `r efa.cut`
 were suppressed.
 
-
 ```{r efa}
+if (efa.nfactors > 10) cat("\n\\newpage\n\\blandscape\n\n")
+justification <- paste(c('cc', rep('r', efa.nfactors)), collapse = '')
 efaTable(mctd,
-         cut = efa.cut,
+         cut      = efa.cut,
          nfactors = efa.nfactors, 
-         n.obs = efa.n.obs,
-         rotate = efa.rotate,
-         fm = efa.fm) %>% 
-  as_table(missing = '')
+         n.obs    = efa.n.obs,
+         rotate   = efa.rotate,
+         fm       = efa.fm) %>% 
+  mutate_if(is.numeric, function(x) ifelse(is.na(x), '-', sprintf('%0.3f', x))) %>%
+  as_table(pander = FALSE, align = justification)
+cat("\nTable: Exploratory Factor Analysis with ", 
+    efa.nfactors, " factors ",
+    "using `", efa.rotate.text, "` rotation and ",
+    "`", efa.fm.text, "` factoring.\n",
+    sep = '')
+if (efa.nfactors > 10) cat("\n\\elandscape\n\n")
 ```
 
 \clearpage
