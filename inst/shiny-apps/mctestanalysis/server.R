@@ -50,7 +50,10 @@ shinyServer(function(input, output, session) {
         error_modal_body <- tagList(
           tags$p('There were warnings and/or errors during the IRT model fitting.',
                  'The messages below may provide some assistance in diagnosing the problem.',
-                 'For more information, please refer to the', tags$code('ltm'), 'package documentation.')
+                 'For more information, please refer to the',
+                 tags$a(href = 'https://cran.r-project.org/web/packages/ltm/',
+                        tags$code("ltm"), "package documentation.")
+                 )
         )
       } else {
         error_modal_body <- tags$p("Unable to load test and answer key data. Please check your data format by comparing with the example CSV files and try again.")
