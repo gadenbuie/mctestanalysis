@@ -306,7 +306,7 @@ pl_name <- paste0('PL', pl_number)
 
 ## Model Summary
 
-`r ifelse(flag_model_chosen, 'The model selected by the user for', "One-, two- and three-parameter logistic models were fit to the test results data. The model chosen for the remained of")` 
+`r ifelse(flag_model_chosen, 'The model selected by the user for', "One-, two- and three-parameter logistic models were fit to the test results data. The model chosen for the remainder of")` 
 this analysis was the
 `r number_words[pl_number]`-factor logistic model,
 which had 
@@ -401,7 +401,7 @@ scree_factors <- screePlot(mctd, TRUE)
 ```
 
 A method for determining the number of factors or components in the tetrachoric correlation matrix of the test responses is to examine the scree plot of the eigenvalues of the correlation matrix.
-Typically, when using a scree plot, the analist is looking for a sharp break in the slope of the line between the eigenvalues of the correlation matrix.
+Typically, when using a scree plot, the analyst is looking for a sharp break in the slope of the line between the eigenvalues of the correlation matrix.
 In parallel analysis, the scree of factors from the observed data is compared to that of a random data matrix of the same size as the observed.
 Parallel analysis suggests a number of factors/components by comparing the eigenvalues of the factors/components of the observed data to the random data and keeping those that are greater than the random data.
 
