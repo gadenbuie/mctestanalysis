@@ -55,17 +55,25 @@ loadAnswerKey <- function(mctd = NULL, answer_file, ...) {
   if (is.null(mctd)) mctd <- list()
   x <- read.csv(answer_file, stringsAsFactors = FALSE, ...)
 
-  expected_columns <- c('Question', 'Answer', 'Title', 'Concept')
+  required_columns <- c('Question', 'Answer')
+  optional_columns <- c('Title', 'Concept')
+
+  # If more than 4 cols, truncate
+  # If less than 4, assume ordered: required, optional, fill in missing
 
   if (ncol(x) > 4) {
     warning("Input data contained more than four columns, using only first four.")
     x <- x[, 1:4]
   } else if (ncol(x) == 3) {
-    warning("Input data contained 3 columns, assuming all questions from same 'General' concept.")
+    warning("Input data contained 3 columns, assumed to be Question, Answer, Title. Default value used for Concept.")
+    x$Concept <- 'General'
+  } else if (ncol(x) == 2) {
+    warning("Input data contained 2 columns, assumed to be Question, Answer. Default values used for Title and Concept.")
+    x$Title   <- paste('Question', x[, 1])
     x$Concept <- 'General'
   }
 
-  colnames(x) <- expected_columns
+  colnames(x) <- c(required_columns, optional_columns)
 
   # Missing concepts given "Missing" concept group
   x[is.na(x$Concept), 'Concept'] <- "Missing"
