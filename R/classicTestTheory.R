@@ -349,14 +349,9 @@ addSubscaleConcept <- function(mctd) {
   for (concept in unique(mctd$AnswerKey$Concept)) {
     questions <- which(mctd$AnswerKey$Concept == concept)
     x <- mctd$item.score[, questions]
-    # From psych::alpha
-    # alpha() removes items with 0 or negative correlation
-    # and will fail if !(ncol() > 1)
-    item.var <- apply(x, 2, sd, na.rm = TRUE)
-    bad <- which((item.var <= 0) | is.na(item.var))
-    if (length(bad) > 0) x <- x[, -bad]
-    if (is.null(ncol(x)) || ncol(x) < 2) mctd$alpha$subscale[[concept]] <- NULL
-    else mctd$alpha$subscale[[concept]] <- psych::alpha(x, warnings = FALSE, check.keys = FALSE)
+    try({
+      mctd$alpha$subscale[[concept]] <- psych::alpha(x, warnings = FALSE, check.keys = FALSE)
+    }, silent = TRUE)
   }
   return(mctd)
 }
