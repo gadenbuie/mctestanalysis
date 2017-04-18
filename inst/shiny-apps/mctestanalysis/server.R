@@ -34,17 +34,16 @@ shinyServer(function(input, output, session) {
                        sep            = input$o_import_sep,
                        quote          = input$o_import_quote)
       data_loaded <- TRUE
-    }, 'error' = function(e) {messages <<- c(messages, paste(e))})
+    }, 'error' = function(e) {messages <<- c(messages, paste(e$message))})
     if (!is.null(x)) {
       withCallingHandlers({
         x <- addIRTfits(x)
       },
-      'warning' = function(w) {messages <<- c(messages, paste(w))},
-      'error' = function(e) {messages <<- c(messages, paste(e))})
+      'warning' = function(w) {messages <<- c(messages, paste(w$message))},
+      'error' = function(e) {messages <<- c(messages, paste(e$message))})
     }
     removeModal()
     if (length(messages)) {
-      messages <- sub("simpleWarning[[:alnum:][:blank:]]*(in|:) ","", messages)
       messages <- unique(messages)
       messages <- strwrap(messages, 60, exdent = 4)
       if (data_loaded) {

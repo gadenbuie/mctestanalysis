@@ -18,6 +18,9 @@
 #'   of guessing for each item.
 #'
 #' @inheritParams mcTestAnalysisData
+#' @importFrom ltm rasch
+#' @importFrom ltm ltm
+#' @importFrom ltm tpm
 #' @export
 addIRTfits <- function(mctd) {
   mctd <- requires(mctd, 'item.score')
@@ -25,32 +28,23 @@ addIRTfits <- function(mctd) {
   irt_models <- list()
 
   # 1-PL Fit
-  data('gh', package = 'ltm')
-  irt_models[['PL1']] <- tryCatch({
-    withCallingHandlers({
-      err <- list()
-      ltm::rasch(mctd$item.score, constraint = cbind(length(mctd$AnswerKey$Question)+1, 1))
-    },
-    error = function(e) {warning(paste(e))}
-    )}, error = function(e) {})
+  # data('gh', package = 'ltm')
+  tryCatch({
+    irt_models[['PL1']] <- ltm::rasch(mctd$item.score, constraint = cbind(length(mctd$AnswerKey$Question)+1, 1))
+  },
+  error = function(e) {warning(paste("Error fitting PL1:", e$message))})
 
   # 2-PL Fit
-  irt_models[['PL2']] <- tryCatch({
-    withCallingHandlers({
-      err <- list()
-      ltm::ltm(mctd$item.score ~ z1)
-    },
-    error = function(e) {warning(paste(e))}
-    )}, error = function(e) {})
+  tryCatch({
+    irt_models[['PL2']] <- ltm::ltm(mctd$item.score ~ z1)
+  },
+  error = function(e) {warning(paste("Error fitting PL2:", e$message))})
 
   # 3-PL Fit
-  irt_models[['PL3']] <- tryCatch({
-    withCallingHandlers({
-      err <- list()
-      ltm::tpm(mctd$item.score, type = 'latent.trait', max.guessing = 1)
-    },
-    error = function(e) {warning(paste(e))}
-    )}, error = function(e) {})
+  tryCatch({
+      irt_models[['PL3']] <- ltm::tpm(mctd$item.score, type = 'latent.trait', max.guessing = 1)
+  },
+  error = function(e) {warning(paste("Error fitting PL3:", e$message))})
 
   # Calculate AIC for each model
   irt_models[['AIC']] <- unlist(lapply(irt_models, AIC))
