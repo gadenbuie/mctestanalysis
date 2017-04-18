@@ -42,6 +42,12 @@ addItemAnalysis <- function(mctd, ...) {
 addAlpha <- function(mctd) {
   mctd <- requires(mctd, 'item.score')
   mctd[['alpha']] <- psych::alpha(mctd$item.score, warnings = FALSE, check.keys = FALSE)
+  if (nrow(mctd$alpha$alpha.drop) != nrow(mctd$AnswerKey)) {
+    # psych::alpha dropped problem questions, need to be added back in
+    qs <- data.frame(q = mctd$AnswerKey$Question)
+    alpha.drop <- rownames_to_column(mctd$alpha$alpha.drop, var = 'q')
+    mctd$alpha$alpha.drop <- left_join(qs, alpha.drop, by = 'q')
+  }
   mctd <- addSubscaleConcept(mctd)
   return(mctd)
 }
