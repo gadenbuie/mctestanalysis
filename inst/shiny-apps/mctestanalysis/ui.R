@@ -347,7 +347,7 @@ shinyUI(navbarPage(
                          choices = list(
                            'None' = 'none',
                            'Orthogonal' = c("varimax", "quartimax", "bentlerT", "equamax", "varimin", "geominT", "bifactor"),
-                           'Oblique' = c("promax", "oblimin", "simplimax", "bentlerQ", "geominQ", "biquartimin", "cluster" )
+                           'Oblique' = c("Promax", "oblimin", "simplimax", "bentlerQ", "geominQ", "biquartimin", "cluster" )
                          ),
                          selected = 'varimax'
                        ),
@@ -359,7 +359,8 @@ shinyUI(navbarPage(
                                      'Generalized WLS' = 'gls',
                                      'Principal Factor' = 'pa',
                                      'Maximimum Likelihood' = 'ml',
-                                     'Minimixed Weighted Chi Square' = 'minchi')
+                                     'Minimixed Weighted Chi Square' = 'minchi',
+                                     'Minimum Rank Factor Analysis' = 'minrank')
                        ),
                        sliderInput(
                          'o_efa_cut',

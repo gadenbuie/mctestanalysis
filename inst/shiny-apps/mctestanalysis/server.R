@@ -440,9 +440,21 @@ shinyServer(function(input, output, session) {
     if (input$o_efa_nfactors == 0) nfactors <- length(unique(concepts()))
     else nfactors <- input$o_efa_nfactors
 
-    efa$mctd <- addEFA(mctd(), nfactors,
-                      rotate = input$o_efa_rotate,
-                      fm = input$o_efa_fm)
+    tryCatch({
+      efa$mctd <- addEFA(mctd(), nfactors,
+                         rotate = input$o_efa_rotate,
+                         fm = input$o_efa_fm)
+    }, error = function(e) {
+      showModal(modalDialog(title = 'Error',
+                            tags$p('There was an error while running the Factor Analysis with the selected parameters.',
+                                   'Please reveiw your settings, the error message below, and the',
+                                   tags$a(href = 'https://cran.r-project.org/web/packages/psych/',
+                                          tags$code("psych"), "package documentation"),
+                                   'to resolve your problem.'
+                            ),
+                            tags$pre(paste(e$message, collapse = '\n')),
+                            footer = modalButton('Ok')))
+    })
   })
 
   output$t_efa_out <- renderPrint({
