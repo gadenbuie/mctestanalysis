@@ -200,6 +200,65 @@ testScoreByQuestionPlot(mctd, facet_by_concept = TRUE)
 
 \clearpage
 
+## Distractor Analysis
+
+```{r distractor-table-data, include = FALSE}
+if ('distractor.pct' %in% names(report_options)) {
+  distractor.pct <- report_options$distractor.pct
+} else distractor.pct <- 0.33
+
+distractor.data <- distractorTable(mctd, distractor.pct)
+distractor.data.counts <- distractor.data %>% 
+  filter(Question == distractor.data[1, 'Question']) %>% 
+  group_by(Group) %>% 
+  summarize(total = sum(count))
+
+# For turning percentile into words
+percentile_abreviation <- c('th', 'st', 'nd', 'rd', rep('th', 6))
+first_digit <- function(x) round(x %% 10, 0)
+pct_to_text <- function(x) {
+  paste0(round(x * 100, 0), percentile_abreviation[first_digit(x*100) + 1])
+}
+```
+
+The following plot and table compare the percentage of all respondents who select a given option for each item.
+These tables allow the test administrator to analize the performance of item options and to determine if the choice of distracting items reveals information about the misconceptions in students' knowledge.
+Repondents are grouped into the upper and lower
+`r pct_to_text(distractor.pct)`
+percentiles by overall test score.
+For this report, there were
+`r distractor.data.counts %>% filter(Group == 'high') %>% .$total`
+respondents in the upper
+`r pct_to_text(distractor.pct)` percentile and
+`r distractor.data.counts %>% filter(Group == 'low') %>% .$total`
+repondents in the lower
+`r pct_to_text(distractor.pct)` percentile.
+Percentages are calculated relative to the total number of respondents, in this case
+`r nrow(mctd$Test.complete)`
+students.
+
+```{r distractor-plot, fig.height=8, fig.width=12}
+distractorPlot(mctd, distractor.pct) + 
+  ggtitle('Distractor Analysis')
+```
+
+```{r distractor-table}
+n_options <- length(unique(distractor.data$Option))
+col_justifications <- paste(paste0(rep('c', 2), collapse = ''), paste0(rep('r', n_options*2), collapse = ''), sep = '')
+distractor.data %>% 
+  mutate(pct = sprintf("%0.2f", pct*100), 
+         pct = ifelse(Correct, embolden(pct), pct), 
+         Group = c('high' = 'H', 'low' = 'L')[Group], 
+         OptionGroup = paste(Option, Group, sep = '')) %>% 
+  select(Question, Title, OptionGroup, pct) %>% 
+  reshape2::dcast(Question + Title ~ OptionGroup, value.var = 'pct') %>% 
+  as_table(justify = col_justifications)
+```
+
+Table: Percentage of total respondents ($N=$ `r nrow(mctd$Test.complete)`) from upper (*High*, $N=$ `r distractor.data.counts %>% filter(Group == 'high') %>% .$total`) and lower (*Low*, $N=$ `r distractor.data.counts %>% filter(Group == 'low') %>% .$total`) `r pct_to_text(distractor.pct)` percentiles having chosen each item option. The percentage of students choosing the correct option for each item are highlighted in bold.
+
+\clearpage
+
 # Item Review Recommendations
 
 **TEXT NEEDED:** Item review recommendations
@@ -327,7 +386,7 @@ for (concept in unique(mctd$AnswerKey$Concept)) {
 
 \clearpage
 
-# Factor Analysis
+# Introductory Factor Analysis
 
 ## Tetrachoric Plot
 
@@ -400,62 +459,5 @@ if (efa.nfactors > 10) cat("\n\\elandscape\n\n")
 ```
 
 \clearpage
-
-# Distractor Analysis
-
-```{r distractor-table-data, include = FALSE}
-if ('distractor.pct' %in% names(report_options)) {
-  distractor.pct <- report_options$distractor.pct
-} else distractor.pct <- 0.33
-
-distractor.data <- distractorTable(mctd, distractor.pct)
-distractor.data.counts <- distractor.data %>% 
-  filter(Question == distractor.data[1, 'Question']) %>% 
-  group_by(Group) %>% 
-  summarize(total = sum(count))
-
-# For turning percentile into words
-percentile_abreviation <- c('th', 'st', 'nd', 'rd', rep('th', 6))
-first_digit <- function(x) round(x %% 10, 0)
-pct_to_text <- function(x) {
-  paste0(round(x * 100, 0), percentile_abreviation[first_digit(x*100) + 1])
-}
-```
-
-The following plot and table compare the percentage of all respondents who select a given option for each item.
-These tables allow the test administrator to analize the performance of item options and to determine if the choice of distracting items reveals information about the misconceptions in students' knowledge.
-Repondents are grouped into the upper and lower
-`r pct_to_text(distractor.pct)`
-percentiles by overall test score.
-For this report, there were
-`r distractor.data.counts %>% filter(Group == 'high') %>% .$total`
-respondents in the upper
-`r pct_to_text(distractor.pct)` percentile and
-`r distractor.data.counts %>% filter(Group == 'low') %>% .$total`
-repondents in the lower
-`r pct_to_text(distractor.pct)` percentile.
-Percentages are calculated relative to the total number of respondents, in this case
-`r nrow(mctd$Test.complete)`
-students.
-
-```{r distractor-plot, fig.height=8, fig.width=12}
-distractorPlot(mctd, distractor.pct) + 
-  ggtitle('Distractor Analysis')
-```
-
-```{r distractor-table}
-n_options <- length(unique(distractor.data$Option))
-col_justifications <- paste(paste0(rep('c', 2), collapse = ''), paste0(rep('r', n_options*2), collapse = ''), sep = '')
-distractor.data %>% 
-  mutate(pct = sprintf("%0.2f", pct*100), 
-         pct = ifelse(Correct, embolden(pct), pct), 
-         Group = c('high' = 'H', 'low' = 'L')[Group], 
-         OptionGroup = paste(Option, Group, sep = '')) %>% 
-  select(Question, Title, OptionGroup, pct) %>% 
-  reshape2::dcast(Question + Title ~ OptionGroup, value.var = 'pct') %>% 
-  as_table(justify = col_justifications)
-```
-
-Table: Percentage of total respondents ($N=$ `r nrow(mctd$Test.complete)`) from upper (*High*, $N=$ `r distractor.data.counts %>% filter(Group == 'high') %>% .$total`) and lower (*Low*, $N=$ `r distractor.data.counts %>% filter(Group == 'low') %>% .$total`) `r pct_to_text(distractor.pct)` percentiles having chosen each item option. The percentage of students choosing the correct option for each item are highlighted in bold.
 
 # References
