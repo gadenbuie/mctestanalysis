@@ -104,6 +104,8 @@ report()
 When running `explore()` a browser window will open with the MC Test Analysis exploration application.
 The `report()` function will launch a window within RStudio to guide the user through the creation of a PDF report.
 
+A longer, more detailed introduction to the package, its usage and the required data format is available at <http://www.eng.usf.edu/~kaw/MCTestAnalysis/MCTestAnalysis_input.pdf>.
+
 # Data format
 
 This package requires both an Answer Key and a table of student responses. 
