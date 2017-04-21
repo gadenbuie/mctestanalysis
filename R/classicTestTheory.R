@@ -146,10 +146,13 @@ addPBCCmodified <- function(mctd) {
 #' @inheritParams mcTestAnalysisData
 #' @param type One of \code{"conventional"}, \code{"pbcc"}, or
 #'   \code{"pbcc_modified"}
-#' @param show_labels Should the question number be shown next to points?
+#' @param show_labels Should the question number be shown next to points? If
+#'   \link{ggrepel} is installed it will be used to ensure that all point labels
+#'   are legible on the plot.
 #' @param hide_legend Should the plot legend be hidden?
 #' @param show_guidelines Should recomended discrimination or difficulty indice
 #'   ranges be shown on the plot as a dotted line?
+#' @param show_gridlines Should the plot include gridlines?
 #' @param max_limits Set x- and y-axis limits. One of \code{"max_x"} (x
 #'   positive, y free), \code{"max_y"} (x free, y positive), \code{"max_y+"} (x
 #'   free, y in [-1,1]), \code{"max_all+"} (x positive, y positive),
@@ -160,6 +163,7 @@ discriminationDifficultyPlot <- function(mctd,
                                          show_labels = TRUE,
                                          hide_legend = TRUE,
                                          show_guidelines = TRUE,
+                                         show_gridlines = TRUE,
                                          max_limits = 'max_x') {
   mctd <- requires(mctd, c('discrimination_index', 'pbcc', 'pbcc_modified', 'item.analysis'))
   should_have(mctd, 'Test.complete', 'discrimination_index', 'pbcc', 'pbcc_modified', 'item.analysis')
@@ -193,7 +197,11 @@ discriminationDifficultyPlot <- function(mctd,
     labs(x = "Difficulty Index", y = y_label, color = 'Question')
 
   if (show_labels) {
-    g <- g + geom_text(nudge_x = -0.025, show.legend = FALSE)
+    if (requireNamespace('ggrepel', quietly = TRUE)) {
+      g <- g + ggrepel::geom_text_repel(show.legend = FALSE)
+    } else {
+      g <- g + geom_text(nudge_x = -0.025, show.legend = FALSE)
+    }
   }
   if (hide_legend) {
     g <- g + guides(color = FALSE)
@@ -203,6 +211,9 @@ discriminationDifficultyPlot <- function(mctd,
       geom_vline(xintercept = 0.2, linetype = 'dashed', color = 'grey80')+
       geom_vline(xintercept = 0.8, linetype = 'dashed', color = 'grey80')+
       geom_hline(yintercept = 0.2, linetype = 'dashed', color = 'grey80')
+  }
+  if (!show_gridlines) {
+    g <- g + theme(panel.grid = element_blank())
   }
   if (!is.null(max_limits)) {
     g <- switch(max_limits,

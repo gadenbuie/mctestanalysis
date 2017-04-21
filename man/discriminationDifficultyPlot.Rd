@@ -6,7 +6,7 @@
 \usage{
 discriminationDifficultyPlot(mctd, type = "conventional",
   show_labels = TRUE, hide_legend = TRUE, show_guidelines = TRUE,
-  max_limits = "max_x")
+  show_gridlines = TRUE, max_limits = "max_x")
 }
 \arguments{
 \item{mctd}{Existing mcTestAnalysis data object}
@@ -14,12 +14,16 @@ discriminationDifficultyPlot(mctd, type = "conventional",
 \item{type}{One of \code{"conventional"}, \code{"pbcc"}, or
 \code{"pbcc_modified"}}
 
-\item{show_labels}{Should the question number be shown next to points?}
+\item{show_labels}{Should the question number be shown next to points? If
+\link{ggrepel} is installed it will be used to ensure that all point labels
+are legible on the plot.}
 
 \item{hide_legend}{Should the plot legend be hidden?}
 
 \item{show_guidelines}{Should recomended discrimination or difficulty indice
 ranges be shown on the plot as a dotted line?}
+
+\item{show_gridlines}{Should the plot include gridlines?}
 
 \item{max_limits}{Set x- and y-axis limits. One of \code{"max_x"} (x
 positive, y free), \code{"max_y"} (x free, y positive), \code{"max_y+"} (x

@@ -175,15 +175,24 @@ Table: Classic Test Theory Summary by Item
 \elandscape
 \clearpage
 
-## Discrimination Index
+## Item Discrimination
 
-**TEXT NEEDED:** DISCRIMINATION INDEX PLOT TEXT
+The below scatter plots compare the three measures of item discrimination with the item difficulty.
+Dotted guidelines indicate the recommended ranges for each index.
+Note that the full difficulty index range is from 0 to 1 and the full range of the discrimination indices is from -1 to 1 --- although a discrimination index (or PBCC or Modified PBCC) of less than 0.2 is not recommended.
 
 ```{r ctt-discrimination-index, fig.width=12, fig.height=12}
+decorate <- function(g) {
+  g + theme(
+    panel.border = element_rect(size=1,linetype="solid",color="black",fill=NA),
+    plot.margin = unit(rep(0.5, 4), 'cm')
+  )
+}
 gridExtra::grid.arrange(
-  discriminationDifficultyPlot(mctd, "conventional")+ggtitle('Discrimination Index'),
-  discriminationDifficultyPlot(mctd, "pbcc")+ggtitle("Point-Biserial Correlation Coefficient"),
-  discriminationDifficultyPlot(mctd, "pbcc_modified")+ggtitle("Modified PBCC"),
+  top=grid::textGrob("Discrimination Analysis", gp=grid::gpar(fontsize=20)),
+  decorate(discriminationDifficultyPlot(mctd, "conventional", show_gridlines = FALSE)),
+  decorate(discriminationDifficultyPlot(mctd, "pbcc", show_gridlines = FALSE)),
+  decorate(discriminationDifficultyPlot(mctd, "pbcc_modified", show_gridlines = FALSE)),
   ncol = 2
 )
 ```
@@ -192,10 +201,21 @@ gridExtra::grid.arrange(
 
 ## Overall Score vs. Question Score
 
-**TEXT NEEDED:** Overall vs Question Score
+The following plot compares the respondents' performance on a single item (correct or incorrect) to their overall score on the test.
+The plots are organized by concept group, and within in subplot, the boxplot displays the range of overall test scores among the respondents who correctly and incorrectly answered each question.
 
-```{r ctt-overall-vs-question, fig.width = 12, fig.height=12}
-testScoreByQuestionPlot(mctd, facet_by_concept = TRUE)
+Intuitively, a question for which there is very little overlap between the boxplots of the correct and incorrect group is more discerning between the high and low performing students.
+Questions for which the box plots are mostly overlapping are not as good at differentiating between students.
+
+Additionally, the range of each boxplot indicates whether the question is correctly (or incorrectly) answerd by students with a wide range of overall performance or more consistently by a students of a particular overal ability.
+
+Generally, it is best for the boxplot of the correct group to be mostly above the boxplot of the incorrect group.
+Questions that have complete overlap between the two boxplots should be reviewed.
+
+
+```{r ctt-overall-vs-question, fig.width = 12, fig.height=9}
+testScoreByQuestionPlot(mctd, facet_by_concept = TRUE) +
+  ggtitle("Overall Test Score vs. Question Score (Correct/Incorrect)")
 ```
 
 \clearpage
@@ -203,7 +223,7 @@ testScoreByQuestionPlot(mctd, facet_by_concept = TRUE)
 ## Distractor Analysis
 
 ```{r distractor-table-data, include = FALSE}
-if ('distractor.pct' %in% names(report_options)) {
+if (!is.null(report_options[['distractor.pct']])) {
   distractor.pct <- report_options$distractor.pct
 } else distractor.pct <- 0.33
 
@@ -242,6 +262,8 @@ distractorPlot(mctd, distractor.pct) +
   ggtitle('Distractor Analysis')
 ```
 
+\clearpage
+
 ```{r distractor-table}
 n_options <- length(unique(distractor.data$Option))
 col_justifications <- paste(paste0(rep('c', 2), collapse = ''), paste0(rep('r', n_options*2), collapse = ''), sep = '')
@@ -261,8 +283,6 @@ Table: Percentage of total respondents ($N=$ `r nrow(mctd$Test.complete)`) from 
 
 # Item Review Recommendations
 
-**TEXT NEEDED:** Item review recommendations
-
 ## Review Recommendations Criteria
 
 Alpha
@@ -272,10 +292,24 @@ Jorion
 :    If the *Difficulty Index* is between 0.3 and 0.9, and the *Discrimination Index* is greater than 0.2, then the recommendation is to **Keep** the item.
 
 Versatile
-:    This recommendation is based on the *Difficulty Index* and *PBCC* and provides a range of recommendations from **Remove** to **Review** through **Keep**, favoring positive PBCC values near to or greater than 0.3 and higher difficulty values.
+:    This recommendation is based on the *Difficulty Index* and *PBCC* and provides a range of recommendations from **Remove** to **Review** through **Keep**, favoring positive PBCC values near to or greater than 0.3 and higher difficulty values. The criteria for this recommendation are based the criteria published by @Sleeper2011, reproduced below.
 
 Stringent
 :    If the *Difficulty Index* is between 0.3 and 0.9, and the *Point-Biserial Correlation Coefficient* is greater than 0.3, then the recommendation is to **Keep** the item.
+
+### "Versatile" Recommendation Criteria
+
+The *Versatile* recommendation criteria are based on criteria published by @Sleeper2011.
+The table below reproduces the source material that is unfortunately no longer available online.
+
+| Difficulty Score (%) | PBCC $[0.3, 1.0]$ | PBCC  $[0.15, 0.3)$ | PBCC $[0.0, 0.15)$ | PBCC $[-1, 0)$ |
+|----------------------|-------------------|---------------------|--------------------|----------------|
+| $[0, 30]$            | Review            | Review/Remove       | Remove             | Remove         |
+| $(30, 50]$           | Keep (Tough)      | Review              | Review/Remove      | Remove         |
+| $(50, 80]$           | Keep              | Keep                | Review/Keep        | Review         |
+| $(80, 100]$          | Keep              | Keep                | Keep (Easy)        | Review         |
+
+Table: *Versatile* recommendation criteria from @Sleeper2011
 
 \clearpage
 
@@ -292,7 +326,7 @@ Table: Recommendations for each test item based on the criteria described above.
 # Item Response Theory
 
 ```{r irt-best-model, include=FALSE}
-if ('irt_model_choice' %in% names(report_options)) {
+if (!is.null(report_options[['irt_model_choice']])) {
   pl_number <- report_options$irt_model_choice %>% as.integer
   flag_model_chosen <- TRUE
 } else {
@@ -311,6 +345,7 @@ if (is.null(mctd$irt_models[[pl_name]])) {
     if (!length(pl_new) && !is.null(mctd$irt_models[[paste0("PL", i)]])) {
       pl_new <- i
       pl_changed <- TRUE
+      warning("Changed IRT parameter choice to", pl_new)
     } else next
   }
   pl_old <- pl_number
@@ -385,25 +420,52 @@ irtSummaryTable(mctd, pl_number) %>% as_table()
 
 ## Item Characteristic Curves
 
-```{r icc-curves, echo=FALSE, fig.height=6, fig.width=12}
-for (concept in unique(mctd$AnswerKey$Concept)) {
-  cat("\n\n###", concept, "\n\n")
-  questions <- mctd$AnswerKey %>%
-    mutate(n = 1:nrow(.)) %>%
-    filter(Concept == concept) %>% .$n
-  plot_title <- paste0("Item Characteristic Curves: Concept \"", concept, '"')
-  switch(pl_name,
-         'PL1' = ltm::plot.rasch(mctd$irt_models[['PL1']], 
+```{r icc-curves, echo=FALSE, fig.height=12, fig.width=9}
+icc_group <- ifelse(is.null(report_options$icc_group), 'concept', report_options$icc_group)
+if (icc_group == 'concept' && length(unique(mctd$AnswerKey$Concept)) < 2) icc_group <- 'question'
+
+if (icc_group == 'concept') {
+  n.concept <- length(unique(mctd$AnswerKey$Concept))
+  plot.rows <- ifelse(n.concept > 4, ceiling(n.concept/2), 4)
+  plot.rows <- ifelse(n.concept <= 2, 3, plot.rows)
+  plot.cols <- ifelse(n.concept > 4, 2, 1)
+  par(mfrow = c(plot.rows, plot.cols))
+  for (concept in unique(mctd$AnswerKey$Concept)) {
+    questions <- mctd$AnswerKey %>%
+      mutate(n = 1:nrow(.)) %>%
+      filter(Concept == concept) %>% .$n
+    plot_title <- paste0("Item Characteristic Curves: Concept \"", concept, '"')
+    switch(pl_name,
+           'PL1' = ltm::plot.rasch(mctd$irt_models[['PL1']], 
+                                   type = "ICC", items = questions,
+                                   main = plot_title),
+           'PL2' = ltm::plot.ltm(mctd$irt_models[['PL2']], 
                                  type = "ICC", items = questions,
                                  main = plot_title),
-         'PL2' = ltm::plot.ltm(mctd$irt_models[['PL2']], 
-                                 type = "ICC", items = questions,
-                                 main = plot_title),
-         'PL3' = ltm::plot.tpm(mctd$irt_models[['PL3']], 
+           'PL3' = ltm::plot.tpm(mctd$irt_models[['PL3']], 
                                  type = "ICC", items = questions,
                                  main = plot_title)
-  )
+    )
+  }
+} else {
+  n.question <- nrow(mctd$AnswerKey)
+  par(mfrow = c(ceiling(n.question/6), 3))
+  for (item in 1:n.question) {
+    plot_title <- paste0("Item Characteristic Curves: \"", mctd$AnswerKey[item, 'Title'] , '"')
+    switch(pl_name,
+           'PL1' = ltm::plot.rasch(mctd$irt_models[['PL1']], 
+                                   type = "ICC", items = item,
+                                   main = plot_title),
+           'PL2' = ltm::plot.ltm(mctd$irt_models[['PL2']], 
+                                 type = "ICC", items = item,
+                                 main = plot_title),
+           'PL3' = ltm::plot.tpm(mctd$irt_models[['PL3']], 
+                                 type = "ICC", items = item,
+                                 main = plot_title)
+    )
+  }
 }
+par(mfrow = c(1,1))
 ```
 
 \clearpage
@@ -412,7 +474,17 @@ for (concept in unique(mctd$AnswerKey$Concept)) {
 
 ## Tetrachoric Plot
 
-```{r tetrachoric-plot, fig.height=9, fig.width=9, dev='png'}
+The following plot shows the item-by-item *tetrachoric correlation* for all questions in the test.
+The tetrachoric correlation estimates the correlation between two variables whose measurement is artificially dichotomized but whose underlying joint ditribution is a bivariate normal distribution.
+In the case of Item Response Theory, the tetrachoric correlation is seen as the correlation between the response to two items when "each item is assumed to represent an underlying ability which is reflected as a probability of responding correctly to the item and the items are coded as correct or incorrect" [@PersonalityProject].
+
+Considering that the tetrachoric correlation matrix represents item correlations for all test items, then the structure of this matrix directly correpsonds to the structure of the underlying latent variables measured by the test.
+This is --- at a very high level --- the goal of factor analysis.
+For more information, the [Personality Project webpage](http://www.personality-project.org/r/book) provides excellent resources.
+The tetrachoric correlation plot is included here for visual inspection of the underlying structure, as this matrix will be used in the factor analysis that follows.
+
+
+```{r tetrachoric-plot, fig.height=8, fig.width=8, dev='png'}
 plotTetrachoric(mctd, TRUE, TRUE)
 ```
 
@@ -432,22 +504,25 @@ Parallel analysis for the test results in this report suggest that the number of
 and the number of components is
 `r scree_factors['ncomp']`.
 
-## Exploratory Factor Analysis
-
-```{r efa-options, include = FALSE}
+```{r efa-clearpage}
 flag_nfactors_chosen_by_user <- FALSE
-if ('efa.nfactors' %in% names(report_options)) {
+if (!is.null(report_options[['efa.nfactors']])) {
   flag_nfactors_chosen_by_user <- TRUE
   efa.nfactors <- report_options$efa.nfactors
   if (efa.nfactors == 0) efa.nfactors <- length(unique(mctd$AnswerKey$Concept))
   else if (efa.nfactors == -1) efa.nfactors <- scree_factors['nfact']
 } else efa.nfactors <- length(unique(mctd$AnswerKey$Concept))
+if (efa.nfactors <= 10) cat("\n\\clearpage\n")
+```
 
-efa.cut         <- ifelse('efa.cut' %in% names(report_options), report_options$efa.cut, 0.3)
+## Exploratory Factor Analysis
+
+```{r efa-options, include = FALSE}
+efa.cut         <- ifelse(!is.null(report_options[['efa.cut']]), report_options$efa.cut, 0.3)
 efa.n.obs       <- nrow(mctd$Test.complete)
-efa.rotate      <- ifelse('efa.rotate' %in% names(report_options), report_options$efa.rotate, 'varimax')
+efa.rotate      <- ifelse(!is.null(report_options[['efa.rotate']]), report_options$efa.rotate, 'varimax')
 efa.rotate.text <- paste0("`'", efa.rotate, "'`")
-efa.fm          <- ifelse('efa.fm' %in% names(report_options), report_options$efa.fm, 'minres')
+efa.fm          <- ifelse(!is.null(report_options[['efa.fm']]), report_options$efa.fm, 'minres')
 efa.fm.text     <- paste0("`'", efa.fm, "'`")
 ```
 

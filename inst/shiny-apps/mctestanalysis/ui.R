@@ -214,7 +214,9 @@ shinyUI(navbarPage(
                           )
                  ),
                  tabPanel("Overall vs. Question Score",
-                          helpText("This plot compares the overall test scores against correct selection of individual items."),
+                          helpText("This plot compares the overall test scores against correct selection of individual items.",
+                                   "Generally, it is best for the boxplot of the correct group to be mostly above the boxplot of the incorrect group.",
+                                   "Questions that have complete overlap between the two boxplots should be reviewed."),
                           fluidRow(
                             column(9,
                                    radioButtons('o_overallbox_concepts', 'Concepts', choices = 'All', inline = TRUE)

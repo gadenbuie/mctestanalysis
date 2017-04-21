@@ -158,6 +158,9 @@ createReportGadget <- function() {
                                choices = c('Lowest AIC' = 'Auto', 'Rasch (1 PL)' = 1, '2 PL' = 2, '3 PL' = 3),
                                selected = 1,
                                inline = TRUE),
+                  radioButtons("o_icc_group", "Plot ICC Curves",
+                               choices = c('Grouped by Concept' = 'concept', 'By Item (Ungrouped)' = 'question'),
+                               inline = TRUE),
                   tags$hr(),
                   tags$h4("Distractor Analysis Settings"),
                   sliderInput(
@@ -253,6 +256,7 @@ createReportGadget <- function() {
                        quote          = input$o_import_quote,
                        report_options = list(
                          'irt_model_choice' = if (input$test_pl_number != 'Auto') input$test_pl_number,
+                         'icc_group'        = input$o_icc_group,
                          'distractor.pct'   = input$distractor.pct,
                          'efa.nfactors'     = input$o_efa_nfactors,
                          'efa.rotate'       = input$o_efa_rotate,

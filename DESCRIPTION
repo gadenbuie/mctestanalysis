@@ -33,3 +33,4 @@ Depends:
     ggplot2,
     shiny (>= 0.14.0),
     miniUI
+Suggests: ggrepel

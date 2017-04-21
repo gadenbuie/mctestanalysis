@@ -25,6 +25,11 @@
 #'   Validity of Concept Inventory Claims. Journal of Engineering Education,
 #'   104(4), 454–496. \url{http://doi.org/10.1002/jee.20104}
 #'
+#' @references Sleeper, Rebecca. 2011. “Keep, Toss or Revise? Tips for Post-Exam
+#'   Item Analysis.”
+#'   \url{http://www.ttuhsc.edu/sop/administration/enhancement/documents/Sleeper_Handout.ppt}
+#'   (No longer available online)
+#'
 #' @inheritParams mcTestAnalysisData
 #' @param include_columns Columns to include in recommendation table, can
 #'   include any of the following: \code{'Title'}, \code{'Concept'},

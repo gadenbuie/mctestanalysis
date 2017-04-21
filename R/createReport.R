@@ -17,8 +17,9 @@
 #'   generated?
 #' @param report_options A list of options that affect analysis parameters and
 #'   results displayed inside the report. Report options include
-#'   \code{irt_model_choice}, \code{efa.nfactors}, \code{efa.cut},
-#'   \code{efa.rotate}, \code{efa.fm} and \code{distractor.pct}.
+#'   \code{irt_model_choice}, \code{icc_group} (\code{"question"} or
+#'   \code{"concept"}), \code{efa.nfactors}, \code{efa.cut}, \code{efa.rotate},
+#'   \code{efa.fm} and \code{distractor.pct}.
 #' @export
 createReport <- function(answer_file = file.choose(),
                          test_file = file.choose(),
