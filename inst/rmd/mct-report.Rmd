@@ -60,7 +60,7 @@ cat(paste(summary_text, collapse = '\n'))
 The purpose of this generated report is to provide the analytical framework proposed in the paper 
 "An Analytic Framework for Evaluating the Validity of Concept Inventory Claims" [@Jorion2015] 
 from the University of Chicago, while providing extra statistical routines based on Classical Test Theory. 
-Within the contents of this report, you will find graphical representations such as plots and graphs and tables all intended to validate the 3 claims proposed in Jorion’s paper.
+Within the contents of this report, you will find graphical representations such as plots, graphs, and tables all intended to validate the three claims proposed in Jorion’s paper.
 
 # Test Overview and Descriptions
 
@@ -137,7 +137,10 @@ Item Variance
 :    Measures the spread among item responses.
 
 Point-Biserial Correlation Coefficient
-:    (PBCC) Measures the correlation with the item removed to decrease the influence of the item on the measure of performance.
+:    (PBCC) Measures the Pearson correlation between a dichotomous variable, in this case the dichotomously scored item (correct/incorrect), and a continuous variable, in this case the overall test score.
+
+Modified Point-Biserial Correlation Coefficient
+:    (Modified PBCC) Measures PBCC where item scores are correlated to overall test scores without considering the given item in the overall test score.
 
 
 \newpage
