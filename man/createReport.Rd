@@ -9,7 +9,7 @@ createReport(answer_file = file.choose(), test_file = file.choose(),
   "MC Test Analysis"), author = ifelse(interactive(),
   readline("Test author: "), Sys.info()["user"]), out_file = paste0("Report",
   " - ", test_title), out_path = getwd(), out_fmt = "pdf",
-  open_file = TRUE, report_options = list(), ...)
+  open_file = TRUE, verbose = TRUE, report_options = list(), ...)
 }
 \arguments{
 \item{answer_file}{Path to the answer key data file}

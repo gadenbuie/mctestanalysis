@@ -31,23 +31,75 @@ createReport <- function(answer_file = file.choose(),
                          out_path = getwd(),
                          out_fmt  = 'pdf',
                          open_file = TRUE,
+                         verbose = TRUE,
                          report_options = list(),
                          ...) {
   stopifnot(out_fmt %in% c('pdf', 'html'))
-  cat('Using answer key: ')
-  cat(answer_file, '\n')
-  cat('Using test file: ')
-  cat(test_file, '\n')
+  if (verbose) cat('Using answer key: ')
+  if (verbose) cat(answer_file, '\n')
+  if (verbose) cat('Using test file: ')
+  if (verbose) cat(test_file, '\n')
   title <- paste('MC Test Analysis Report:', test_title)
   author <- author
 
-  cat("Loading data...")
+  if (verbose) cat("Loading data...")
   mctd <- loadAllData(answer_file, test_file, ...)
   mctd <- requires(mctd, c('item.analysis', 'irt_models'))
-  cat('done.\n')
+  if (verbose) cat('done.\n')
 
-  cat("Creating report...")
-  # Handle output format decisions
+  if (verbose) cat("Creating report...")
+  out_fmt <- choose_output_format(out_fmt)
+  out_file <- paste0(out_file, '.', out_fmt)
+
+  # Write report, but suppress output
+  suppressWarnings(
+    output_file <- rmarkdown::render(
+      system.file('rmd/mct-report.Rmd', package = 'MCTestAnalysis'),
+      output_format = output_format_function(out_fmt),
+      output_file = out_file,
+      output_dir = out_path,
+      quiet = TRUE
+    )
+  )
+  if (verbose) cat('done.\n')
+
+  # Try to open the file
+  if (open_file) {
+    tryCatch({
+      rstudioapi::verifyAvailable()
+      if (out_fmt == 'html') {
+        temp_file <- tempfile(fileext = '.html')
+        file.copy(output_file, temp_file, overwrite = TRUE)
+      } else temp_file <- output_file
+      rstudioapi::viewer(temp_file)
+      if (verbose) cat('Report saved to: ', output_file)
+    },
+    error = function(e) message('RStudio not running, report written to: ', output_file)
+    )
+  } else {
+    if (verbose) cat('Report saved to: ', output_file)
+  }
+}
+
+
+createReportFromMCTD <- function(mctd,
+                                 test_title = "Test Title",
+                                 author = 'Author',
+                                 file,
+                                 out_fmt = 'pdf',
+                                 report_options = list()) {
+  title <- paste('MC Test Analysis Report:', test_title)
+  author <- author
+
+  rmarkdown::render(
+    system.file('rmd/mct-report.Rmd', package = 'MCTestAnalysis'),
+    output_format = output_format_function(choose_output_format(out_fmt)),
+    output_file = file,
+    quiet = TRUE
+  )
+}
+
+choose_output_format <- function(out_fmt) {
   if (out_fmt == 'pdf') {
     # Check that pdflatex is installed, default to html otherwise
     if (.Platform$OS.type == 'windows') {
@@ -61,7 +113,10 @@ createReport <- function(answer_file = file.choose(),
               '\nInstall MiKTeX (Windows), MacTeX (Mac), or texlive (Linux) for PDF support.')
     }
   }
-  out_file <- paste0(out_file, '.', out_fmt)
+  return(out_fmt)
+}
+
+output_format_function <- function(out_fmt) {
   if (out_fmt == 'pdf') {
     fmt_func <- rmarkdown::pdf_document(toc = TRUE)
   } else {
@@ -71,49 +126,5 @@ createReport <- function(answer_file = file.choose(),
       theme = 'lumen'
     )
   }
-
-  # Write report, but suppress output
-  suppressWarnings(
-    output_file <- rmarkdown::render(
-      system.file('rmd/mct-report.Rmd', package = 'MCTestAnalysis'),
-      output_format = fmt_func,
-      output_file = out_file,
-      output_dir = out_path,
-      quiet = TRUE
-    )
-  )
-  cat('done.\n')
-
-  # Try to open the file
-  if (open_file) {
-    tryCatch({
-      rstudioapi::verifyAvailable()
-      if (out_fmt == 'html') {
-        temp_file <- tempfile(fileext = '.html')
-        file.copy(output_file, temp_file, overwrite = TRUE)
-      } else temp_file <- output_file
-      rstudioapi::viewer(temp_file)
-      cat('Report saved to: ', output_file)
-    },
-    error = function(e) message('RStudio not running, report written to: ', output_file)
-    )
-  } else {
-    cat('Report saved to: ', output_file)
-  }
-}
-
-
-createReportFromMCTD <- function(mctd,
-                                 test_title = "Test Title",
-                                 author = 'Author',
-                                 file) {
-  title <- paste('MC Test Analysis Report:', test_title)
-  author <- author
-
-  rmarkdown::render(
-    system.file('rmd/mct-report.Rmd', package = 'MCTestAnalysis'),
-    output_format = 'pdf_document',
-    output_file = file,
-    quiet = TRUE
-  )
+  return(fmt_func)
 }
