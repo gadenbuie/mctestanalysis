@@ -176,6 +176,7 @@ shinyServer(function(input, output, session) {
                   autoHideNavigation = TRUE,
                   rownames = FALSE,
                   fillContainer = FALSE,
+                  selection = ifelse(input$o_classic_summary_table == 'whole', 'single', 'none'),
                   options = list(
                     'pageLength' = 10,
                     # 'autoWidth' = TRUE,
@@ -186,41 +187,49 @@ shinyServer(function(input, output, session) {
   )
 
   output$txt_classic_summary <- renderUI({
+    classic_summary <- list(
+      'cronbach_alpha' = tags$p(tags$strong("Cronbach's Alpha."),
+                                "the parameter cronbach alpha is a measure of internal consistency or reliability of a scale.",
+                                "In other words, how closely related a set of items are as a group."
+      ),
+      'alpha_woi' = tags$p(tags$strong("Alpha without item (WOI)"),
+                           "provides a coefficient of internal reliability",
+                           "of the text were the item excluded."
+      ),
+      'difficulty_index' = tags$p(tags$strong("Difficulty Index"),
+                                  "is the proportion of students who answered the test item accurately."
+      ),
+      'item_variance' = tags$p(tags$strong("Item Variance"),
+                               "measures the spread among item responses."
+      ),
+      'discrimination_index' = tags$p(tags$strong("Discrimination Index"),
+                                      "indicates the ability of the assessment to differentiate between high and low scorers."
+      ),
+      'pbcc' = tags$p(tags$strong("Point Biserial Correlation Coefficient"),
+                      "(PBCC) measures correlation between correctly answering a given item",
+                      "and overall test scores."
+      ),
+      'mpbcc' = tags$p(tags$strong("Modified PBCC"),
+                       "(MPBCC) modified version of PBCC where the item score is removed from the overall score",
+                       "before calculating correlation."
+      )
+    )
     if (input$o_classic_summary_table == 'whole') {
-      helpText(
-        tags$p(tags$strong("Cronbach's Alpha."),
-               "the parameter cronbach alpha is a measure of internal consistency.",
-               "In other words, how closely related a set of items are as a group.",
-               "It is considered to be a measure of scale reliability.",
-               "Technically speaking, Cronbach’s alpha is not a statistical routine or test;",
-               "instead, it is a coefficient of reliability (or consistency).",
-               tags$a(href="http://www.ats.ucla.edu/stat/spss/faq/alpha.html",
-                      "What Does Cronbach's Alpha Mean?")
-        )
-      )
-    } else if (input$o_classic_summary_table == 'item') {
-      helpText(
-        tags$p(tags$strong("Alpha without item (WOI)"),
-               "provides a coefficient of internal reliability",
-               "of the text were the item excluded."
-        ),
-        tags$p(tags$strong("Difficulty Index"),
-               "is the proportion of students who answered the test item accurately."
-        ),
-        tags$p(tags$strong("Item Variance"),
-               "measures the spread among item responses."
-        ),
-        tags$p(tags$strong("Discrimination Index"),
-               "indicates the ability of the assessment to differentiate between high and low scorers."
-        ),
-        tags$p(
-          tags$strong("Point Biserial Correlation Coefficient"),
-          "(PBCC) measures correlation between correctly answering a given item",
-          "and overall test scores."
-        )
-      )
+      whole_summary_rows <- c('cronbach_alpha',
+                              'alpha_woi',
+                              'discrimination_index',
+                              'pbcc',
+                              'mpbcc',
+                              'item_variance')
+      if (length(input$t_classic_summary_rows_selected)) {
+        helpText(classic_summary[[whole_summary_rows[input$t_classic_summary_rows_selected]]])
+      } else {
+        helpText("Select a row from the table below for a brief description of the meaning of the statistic.")
+      }
+    } else if (input$o_classic_summary_table == 'concept') {
+      helpText(classic_summary[c(3,5:7,4)])
     } else {
-      helpText()
+      helpText(classic_summary)
     }
   })
 
