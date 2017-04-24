@@ -133,12 +133,12 @@ shinyServer(function(input, output, session) {
   )
 
   # ---- View Test Results ----
-  output$t_answer_key <- renderDataTable({
+  output$t_answer_key <- DT::renderDataTable({
     if (is.null(input$f_answer_key)) return(NULL)
     mctd()$AnswerKey
   }, options = list('pageLength' = 50))
 
-  output$t_test <- renderDataTable({
+  output$t_test <- DT::renderDataTable({
     if (is.null(input$f_test)) return(NULL)
     mctd()$Test %>%
       tibble::rownames_to_column('id') %>%

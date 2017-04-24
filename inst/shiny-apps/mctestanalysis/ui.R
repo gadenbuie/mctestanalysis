@@ -134,10 +134,10 @@ shinyUI(navbarPage(
              h3("View Test Results"),
              tabsetPanel(
                tabPanel("Answer Key",
-                        dataTableOutput('t_answer_key')
+                        column(8, DT::dataTableOutput('t_answer_key'))
                ),
                tabPanel("Test Data",
-                        dataTableOutput('t_test')
+                        column(10, DT::dataTableOutput('t_test'))
                ),
                tabPanel("Option Selection",
                         helpText("This table shows the number of students who ",
@@ -163,7 +163,7 @@ shinyUI(navbarPage(
                                               inline = TRUE)
                           )
                         ),
-                        DT::dataTableOutput('t_option_pct'))
+                        column(10, DT::dataTableOutput('t_option_pct')))
              )
            )
   ),
@@ -189,10 +189,13 @@ shinyUI(navbarPage(
                                    )
                             )
                           ),
-                          DT::dataTableOutput('t_classic_summary', width = 'auto')
+                          column(8, DT::dataTableOutput('t_classic_summary', width = 'auto'))
                  ),
                  tabPanel("Discrimination Index",
-                          helpText("Help text about this plot"),
+                          helpText("The below scatter plots compares the selected measure of item discrimination with the item difficulty.",
+                                   "Dotted guidelines indicate the recommended ranges for each index.",
+                                   "A discrimination index (or PBCC or Modified PBCC) of less than 0.2 is not recommended,",
+                                   "while item difficulty should generally be between 0.2 and 0.8."),
                           fluidRow(
                             column(4,
                                    selectInput('o_disc_type',
@@ -234,7 +237,7 @@ shinyUI(navbarPage(
                  tabPanel("Item Review",
                           helpText("This table uses a number of heuristics and guidelines ",
                                    "to guide the user in reviewing individual items",
-                                   "when deciding to keep, modify or discard test items."),
+                                   "when deciding to keep, modify or discard an item."),
                           fluidRow(
                             column(4,
                                    checkboxGroupInput('o_item_review_cols',
@@ -253,7 +256,7 @@ shinyUI(navbarPage(
                                    )
                             )
                           ),
-                          DT::dataTableOutput('t_item_review'))
+                          column(10, offset = 1, DT::dataTableOutput('t_item_review')))
                )
              )),
     tabPanel("Item Response Theory",
@@ -278,7 +281,7 @@ shinyUI(navbarPage(
                           )
                  ),
                  tabPanel("ICC",
-                          helpText("Choose to plot ICC for 1-, 2- or 3-PL IRT models. (More help text needed.)"),
+                          helpText("Plot the Item Characteristic Curves for 1-, 2- or 3-PL IRT models."),
                           fluidRow(
                             column(4, selectInput('o_icc_model',
                                                   'Choose Model',
@@ -310,16 +313,23 @@ shinyUI(navbarPage(
                h3("Factor Analysis Results"),
                tabsetPanel(
                  tabPanel("Tetrachoric Plot",
-                          helpText("Provides tetrachoric plot"),
+                          column(8, helpText(
+                            "The following plot shows the item-by-item", tags$em("tetrachoric correlation"),
+                            "for all questions in the test. The tetrachoric correlation estimates the correlation",
+                            "between two variables whose measurement is artificially dichotomized",
+                            "but whose underlying joint ditribution is a bivariate normal distribution.",
+                            "Structural features of the tetrachoric matrix directly correpsond to the",
+                            "structure of the underlying latent variables measured by the test.",
+                            "For more information and resources, visit the",
+                            tags$a(href = 'http://www.personality-project.org/r/book', "Personality Project webpage.")
+                          )),
                           fluidRow(
                             column(4,
                                    checkboxInput('o_tetra_show_concept', 'Show Concept Groups', value = TRUE)
                             )
                           ),
                           fluidRow(
-                            column(8, offset = 2,
-                                   plotOutput('p_tetra', height = '600px')
-                            )
+                            column(8,plotOutput('p_tetra', height = '600px'))
                           )
                  ),
                  tabPanel(
@@ -431,7 +441,7 @@ shinyUI(navbarPage(
                  ),
                  tabPanel("Table",
                    fluidRow(
-                     DT::dataTableOutput('t_distractor')
+                     column(10, DT::dataTableOutput('t_distractor'))
                    )
                  )
                )
