@@ -2,14 +2,22 @@
 
 This [R] package provides a nice set of interfaces via [Shiny] for the analysis and review of multiple choice tests.
 
-# Installation
+## Table of contents
 
-## Required Software
+- [Required Software](#required-software)
+    - [R](#r)
+    - [RStudio](#rstudio)
+    - [LaTeX](#latex)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Data Format](#data-format)
+
+# Required Software
 
 You need to download and install the latest version of the following software.
 If you already have recent versions of R, RStudio and LaTeX (optional) installed, you can skip ahead to the section on [installing the MCTestAnalysis library](#install-mctestanalysis).
 
-### R 
+## R 
 
 Using the MCTestAnalysis package does not require any R programming. 
 If you are interested in learning to program in R, RStudio have collated some excellent resources for [Learning R Programming](https://www.rstudio.com/online-learning/#R) on their webpage.
@@ -23,7 +31,7 @@ To install:
 - Click the link for the **base** distribution. This package was built and tested on R 3.3.2, although both this package and R may have been updated.
 
 
-### RStudio
+## RStudio
 
 [RStudio] is an IDE (an application that supports the development and use of a language) for R.
 The MCTestAnalysis package is best used from within RStudio, but the user only needs to be able to find the Console window to run the few commands [described below](#install-mctestanalysis).
@@ -37,7 +45,7 @@ To install:
 
 - Choose the appropriate installer for your OS under the **Installers for Supported Platforms** heading.
 
-### LaTeX
+## LaTeX
 
 LaTeX is required in order to create PDF reports.
 The package will fall back on HTML reports if `pdflatex` is not installed.
@@ -60,9 +68,9 @@ To install:
     - Or alternatively install the full texlive package with `sudo apt-get install texlive-latex-extra`.
 
 
-## Install MCTestAnalysis
+# Installation
 
-### Mac/Linux
+## Mac/Linux
 
 On Mac OS X or Unix-based systems, install this package by running the following commands inside [RStudio] or the [R] command line:
 
@@ -71,7 +79,7 @@ install.packages("devtools")
 devtools::install_github("gadenbuie/mctestanalysis")
 ```
 
-### Windows
+## Windows
 
 On Windows, the current version of `devtools` doesn't correctly install all package dependencies, so they need to be installed manually.
 
