@@ -590,4 +590,40 @@ shinyServer(function(input, output, session) {
       use_title = input$o_distractor_show_title
     )
   })
+
+  # ---- Export ----
+  output$export_report <- downloadHandler(
+    filename = function() {
+      if (input$export_test_title == '' && input$export_test_author == '') {
+        fname <- 'MCTestAnalysis_Report'
+      } else {
+        fname <- paste("MCTestAnalysisReport -", input$export_test_title, '-', input$export_test_author)
+      }
+      paste0(fname, '.', input$export_o_out_fmt)
+    },
+    content = function(file) {
+      showModal(modalDialog(title = 'Processing Report',
+                            paste('Processing test data and generating report, please wait.',
+                                  'Depending on the number of responses and the size of the test,',
+                                  'this should only take a few seconds or minutes.'),
+                            footer = NULL))
+      MCTestAnalysis:::createReportFromMCTD(
+        mctd(),
+        test_title = input$export_test_title,
+        author = input$export_test_author,
+        file = file,
+        out_fmt = input$export_o_out_fmt,
+        report_options = list(
+          'irt_model_choice' = if (input$export_test_pl_number != 'Auto') input$export_test_pl_number,
+          'icc_group'        = input$export_o_icc_group,
+          'distractor.pct'   = input$export_distractor.pct,
+          'efa.nfactors'     = input$export_o_efa_nfactors,
+          'efa.rotate'       = input$export_o_efa_rotate,
+          'efa.fm'           = input$export_o_efa_fm,
+          'efa.cut'          = input$export_o_efa_cut
+        )
+      )
+      removeModal()
+    }
+  )
 })

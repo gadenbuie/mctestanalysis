@@ -383,10 +383,6 @@ shinyUI(navbarPage(
                      ),
                      mainPanel(
                        tabsetPanel(
-                         # tabPanel(
-                         #   "Factor Loadings",
-                         #   DT::dataTableOutput('t_efa_factor_loadings')
-                         # ),
                          tabPanel(
                            "Factor Loadings",
                            tableOutput('t_efa_factor_loadings')
@@ -401,7 +397,6 @@ shinyUI(navbarPage(
                  )
                )
              )),
-    # tabPanel("Diagnostic Classification Modeling")
     tabPanel("Distractor Analysis",
              fluidPage(
                h3("Distractor Analysis Results"),
@@ -446,6 +441,82 @@ shinyUI(navbarPage(
                  )
                )
              ))
+  ),
+  tabPanel(
+    "Export",
+    tags$h3("Create and Download Report"),
+    fluidRow(
+      column(6,
+        tags$h4("Test Information"),
+        helpText("Download a report containing a summary of the analysis demonstrated",
+                 "throughout this interface. The report will use the test data you chose",
+                 'in the "Import" tab. Fill in the test details below and choose your desired',
+                 "output options from the selections on the right."
+        ),
+        textInput('export_test_title', 'Test Title'),
+        textInput('export_test_author', 'Author'),
+        selectInput('export_o_out_fmt', 'Output Format', choices = c('PDF' = 'pdf', 'HTML' = 'html')),
+        downloadButton('export_report', label = 'Generate Report', class = 'btn-primary'),
+        helpText('Generating the report may take a little while once the button is clicked.')
+      ),
+      column(6,
+        tags$h4("Report Settings"),
+        tags$h5("IRT Settings"),
+        radioButtons('export_test_pl_number', 'IRT Model',
+                     choices = c('Lowest AIC' = 'Auto', 'Rasch (1 PL)' = 1, '2 PL' = 2, '3 PL' = 3),
+                     selected = 1,
+                     inline = TRUE),
+        radioButtons("export_o_icc_group", "Plot ICC Curves",
+                     choices = c('Grouped by Concept' = 'concept', 'By Item (Ungrouped)' = 'question'),
+                     inline = TRUE),
+        tags$hr(),
+        tags$h5("Distractor Analysis Settings"),
+        sliderInput(
+          'export_distractor.pct',
+          'Percentile for high/low performance group',
+          min = 0, max = 0.5, step = 0.01, value = 0.33
+        ),
+        tags$hr(),
+        tags$h5("Exploratory Factor Analysis"),
+        helpText(
+          "See the",
+          tags$a(href = 'https://cran.r-project.org/web/packages/psych/',
+                 tags$code("psych"), "package documentation"),
+          "for more information about these options."
+        ),
+        selectInput(
+          'export_o_efa_nfactors',
+          'Number of Factors',
+          choices = c('# of Concepts' = 0, 'Auto (Scree Recommendation)' = -1, 1:15)
+        ),
+        selectInput(
+          'export_o_efa_rotate',
+          'Rotation Method',
+          choices = list(
+            'None' = 'none',
+            'Orthogonal' = c("varimax", "quartimax", "bentlerT", "equamax", "varimin", "geominT", "bifactor"),
+            'Oblique' = c("Promax", "oblimin", "simplimax", "bentlerQ", "geominQ", "biquartimin", "cluster" )
+          ),
+          selected = 'varimax'
+        ),
+        selectInput(
+          'export_o_efa_fm',
+          'Factor Method',
+          choices = c('Minimum Residual' = 'minres',
+                      'Weighted Least Squares' = 'wls',
+                      'Generalized WLS' = 'gls',
+                      'Principal Factor' = 'pa',
+                      'Maximimum Likelihood' = 'ml',
+                      'Minimixed Weighted Chi Square' = 'minchi',
+                      'Minimum Rank Factor Analysis' = 'minrank')
+        ),
+        sliderInput(
+          'export_o_efa_cut',
+          'Factor Loading Cutoff',
+          min = 0, max = 1, value = 0.3, step = 0.05
+        )
+      )
+    )
   ),
   tabPanel("About")
   # Page output will go here
