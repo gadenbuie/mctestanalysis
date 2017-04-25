@@ -15,6 +15,7 @@
 #'   If \code{pdflatex} is not found, the report will fall back to HTML output.
 #' @param open_file Should the report file be opened automatically once
 #'   generated?
+#' @param verbose If TRUE, notes about progress are written to the console.
 #' @param report_options A list of options that affect analysis parameters and
 #'   results displayed inside the report. Report options include
 #'   \code{irt_model_choice}, \code{icc_group} (\code{"question"} or

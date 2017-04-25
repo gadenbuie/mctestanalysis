@@ -112,12 +112,13 @@ report()
 When running `explore()` a browser window will open with the MC Test Analysis exploration application.
 The `report()` function will launch a window within RStudio to guide the user through the creation of a PDF report.
 
-A longer, more detailed introduction to the package, its usage and the required data format is available at <http://www.eng.usf.edu/~kaw/MCTestAnalysis/MCTestAnalysis_input.pdf>.
-
 # Data format
 
 This package requires both an Answer Key and a table of student responses. 
 An example of each table is provided, in the preferred format, in the  [`inst/extdata` folder](inst/extdata) of this repo, or from links on the "Import" tab of the `explore()` or `report()` interfaces.
+
+A detailed overview of the required data format is available at <http://www.eng.usf.edu/~kaw/MCTestAnalysis/MCTestAnalysis_input.pdf>.
+Additional example [test results](http://www.eng.usf.edu/~kaw/MCTestAnalysis/sample_answer_key.csv) and [answer key](http://www.eng.usf.edu/~kaw/MCTestAnalysis/sample_student_answers.csv) CSV files are also available.
 
 [R]: https://cran.r-project.org/
 [Shiny]: http://shiny.rstudio.com/
