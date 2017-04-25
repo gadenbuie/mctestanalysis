@@ -191,6 +191,11 @@ shinyUI(navbarPage(
                           ),
                           column(8, DT::dataTableOutput('t_classic_summary', width = 'auto'))
                  ),
+                 tabPanel("Histogram",
+                          helpText("The plot below shows the histogram of overall test scores for all students,",
+                                   "with a (scaled) normal curve overlay for reference."),
+                          column(8, plotOutput('p_classic_histogram'))
+                 ),
                  tabPanel("Discrimination Index",
                           helpText("The below scatter plots compares the selected measure of item discrimination with the item difficulty.",
                                    "Dotted guidelines indicate the recommended ranges for each index.",

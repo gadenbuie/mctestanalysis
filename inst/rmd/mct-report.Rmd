@@ -75,25 +75,7 @@ as_table(mctd$AnswerKey)
 ## Overall Score Histogram
 
 ```{r overall-histogram, fig.height=3, fig.width=9}
-# Credit: JWilliman @ http://stackoverflow.com/a/36344354
-n        <- length(mctd$scores)
-mean     <- mean(mctd$scores, na.rm = TRUE)
-sd       <- sd(mctd$scores, na.rm = TRUE)
-binwidth <- 0.05
-
-data.frame(ids = names(mctd$scores), overall = mctd$scores) %>% 
-  ggplot(aes(x = overall)) +
-  geom_histogram(bins = 25, color = 'white')+
-  stat_function( 
-    fun = function(x, mean, sd, n, bw){ 
-      dnorm(x = x, mean = mean, sd = sd) * n * bw
-    }, 
-    args = c(mean = mean, sd = sd, n = n, bw = binwidth),
-    color = 'red')+
-  xlim(0, 1)+
-  theme_minimal()+
-  labs(y = "Count", x = "Overall Score")+
-  ggtitle("Histogram of Overall Test Scores")
+plotOverallHistogram(mctd)
 ```
 
 ## Option Selection by Item

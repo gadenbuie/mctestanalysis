@@ -200,6 +200,7 @@ discriminationDifficultyPlot <- function(mctd,
     if (requireNamespace('ggrepel', quietly = TRUE)) {
       g <- g + ggrepel::geom_text_repel(show.legend = FALSE)
     } else {
+      warning("For better point labelling, install ggrepel with: install.packages(\"ggrepel\")")
       g <- g + geom_text(nudge_x = -0.025, show.legend = FALSE)
     }
   }
@@ -270,6 +271,44 @@ testScoreByQuestionPlot <- function(mctd,
   return(g)
 }
 
+#' Plot a histogram of overall test scores
+#'
+#' Plots a histogram of overall test scores with an optional scaled normal curve
+#' overlaid for reference.
+#'
+#' @inheritParams mcTestAnalysisData
+#' @param add_normal If TRUE, adds a scaled normal curve to the plot.
+#' @param binwidth Sets the \code{binwidth} of the histogram bars.
+#' @import ggplot2
+#' @export
+plotOverallHistogram <- function(mctd, add_normal = TRUE, binwidth = 0.05) {
+  mctd <- requires(mctd, 'scores')
+  should_have(mctd, 'scores')
+
+  n        <- length(mctd$scores)
+  mean     <- mean(mctd$scores, na.rm = TRUE)
+  sd       <- sd(mctd$scores, na.rm = TRUE)
+
+  g <- data.frame(ids = names(mctd$scores), overall = mctd$scores) %>%
+    ggplot(aes(x = overall)) +
+    geom_histogram(bins = ceiling(1/binwidth), color = 'white')
+
+  if (add_normal) {
+    # Credit: JWilliman @ http://stackoverflow.com/a/36344354
+    g <- g + stat_function(
+      fun = function(x, mean, sd, n, bw){
+        dnorm(x = x, mean = mean, sd = sd) * n * bw
+      },
+      args = c(mean = mean, sd = sd, n = n, bw = binwidth),
+      color = 'red'
+    )
+  }
+  g +
+    xlim(0, 1) +
+    theme_minimal() +
+    labs(y = "Count", x = "Overall Score") +
+    ggtitle("Histogram of Overall Test Scores")
+}
 
 #' Generate Classic Test Theory Results Summary Table
 #'
@@ -291,12 +330,15 @@ summarizeCTT <- function(mctd,
   if (summarize_by == 'whole') {
     # Overall Test Summary
     # Average of: alpha, difficulty index, discrimination index, item variance, pbcc
-    x <- c('Cronbach Alpha'            = mctd$alpha$total$raw_alpha,
-           'Avg. Difficulty Index'     = mean(mctd$item.analysis$Difficulty),
-           'Avg. Discrimination Index' = mean(mctd$discrimination_index),
-           'Avg. PBCC'                 = mean(mctd$pbcc),
-           'Avg. Modified PBCC'        = mean(mctd$pbcc_modified),
-           'Avg. Item Variance'        = mean(apply(mctd$item.score, 2, sd)^2))
+    x <- c(
+      'Avg. Overall Score'        = mean(mctd$scores),
+      'Cronbach Alpha'            = mctd$alpha$total$raw_alpha,
+      'Avg. Difficulty Index'     = mean(mctd$item.analysis$Difficulty),
+      'Avg. Discrimination Index' = mean(mctd$discrimination_index),
+      'Avg. PBCC'                 = mean(mctd$pbcc),
+      'Avg. Modified PBCC'        = mean(mctd$pbcc_modified),
+      'Avg. Item Variance'        = mean(apply(mctd$item.score, 2, sd)^2)
+    )
     x <- round(x, digits.round)
     data.frame('Measure' = names(x),
                'Value' = x)

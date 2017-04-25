@@ -170,6 +170,8 @@ shinyServer(function(input, output, session) {
     summarizeCTT(mctd(), input$o_classic_summary_table)
   })
 
+
+
   output$t_classic_summary <- DT::renderDataTable(
     DT::datatable(summarize_ctt(),
                   filter = ifelse(input$o_classic_summary_table %in% c('whole', 'concept'), 'none', 'bottom'),
@@ -188,9 +190,12 @@ shinyServer(function(input, output, session) {
 
   output$txt_classic_summary <- renderUI({
     classic_summary <- list(
-      'cronbach_alpha' = tags$p(tags$strong("Cronbach's Alpha."),
-                                "the parameter cronbach alpha is a measure of internal consistency or reliability of a scale.",
-                                "In other words, how closely related a set of items are as a group."
+      'avg_overall' = tags$p(tags$strong("Average Overall Score"),
+                             'is the average score on the test, considering all items when scored as correct/incorrect.'
+      ),
+      'cronbach_alpha' = tags$p(tags$strong("Cronbach's Alpha"),
+                                "is a measure of the internal consistency or reliability of a scale --",
+                                "in other words, how closely related a set of items are as a group."
       ),
       'alpha_woi' = tags$p(tags$strong("Alpha without item (WOI)"),
                            "provides a coefficient of internal reliability",
@@ -215,7 +220,8 @@ shinyServer(function(input, output, session) {
       )
     )
     if (input$o_classic_summary_table == 'whole') {
-      whole_summary_rows <- c('cronbach_alpha',
+      whole_summary_rows <- c('avg_overall',
+                              'cronbach_alpha',
                               'alpha_woi',
                               'discrimination_index',
                               'pbcc',
@@ -227,10 +233,15 @@ shinyServer(function(input, output, session) {
         helpText("Select a row from the table below for a brief description of the meaning of the statistic.")
       }
     } else if (input$o_classic_summary_table == 'concept') {
-      helpText(classic_summary[c(3,5:7,4)])
+      helpText(classic_summary[c(3,5:7,4)+1])
     } else {
-      helpText(classic_summary)
+      helpText(classic_summary[-1])
     }
+  })
+
+  output$p_classic_histogram <- renderPlot({
+    if (is.null(mctd())) return(NULL)
+    plotOverallHistogram(mctd())
   })
 
   output$p_discrimination <- renderPlot({
