@@ -47,4 +47,3 @@ results displayed inside the report. Report options include
 Creates a static PDF file containing a report on the properties of the test
 using Classic Test Theory and Item Response Theory.
 }
-

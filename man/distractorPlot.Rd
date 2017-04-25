@@ -20,4 +20,3 @@ percentage be displayed?}
 Plots the distractor analysis results as provided by
 \code{\link{distractorTable}}.
 }
-

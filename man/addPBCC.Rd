@@ -13,4 +13,3 @@ addPBCC(mctd)
 Calculates standard PBCC (or Pearson-moment correlation), in which the
 answers to each item are correlated with overall test performance.
 }
-

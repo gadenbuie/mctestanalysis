@@ -14,4 +14,3 @@ Runs \code{\link[psych]{alpha}} from the \link{psych} package and adds
 Cronbach alpha and overall student test score results to
 \link{mcTestAnalysisData} as \code{alpha} and \code{scores}.
 }
-

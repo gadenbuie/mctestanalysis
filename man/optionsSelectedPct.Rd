@@ -26,4 +26,3 @@ options? (Default: FALSE)}
 Returns a dataframe summarizing the percentage of students who chose each of
 the options availble for each question.
 }
-

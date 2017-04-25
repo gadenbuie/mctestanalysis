@@ -47,6 +47,7 @@ based on published guidelines.
   point-biserial correlation coefficient is greater than 0.3, then the
   recommendation is to Keep the item.
 }
+
 \references{
 Jorion, N., Gane, B. D., James, K., Schroeder, L., Dibello, L.
   V., & Pellegrino, J. W. (2015). An Analytic Framework for Evaluating the
@@ -58,4 +59,3 @@ Sleeper, Rebecca. 2011. “Keep, Toss or Revise? Tips for Post-Exam
   \url{http://www.ttuhsc.edu/sop/administration/enhancement/documents/Sleeper_Handout.ppt}
   (No longer available online)
 }
-

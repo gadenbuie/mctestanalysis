@@ -16,4 +16,3 @@ returned in addition to scree plot?}
 Wraps \code{\link[psych]{fa.parallel}} to provide scree plot or automatic
 determination of appropriate number of components or factors to extract.
 }
-

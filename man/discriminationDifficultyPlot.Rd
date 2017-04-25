@@ -35,4 +35,3 @@ Plots discrimination index, as calculated using the \code{"conventional"}
 formula, or via \code{"PBCC"}, against difficulty index. Several parameters
 control settings related to the appearance of the final plot.
 }
-

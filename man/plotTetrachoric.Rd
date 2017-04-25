@@ -19,4 +19,3 @@ to be equal (square plot).}
 This function is a simple wrapper for the \link[psych]{tetrachoric} function
 provided by the \code{psych} package.
 }
-

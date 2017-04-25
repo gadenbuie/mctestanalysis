@@ -81,12 +81,15 @@ devtools::install_github("gadenbuie/mctestanalysis")
 
 ## Windows
 
-On Windows, the current version of `devtools` doesn't correctly install all package dependencies, so they need to be installed manually.
+On Windows, the current version of `devtools` doesn't correctly install all package dependencies, so they need to be installed manually before installing the MCTestAnalysis package.
 
 Copy and paste the following command into the RStudio console or the R command line to install the MCTestAnalysis package dependencies.
 
 ```r
-install.packages(c("devtools", "dplyr", "ggplot2", "shiny", "miniUI", "ltm", "psych", "psychometric", "reshape2", "tibble", "DT", "rmarkdown", "pander", "gridExtra", "survival"))
+install.packages(c("devtools", "dplyr", "ggplot2", "shiny", "miniUI",
+                   "ltm", "psych", "psychometric", "reshape2", "tibble",
+                   "DT", "rmarkdown", "backports", "pander", "gridExtra",
+                   "survival"))
 ```
 
 Then run the following to complete the installation of the MCTestAnalysis package.

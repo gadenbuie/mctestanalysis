@@ -12,4 +12,3 @@ addTetrachoric(mctd)
 \description{
 Adds tetrachoric correlation to the \link{mcTestAnalysisData} object.
 }
-

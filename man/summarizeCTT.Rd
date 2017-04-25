@@ -18,4 +18,3 @@ summarizeCTT(mctd, summarize_by = "whole",
 \description{
 Summarizes Classic Test Theory results for the loaded test.
 }
-

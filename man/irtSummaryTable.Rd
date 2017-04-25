@@ -22,4 +22,3 @@ Creates summary table of coefficients for the IRT models.
 \seealso{
 \code{\link{addIRTfits}}
 }
-

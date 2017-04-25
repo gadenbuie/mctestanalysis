@@ -17,4 +17,3 @@ testScoreByQuestionPlot(mctd, concepts = unique(mctd$AnswerKey$Concept),
 \description{
 Boxplot of test scores compared with question responses.
 }
-

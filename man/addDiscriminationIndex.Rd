@@ -25,4 +25,3 @@ answers in each group.
   A. Rasch Measurement Transactions, 1998, 12:1 p. 626.
   \url{http://www.rasch.org/rmt/rmt121r.htm}
 }
-

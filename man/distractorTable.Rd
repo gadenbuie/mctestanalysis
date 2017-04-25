@@ -20,4 +20,3 @@ of test scores. A table is returned containing a count, within-group
 percentage and overall percentage of respondents from each of the performance
 groups who chose each option for all questions.
 }
-

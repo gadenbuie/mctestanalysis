@@ -10,4 +10,3 @@ loadDataGadget()
 Use a Shiny Gadget to load the test data. Upon clicking "Load Data" a list
 is returned containing the data required for the MCTestAnaylsis package.
 }
-

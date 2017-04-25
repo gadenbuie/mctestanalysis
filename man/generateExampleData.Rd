@@ -36,4 +36,3 @@ This is a quick-and-dirty style exam results generator that can be used to
 provide, if nothing else, an example test data set that will work throughout
 all of the MCTestAnalysis functions and interfaces.
 }
-

@@ -16,4 +16,3 @@ efaTable(mctd, cut = 0.3, ...)
 \description{
 Prints EFA factor loadings.
 }
-

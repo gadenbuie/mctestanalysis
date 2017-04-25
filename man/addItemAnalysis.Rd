@@ -16,4 +16,3 @@ addItemAnalysis(mctd, ...)
 Runs \code{\link{item.exam}} from the \link{psychometric} package and adds
 item analysis results to \link{mcTestAnalysisData} as \code{item.analysis}.
 }
-

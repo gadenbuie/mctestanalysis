@@ -14,4 +14,3 @@ Adds a matrix called \code{item.score} to the \link{mcTestAnalysisData}
 object. Rows are students, columns represent questions and each entry is
 a binary correct/incorrect response.
 }
-

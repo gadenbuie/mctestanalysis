@@ -12,4 +12,3 @@ addSubscaleConcept(mctd)
 \description{
 Add subscale alpha and CTT reliability analysis to \link{mcTestAnalysisData}.
 }
-

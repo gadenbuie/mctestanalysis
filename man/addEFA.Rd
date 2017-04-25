@@ -25,4 +25,3 @@ addEFA(mctd, nfactors = length(unique(mctd$AnswerKey$Concept)),
 Wraps \code{\link[psych]{fa}} function, see \code{\link[psych]{fa}} for more
 information.
 }
-
