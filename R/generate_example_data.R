@@ -27,6 +27,7 @@ generateExampleData <- function(
   write_files                      = TRUE
 ) {
   set.seed(seed)
+  n.questions <- n.concepts*n.q_per_concept
 
   concept_diff  <- setNames(runif(n.concepts,
                                   min = concept_difficulty_min_max[1],
