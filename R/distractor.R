@@ -1,4 +1,4 @@
-#' Distractor Analysis
+#' Summarize Distractor Analysis
 #'
 #' Respondents are grouped into High- or Low-performing quantiles according to
 #' their overall test score and the quantile given by \code{pct}. If a middle
@@ -11,7 +11,7 @@
 #' @inheritParams mcTestAnalysisData
 #' @param pct Percentage for top/bottom comparison
 #' @export
-distractorTable <- function(mctd, pct = 0.33) {
+summarizeDistractors <- function(mctd, pct = 0.33) {
   mctd <- requires(mctd, 'scores')
   should_have(mctd, 'AnswerKey', 'Test.complete', 'scores')
 
@@ -73,16 +73,16 @@ distractorTable <- function(mctd, pct = 0.33) {
 #' Plot Distractor Analysis
 #'
 #' Plots the distractor analysis results as provided by
-#' \code{\link{distractorTable}}.
+#' \code{\link{summarizeDistractors}}.
 #'
-#' @inheritParams distractorTable
+#' @inheritParams summarizeDistractors
 #' @param pct_relative Should relative (within-group) percentage or overall
 #'   percentage be displayed?
 #' @param use_title Should the question title be included in the plot output?
 #' @export
-distractorPlot <- function(mctd, pct = 0.33, pct_relative = FALSE, use_title = FALSE) {
+plotDistractors <- function(mctd, pct = 0.33, pct_relative = FALSE, use_title = FALSE) {
   pct <- check_pct(pct)
-  choices <- distractorTable(mctd, pct)
+  choices <- summarizeDistractors(mctd, pct)
 
   choices$Group <- factor(choices$Group,
                           levels = c('low', 'high'),

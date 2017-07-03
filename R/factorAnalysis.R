@@ -7,7 +7,7 @@
 #' @param return_nfactcomp Should suggested number of factors and components be
 #'   returned in addition to scree plot?
 #' @export
-screePlot <- function(mctd, return_nfactcomp = FALSE) {
+plotScree <- function(mctd, return_nfactcomp = FALSE) {
   mctd <- requires(mctd, 'tetrachoric')
   should_have(mctd, 'tetrachoric', 'Test.complete')
 
@@ -26,8 +26,8 @@ screePlot <- function(mctd, return_nfactcomp = FALSE) {
 
 #' Exploratory Factor Analysis
 #'
-#' Wraps \code{\link[psych]{fa}} function, see \code{\link[psych]{fa}} for more
-#' information.
+#' Wraps \code{\link[psych]{fa}} function from the \code{\link{psych}} package;
+#' see \code{\link[psych]{fa}} for more information.
 #'
 #' @inheritParams mcTestAnalysisData
 #' @inheritParams psych::fa
@@ -48,15 +48,15 @@ addEFA <- function(mctd,
 }
 
 
-#' Exploratory Factor Table
+#' Summarize Exploratory Factor Analysis
 #'
-#' Prints EFA factor loadings.
+#' Prints a table with EFA factor loadings.
 #'
 #' @inheritParams addEFA
 #' @param cut Suppress factor loadings not greater than this value
 #' @param ... Passed to \code{\link{addEFA}}.
 #' @export
-efaTable <- function(mctd, cut = 0.3, ...) {
+summarizeEFA <- function(mctd, cut = 0.3, ...) {
   if (!('efa' %in% names(mctd))) {
     mctd <- addEFA(mctd, ...)
   }

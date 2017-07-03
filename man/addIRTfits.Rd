@@ -10,22 +10,24 @@ addIRTfits(mctd)
 \item{mctd}{Existing mcTestAnalysis data object}
 }
 \description{
-Adds item response theory model fits to the \link{mcTestAnalysisData} object.
+Adds item response theory model fits to an \link{mcTestAnalysisData} object,
+using the \code{\link{ltm}} package.
 }
 \section{Parameter Description}{
 
 
   \strong{Difficulty.} The difficulty parameter, \eqn{\beta}, sometimes
   called the threshold parameter, describes the difficulty of a given item.
-  It is the only parameter estimated in the 1PL (Rasch) model.
+  It is the only parameter estimated in the 1PL (Rasch) model. Uses
+  \code{\link[ltm]{rasch}} from \code{ltm}.
 
   \strong{Discrimination.} The discrimination parameter, \eqn{\alpha},
   reflects the effectiveness of the item in differentiating between high- and
   low-performing students. This parameter is estimated in the 2PL model, in
-  addition to difficulty.
+  addition to difficulty. Uses \code{\link[ltm]{ltm}} from \code{ltm}.
 
   \strong{Guessing.} The guessing parameter, \eqn{\gamma}, is included in the
   3PL model, in addition the previous parameters, and reflects the influence
-  of guessing for each item.
+  of guessing for each item. Uses \code{\link[ltm]{tpm}} from \code{ltm}.
 }
 

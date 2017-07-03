@@ -16,6 +16,6 @@ group and guidelines and guide text are added to the plot.}
 to be equal (square plot).}
 }
 \description{
-This function is a simple wrapper for the \link[psych]{tetrachoric} function
-provided by the \code{psych} package.
+This function creates a tetrachoric correlation plot using the
+\link[psych]{tetrachoric} function provided by the \code{psych} package.
 }

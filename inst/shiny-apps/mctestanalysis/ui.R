@@ -14,7 +14,7 @@ shinyUI(navbarPage(
       tags$head(tags$style(HTML(
         ".tab-content { padding-top: 10px; }"
       ))),
-      # ---- Import Data ----
+      # ---- Tab: Import Data ----
       h3("Import Test Data"),
       tabsetPanel(
         tabPanel("Import Data",
@@ -128,7 +128,7 @@ shinyUI(navbarPage(
       )
     )
   }),
-  # ---- View Test Results ----
+  # ---- Tab: View Test Results ----
   tabPanel("View",
            fluidPage(
              h3("View Test Results"),
@@ -167,9 +167,10 @@ shinyUI(navbarPage(
              )
            )
   ),
-  # ---- Analysis Results Dropdown Menu ----
+  # ---- Dropdown Menu: Analysis ----
   navbarMenu(
     'Analysis',
+    # ---- Analysis > Tab: Classic Test Theory ----
     tabPanel("Classic Test Theory",
              fluidPage(
                h3("Classic Test Theory Results"),
@@ -264,6 +265,7 @@ shinyUI(navbarPage(
                           column(10, offset = 1, DT::dataTableOutput('t_item_review')))
                )
              )),
+    # ---- Analysis > Tab: Item Response Theory ----
     tabPanel("Item Response Theory",
              fluidPage(
                h3("Item Response Theory Results"),
@@ -313,6 +315,7 @@ shinyUI(navbarPage(
                  )
                )
              )),
+    # ---- Analysis > Tab: Factor Analysis ----
     tabPanel("Factor Analysis",
              fluidPage(
                h3("Factor Analysis Results"),
@@ -402,6 +405,7 @@ shinyUI(navbarPage(
                  )
                )
              )),
+    # ---- Analysis > Tab: Distractor Analysis ----
     tabPanel("Distractor Analysis",
              fluidPage(
                h3("Distractor Analysis Results"),
@@ -447,6 +451,7 @@ shinyUI(navbarPage(
                )
              ))
   ),
+  # ---- Tab: Export ----
   tabPanel(
     "Export",
     tags$h3("Create and Download Report"),
@@ -523,9 +528,70 @@ shinyUI(navbarPage(
       )
     )
   ),
-  tabPanel("About")
-  # Page output will go here
-))
+  # ---- Tab: About ----
+  tabPanel(
+    "About",
+    column(
+      8, offset = 2,
+      tags$h3("About"),
+      p(
+        "Many educators design multiple-choice question examination.",
+        "How do we know that these tests are valid and reliable?",
+        "How can we improve upon the test by way of modifying, revising and deleting items based on student responses?"
+      ),
+      p(
+        "In a paper in the highly regarded Journal of Engineering Education, Jorion, et al (2016) developed \"an analytical framework for evaluating the validity of concept inventory claims\".",
+        "We believe that we can use this framework to help educators design their multiple-choice tests as well, especially, if they are designed as the final mastery examination in a course.",
+        "An open source software to analyze a multiple-choice question examination would be encouraging to educators who have minimal programming experience and promising to contributors who would enhance the program."
+      ),
+      tags$hr(),
+      tags$h3("Authors"),
+      p(
+        tags$strong("Garrick Aden-Buie"),
+        tags$a(href = 'http://garrickadenbuie.com', "is a doctoral candidate"),
+        "in",  tags$a(href = "http://imse.eng.usf.edu", "Industrial and Management Systems Engineering"),
+        "at the University of South Florida.",
+        "He is an avid R enthusiast and programmer.",
+        "His research focus is on collecting, storing, processing, visualizing and learning from passive sensors networks in smart homes.",
+        "He is also passionate about bringing together education, data science and interactive R tools to improve education outcomes in higher education."
+      ),
+      p(
+        tags$strong('Autar Kaw'), "is a",
+        tags$a(href = "http://www.eng.usf.edu/~kaw", "professor of mechanical engineering"),
+        'and Jerome Krivanek Distinguished Teacher at the',
+        tags$a(href = "http://usf.edu/", 'University of South Florida.'),
+        "He is a recipient of the 2012",
+        tags$a(href = "http://www.usprofessorsoftheyear.org/Winners.html", "U.S. Professor of the Year Award"),
+        "from the Council for Advancement and Support of Education (CASE) and Carnegie Foundation for Advancement of Teaching.",
+        "Professor Kaw's related",
+        tags$a(href = "http://www.eng.usf.edu/~kaw/research/", "main scholarly interests"),
+        "are in engineering education research, open courseware development, and the state and future of higher education.",
+        "His education research has been funded by National Science Foundation since 2002."
+      ),
+      tags$hr(),
+      tags$h3("References"),
+      tags$h4("Test Theory References"),
+      REFERENCES_THEORY,
+      tags$h4("Packages Used"),
+      REFERENCES_PKGS,
+      p(tags$em("MCTestAnalysis"), 'was built in R using the following packages:'),
+      tags$ul(
+        pkg_url_li('psych'),
+        pkg_url_li('psychometric'),
+        pkg_url_li('ltm'),
+        pkg_url_li('shiny'),
+        pkg_url_li('dplyr'),
+        pkg_url_li('ggplot2'),
+        pkg_url_li('reshape2'),
+        pkg_url_li('rmarkdown'),
+        pkg_url_li('DT'),
+        pkg_url_li('tibble'),
+        pkg_url_li('gridExtra'),
+        pkg_url_li('miniUI')
+      )
+    )
+  )
+  ))
 
 
 # fluidPage(

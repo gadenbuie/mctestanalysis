@@ -10,5 +10,6 @@ addTetrachoric(mctd)
 \item{mctd}{Existing mcTestAnalysis data object}
 }
 \description{
-Adds tetrachoric correlation to the \link{mcTestAnalysisData} object.
+Adds tetrachoric correlation to the \link{mcTestAnalysisData} object, using
+\code{\link[psych]{tetrachoric}} from the \link{psych} package.
 }

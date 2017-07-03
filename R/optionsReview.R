@@ -1,4 +1,4 @@
-#' Option selection per question
+#' Summarize Option Selection per Question
 #'
 #' Returns a dataframe summarizing the percentage of students who chose each of
 #' the options availble for each question.
@@ -12,7 +12,7 @@
 #' @param correct_vs_incorrect Group option into correct option vs incorrect
 #'   options? (Default: FALSE)
 #' @export
-optionsSelectedPct <- function(mctd,
+summarizeSelectedOptions <- function(mctd,
                                include_columns = c("Title", "Answer", "Concept"),
                                questions_as_row_names = FALSE,
                                as_percentage = FALSE,

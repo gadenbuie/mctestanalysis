@@ -10,7 +10,7 @@ addAlpha(mctd)
 \item{mctd}{Existing mcTestAnalysis data object}
 }
 \description{
-Runs \code{\link[psych]{alpha}} from the \link{psych} package and adds
+Runs \code{\link[psych]{alpha}} from the \code{\link{psych}} package and adds
 Cronbach alpha and overall student test score results to
 \link{mcTestAnalysisData} as \code{alpha} and \code{scores}.
 }

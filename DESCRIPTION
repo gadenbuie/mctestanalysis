@@ -1,21 +1,24 @@
 Package: MCTestAnalysis
 Type: Package
 Title: Multiple Choice Test Analysis
-Version: 0.0.62
-Author: c( person("Autar", "Kaw", email = "kaw@usf.edu", role = "cre"),
-    person("Garrick", "Aden-Buie", email = "gadenbuie@mail.usf.edu", role = "aut"),
-    person("Alvaro", "Lopez", role = "aut"))
+Version: 0.1.0
+Author: Garrick Aden-Buie, Autar Kaw
+Authors@R: c(
+    person("Garrick", "Aden-Buie",, "gadenbuie@mail.usf.edu", c("aut", "cre", "cph")),
+    person("Autar", "Kaw",, "kaw@usf.edu", role = c('aut', 'cph'))
+    )
 Maintainer: Garrick Aden-Buie <gadenbuie@mail.usf.edu>
-Description: The purpose of this generated report is to provide the analytical
-    framework proposed in the paper "An Analytic Framework for Evaluating the
-    Validity of Concept Inventory Claims" (Natalie Jorion et al., 2015) from
-    the University of Chicago, while providing extra statistical routines based
-    on Classical Test Theory. Within the contents of this package, you will find
-    graphical representations such as plots and graphs and tables all intended
-    to validate the 3 claims proposed in Jorion's paper.
-License: Not released yet
+Description: MCTestAnalysis provides useful interfaces and functions to assist
+    with the analysis of data from a typical multiple-choice test. The user
+    needs only to provide an answer key that optionally identifies the concept or
+    topic of each question and a table of responses given by each student to the
+    questions in the test. MCTestAnalysis provides a Shiny web app interface
+    and an automatic report-generation tool featuring concepts from Classical 
+    Test Theory, Item Response Theory and structural analysis. We regard this 
+    package to be a work-in-progress and encourage contributions.
+License: GNU GPLv3 + file LICENSE
 LazyData: TRUE
-RoxygenNote: 6.0.1
+RoxygenNote: 6.0.1.9000
 Imports:
     ltm,
     psych,
@@ -33,6 +36,8 @@ Depends:
     ggplot2,
     shiny (>= 0.14.0),
     miniUI
-Suggests: ggrepel
+Suggests: ggrepel,
+    knitr
 URL: https://github.com/gadenbuie/mctestanalysis
 BugReports: https://github.com/gadenbuie/mctestanalysis/issues
+VignetteBuilder: knitr

@@ -22,6 +22,6 @@ addEFA(mctd, nfactors = length(unique(mctd$AnswerKey$Concept)),
 \item{...}{Passed to \code{\link[psych]{fa}}}
 }
 \description{
-Wraps \code{\link[psych]{fa}} function, see \code{\link[psych]{fa}} for more
-information.
+Wraps \code{\link[psych]{fa}} function from the \code{\link{psych}} package;
+see \code{\link[psych]{fa}} for more information.
 }

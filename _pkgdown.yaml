@@ -1,0 +1,33 @@
+authors:
+  Garrick Aden-Buie:
+    href: http://garrickadenbuie.com
+  Autar Kaw:
+    href: http://www.eng.usf.edu/~kaw
+template:
+  params:
+    bootswatch: lumen
+reference:
+- title: Shiny Web Interfaces and Gadgets
+  desc: >
+    These functions provide easy-to-use web interfaces and gadgets to explore,
+    analize, and report results of multiple-choice tests.
+  contents:
+  - '`explore`'
+  - '`report`'
+  - '`loadDataGadget`'
+- title: Load and Analyze Multiple-Choice Test Data
+  desc: ~
+  contents:
+  - '`mcTestAnalysisData`'
+  - '`generateExampleData`'
+  - '`createReport`'
+  - starts_with("add")
+- title: Summary Plots
+  desc: ~
+  contents:
+  - starts_with("plot")
+- title: Summary Tables
+  desc: ~
+  contents:
+  - '`recommendItemActions`'
+  - starts_with("summarize")

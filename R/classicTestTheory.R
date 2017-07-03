@@ -21,6 +21,7 @@ addItemScore <- function(mctd) {
 #'
 #' Runs \code{\link{item.exam}} from the \link{psychometric} package and adds
 #' item analysis results to \link{mcTestAnalysisData} as \code{item.analysis}.
+#'
 #' @inheritParams mcTestAnalysisData
 #' @param ... Additional parameters passed to
 #'   \code{\link[psychometric]{item.exam}}
@@ -34,7 +35,7 @@ addItemAnalysis <- function(mctd, ...) {
 
 #' Add Cronbach Alpha to MC Test Data Object
 #'
-#' Runs \code{\link[psych]{alpha}} from the \link{psych} package and adds
+#' Runs \code{\link[psych]{alpha}} from the \code{\link{psych}} package and adds
 #' Cronbach alpha and overall student test score results to
 #' \link{mcTestAnalysisData} as \code{alpha} and \code{scores}.
 #' @inheritParams mcTestAnalysisData
@@ -147,7 +148,7 @@ addPBCCmodified <- function(mctd) {
 #' @param type One of \code{"conventional"}, \code{"pbcc"}, or
 #'   \code{"pbcc_modified"}
 #' @param show_labels Should the question number be shown next to points? If
-#'   \link{ggrepel} is installed it will be used to ensure that all point labels
+#'   \link[ggrepel]{ggrepel} is installed it will be used to ensure that all point labels
 #'   are legible on the plot.
 #' @param hide_legend Should the plot legend be hidden?
 #' @param show_guidelines Should recomended discrimination or difficulty indice
@@ -158,7 +159,7 @@ addPBCCmodified <- function(mctd) {
 #'   free, y in [-1,1]), \code{"max_all+"} (x positive, y positive),
 #'   \code{"max_all"} (x positive, y in [-1,1]), and \code{NULL} (all free).
 #' @export
-discriminationDifficultyPlot <- function(mctd,
+plotDiscriminationDifficulty <- function(mctd,
                                          type = 'conventional',
                                          show_labels = TRUE,
                                          hide_legend = TRUE,
@@ -237,7 +238,7 @@ discriminationDifficultyPlot <- function(mctd,
 #' @param concepts Character vector containing concept groups to be plotted
 #' @param facet_by_concept Should plot be facetted by concept group?
 #' @export
-testScoreByQuestionPlot <- function(mctd,
+plotTestScoreByQuestion <- function(mctd,
                                     concepts = unique(mctd$AnswerKey$Concept),
                                     facet_by_concept = FALSE) {
   mctd <- requires(mctd, c('scores', 'item.score'))
@@ -310,9 +311,9 @@ plotOverallHistogram <- function(mctd, add_normal = TRUE, binwidth = 0.05) {
     ggtitle("Histogram of Overall Test Scores")
 }
 
-#' Generate Classic Test Theory Results Summary Table
+#' Summarize Classic Test Theory Results
 #'
-#' Summarizes Classic Test Theory results for the loaded test.
+#' Generates Classic Test Theory summary table for CTT results.
 #'
 #' @inheritParams mcTestAnalysisData
 #' @param summarize_by One of \code{"whole"}, \code{"concept"} or \code{"item"}

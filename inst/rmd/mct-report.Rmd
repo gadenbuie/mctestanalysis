@@ -3,10 +3,13 @@ title: "`r ifelse(exists('title'), title, 'MC Test Analysis')`"
 author: "`r ifelse(exists('author'), author, Sys.info()['user'])`"
 date: "`r strftime(Sys.time(), '%B %d, %Y')`"
 bibliography: mctestanalysis.bib
+csl: apa.csl
 header-includes:
 - \usepackage{pdflscape}
 - \newcommand{\blandscape}{\begin{landscape}}
 - \newcommand{\elandscape}{\end{landscape}}
+nocite: |
+  @DiBello2015, @Bond2007, @Haertel2004, @Baker2001, @pkg:ltm, @pkg:psychometric
 ---
 
 ```{r init-opts, message=FALSE, warning=FALSE, include=FALSE}
@@ -32,27 +35,6 @@ stopifnot(exists('mctd'))
 mctd <- requires(mctd, c('item.score', 'item.analysis', 'alpha', 'irt_models'))
 ```
 
-```{r check, eval=FALSE, include=FALSE}
-summary_text <- c()
-
-add_to_output <- function(...) {
-  element <- paste(...)
-  summary_text <<- c(summary_text, element)
-}
-
-add_to_output('Questions:')
-add_to_output('  - In answer key:', length(mctd$AnswerKey$Question))
-add_to_output('  - In test data: ', ncol(mctd$Test))
-add_to_output('')
-add_to_output('Responses:')
-add_to_output('  - Incomplete:', nrow(mctd$Test[!complete.cases(mctd$Test),]))
-add_to_output('  - Total:', nrow(mctd$Test))
-add_to_output('')
-add_to_output('Concepts:', length(unique(mctd$AnswerKey$Concept)))
-
-cat(paste(summary_text, collapse = '\n'))
-```
-
 \clearpage
 
 # Introduction
@@ -60,7 +42,7 @@ cat(paste(summary_text, collapse = '\n'))
 The purpose of this generated report is to provide the analytical framework proposed in the paper 
 "An Analytic Framework for Evaluating the Validity of Concept Inventory Claims" [@Jorion2015] 
 from the University of Chicago, while providing extra statistical routines based on Classical Test Theory. 
-Within the contents of this report, you will find graphical representations such as plots, graphs, and tables all intended to validate the three claims proposed in Jorion’s paper.
+Within the contents of this report, you will find graphical representations such as plots, graphs, and tables all intended to support an analysis of a multiple-choice test based on the framework proposed in Jorion’s paper.
 
 # Test Overview and Descriptions
 
@@ -83,7 +65,7 @@ plotOverallHistogram(mctd)
 The following table presents the percentage of students selecting each option by item.
 
 ```{r options-selected}
-optionsSelectedPct(
+summarizeSelectedOptions(
   mctd,
   include_columns = c('Title', 'Answer', 'Concept'),
   questions_as_row_names = FALSE,
@@ -175,9 +157,9 @@ decorate <- function(g) {
 }
 gridExtra::grid.arrange(
   top=grid::textGrob("Discrimination Analysis", gp=grid::gpar(fontsize=20)),
-  decorate(discriminationDifficultyPlot(mctd, "conventional", show_gridlines = FALSE)),
-  decorate(discriminationDifficultyPlot(mctd, "pbcc", show_gridlines = FALSE)),
-  decorate(discriminationDifficultyPlot(mctd, "pbcc_modified", show_gridlines = FALSE)),
+  decorate(plotDiscriminationDifficulty(mctd, "conventional", show_gridlines = FALSE)),
+  decorate(plotDiscriminationDifficulty(mctd, "pbcc", show_gridlines = FALSE)),
+  decorate(plotDiscriminationDifficulty(mctd, "pbcc_modified", show_gridlines = FALSE)),
   ncol = 2
 )
 ```
@@ -199,7 +181,7 @@ Questions that have complete overlap between the two boxplots should be reviewed
 
 
 ```{r ctt-overall-vs-question, fig.width = 12, fig.height=9}
-testScoreByQuestionPlot(mctd, facet_by_concept = TRUE) +
+plotTestScoreByQuestion(mctd, facet_by_concept = TRUE) +
   ggtitle("Overall Test Score vs. Question Score (Correct/Incorrect)")
 ```
 
@@ -212,7 +194,7 @@ if (!is.null(report_options[['distractor.pct']])) {
   distractor.pct <- report_options$distractor.pct
 } else distractor.pct <- 0.33
 
-distractor.data <- distractorTable(mctd, distractor.pct)
+distractor.data <- summarizeDistractors(mctd, distractor.pct)
 distractor.data.counts <- distractor.data %>% 
   filter(Question == distractor.data[1, 'Question']) %>% 
   group_by(Group) %>% 
@@ -243,7 +225,7 @@ Percentages are calculated relative to the total number of respondents, in this 
 students.
 
 ```{r distractor-plot, fig.height=8, fig.width=12}
-distractorPlot(mctd, distractor.pct) + 
+plotDistractors(mctd, distractor.pct) + 
   ggtitle('Distractor Analysis')
 ```
 
@@ -400,7 +382,7 @@ do.call('cat', irt_help_text[c(1:pl_number, if(pl_number == 1) 5, 4)])
 ```
 
 ```{r irt-summary, echo=FALSE}
-irtSummaryTable(mctd, pl_number) %>% as_table()
+summarizeIRT(mctd, pl_number) %>% as_table()
 ```
 
 ## Item Characteristic Curves
@@ -476,7 +458,7 @@ plotTetrachoric(mctd, TRUE, TRUE)
 ## Scree Plot
 
 ```{r scree-plot}
-scree_factors <- screePlot(mctd, TRUE)
+scree_factors <- plotScree(mctd, TRUE)
 ```
 
 A method for determining the number of factors or components in the tetrachoric correlation matrix of the test responses is to examine the scree plot of the eigenvalues of the correlation matrix.
@@ -513,7 +495,7 @@ efa.fm.text     <- paste0("`'", efa.fm, "'`")
 
 The table below presents the factor loadings, where
 `r efa.nfactors`
-were explored, using the `fa()` function from the [`psych` package](https://cran.r-project.org/web/packages/psych/) (see @Psych2016 for more information on the options available for this function).
+were explored, using the `fa()` function from the [`psych` package](https://cran.r-project.org/web/packages/psych/) (see @pkg:psych for more information on the options available for this function).
 In this report, the EFA used the
 `r efa.rotate.text` rotation method and the 
 `r efa.fm.text` factoring method.
@@ -524,7 +506,7 @@ were suppressed.
 ```{r efa}
 if (efa.nfactors > 10) cat("\n\\newpage\n\\blandscape\n\n")
 justification <- paste(c('cc', rep('r', efa.nfactors)), collapse = '')
-efaTable(mctd,
+summarizeEFA(mctd,
          cut      = efa.cut,
          nfactors = efa.nfactors, 
          n.obs    = efa.n.obs,

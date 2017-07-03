@@ -2,7 +2,7 @@
 % Please edit documentation in R/classicTestTheory.R
 \name{summarizeCTT}
 \alias{summarizeCTT}
-\title{Generate Classic Test Theory Results Summary Table}
+\title{Summarize Classic Test Theory Results}
 \usage{
 summarizeCTT(mctd, summarize_by = "whole",
   digits.round = getOption("digits"))
@@ -16,5 +16,5 @@ summarizeCTT(mctd, summarize_by = "whole",
 \code{digits} option (see \code{getOption("digits")})}
 }
 \description{
-Summarizes Classic Test Theory results for the loaded test.
+Generates Classic Test Theory summary table for CTT results.
 }

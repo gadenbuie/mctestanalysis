@@ -147,7 +147,7 @@ shinyServer(function(input, output, session) {
 
   d_option_pct <- reactive({
     if(is.null(mctd())) return(NULL)
-    optionsSelectedPct(mctd(),
+    summarizeSelectedOptions(mctd(),
                        include_columns = input$o_option_pct_cols,
                        questions_as_row_names = FALSE,
                        as_percentage = input$o_option_pct_count == 'Percentage',
@@ -254,7 +254,7 @@ shinyServer(function(input, output, session) {
                     'PositivePositive' = 'max_all+',
                     'FullFree'         = 'max_y',
                     'FullPositive'     = 'max_all')
-    discriminationDifficultyPlot(mctd(),
+    plotDiscriminationDifficulty(mctd(),
                                  type = input$o_disc_type,
                                  show_labels = 'Labels' %in% input$o_disc_show,
                                  hide_legend = !('Legend' %in% input$o_disc_show),
@@ -266,7 +266,7 @@ shinyServer(function(input, output, session) {
     if (is.null(mctd())) return(NULL)
     if (input$o_overallbox_concepts == 'All') concepts <- unique(concepts())
     else concepts <- input$o_overallbox_concepts
-    testScoreByQuestionPlot(mctd(),
+    plotTestScoreByQuestion(mctd(),
                             concepts = concepts,
                             facet_by_concept = input$o_overallbox_facet)
   })
@@ -368,7 +368,7 @@ shinyServer(function(input, output, session) {
       x <- data.frame('Model' = names(x), 'AIC' = x)
     } else {
       pl_number <- substr(input$o_irt_model_summary, 3, 3)
-      x <- irtSummaryTable(mctd(), pl_number, 'Prob')
+      x <- summarizeIRT(mctd(), pl_number, 'Prob')
     }
     DT::datatable(x,
                   filter = 'bottom',
@@ -436,7 +436,7 @@ shinyServer(function(input, output, session) {
 
   output$p_scree <- renderPlot({
     if (is.null(mctd())) return(NULL)
-    efa$screefactors <- screePlot(mctd(), TRUE)
+    efa$screefactors <- plotScree(mctd(), TRUE)
   })
 
   output$txt_scree <- renderUI({
@@ -488,7 +488,7 @@ shinyServer(function(input, output, session) {
 
   # output$t_efa_factor_loadings <- DT::renderDataTable({
   #   if (!is.null(efa$mctd)) {
-  #     x <- efaTable(efa$mctd, cut = input$o_efa_cut) %>%
+  #     x <- summarizeEFA(efa$mctd, cut = input$o_efa_cut) %>%
   #       mutate_if(is.numeric, round, digits = 2)
   #     if (nrow(x) > 0) {
   #       DT::datatable(x,
@@ -505,7 +505,7 @@ shinyServer(function(input, output, session) {
 
   output$t_efa_factor_loadings <- renderTable({
     if (!is.null(efa$mctd)) {
-      x <- efaTable(efa$mctd, cut = input$o_efa_cut) %>%
+      x <- summarizeEFA(efa$mctd, cut = input$o_efa_cut) %>%
         mutate_if(is.numeric, round, digits = 2)
       if (nrow(x) > 0) x
       else NULL
@@ -515,7 +515,7 @@ shinyServer(function(input, output, session) {
   # ---- Distractor Analysis ----
   distractor.data <- reactive({
     if (is.null(mctd())) return(NULL)
-    distractorTable(mctd(), input$o_distractor_pct)
+    summarizeDistractors(mctd(), input$o_distractor_pct)
   })
 
   output$txt_distractor <- renderUI({
@@ -594,7 +594,7 @@ shinyServer(function(input, output, session) {
 
   output$p_distractor <- renderPlot({
     if (is.null(mctd())) return(NULL)
-    distractorPlot(
+    plotDistractors(
       mctd(),
       pct = input$o_distractor_pct,
       pct_relative = input$o_distractor_pct_relative == 'group',

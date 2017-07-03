@@ -1,21 +1,23 @@
 #' Add Item Response Theory Model Fits
 #'
-#' Adds item response theory model fits to the \link{mcTestAnalysisData} object.
+#' Adds item response theory model fits to an \link{mcTestAnalysisData} object,
+#' using the \code{\link{ltm}} package.
 #'
 #' @section Parameter Description:
 #'
 #'   \strong{Difficulty.} The difficulty parameter, \eqn{\beta}, sometimes
 #'   called the threshold parameter, describes the difficulty of a given item.
-#'   It is the only parameter estimated in the 1PL (Rasch) model.
+#'   It is the only parameter estimated in the 1PL (Rasch) model. Uses
+#'   \code{\link[ltm]{rasch}} from \code{ltm}.
 #'
 #'   \strong{Discrimination.} The discrimination parameter, \eqn{\alpha},
 #'   reflects the effectiveness of the item in differentiating between high- and
 #'   low-performing students. This parameter is estimated in the 2PL model, in
-#'   addition to difficulty.
+#'   addition to difficulty. Uses \code{\link[ltm]{ltm}} from \code{ltm}.
 #'
 #'   \strong{Guessing.} The guessing parameter, \eqn{\gamma}, is included in the
 #'   3PL model, in addition the previous parameters, and reflects the influence
-#'   of guessing for each item.
+#'   of guessing for each item. Uses \code{\link[ltm]{tpm}} from \code{ltm}.
 #'
 #' @inheritParams mcTestAnalysisData
 #' @export
@@ -25,7 +27,10 @@ addIRTfits <- function(mctd) {
   irt_models <- list()
 
   # 1-PL Fit
-  data('gh', package = 'ltm')
+  if (!requireNamespace('ltm', quietly = TRUE)) {
+    stop("The ltm package is required for fitting IRT models.\n",
+         "Please install ltm using: install.packages(\"ltm\")")
+  }
   tryCatch({
     irt_models[['PL1']] <- ltm::rasch(mctd$item.score, constraint = cbind(length(mctd$AnswerKey$Question)+1, 1))
   },
@@ -52,7 +57,8 @@ addIRTfits <- function(mctd) {
 
 #' Add Tetrachoric Correlation
 #'
-#' Adds tetrachoric correlation to the \link{mcTestAnalysisData} object.
+#' Adds tetrachoric correlation to the \link{mcTestAnalysisData} object, using
+#' \code{\link[psych]{tetrachoric}} from the \link{psych} package.
 #'
 #' @inheritParams mcTestAnalysisData
 #' @export
@@ -66,8 +72,8 @@ addTetrachoric <- function(mctd) {
 
 #' Plot Tetrachoric Correlations
 #'
-#' This function is a simple wrapper for the \link[psych]{tetrachoric} function
-#' provided by the \code{psych} package.
+#' This function creates a tetrachoric correlation plot using the
+#' \link[psych]{tetrachoric} function provided by the \code{psych} package.
 #'
 #' @inheritParams mcTestAnalysisData
 #' @param group_by_concept If \code{TRUE}, questions are grouped by concept
@@ -133,7 +139,7 @@ plotTetrachoric <- function(mctd, group_by_concept = TRUE, equal_coords = FALSE)
   g
 }
 
-#' Create IRT Summary Table
+#' Summarize IRT Model Results
 #'
 #' Creates summary table of coefficients for the IRT models.
 #'
@@ -145,7 +151,7 @@ plotTetrachoric <- function(mctd, group_by_concept = TRUE, equal_coords = FALSE)
 #' @param probcolname Column name for probability column, defaults to
 #'   mathematical expression.
 #' @export
-irtSummaryTable <- function(mctd,
+summarizeIRT <- function(mctd,
                             model_params = 1,
                             probcolname = '$\\mathrm{P}(x_i = 1 \\vert z = 0)$'){
   mctd <- requires(mctd, 'irt_models')

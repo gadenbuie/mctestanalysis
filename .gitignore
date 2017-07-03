@@ -4,3 +4,5 @@
 .Ruserdata
 devnotes.md
 *.pdf
+inst/doc
+*.css

@@ -52,10 +52,10 @@ based on published guidelines.
 Jorion, N., Gane, B. D., James, K., Schroeder, L., Dibello, L.
   V., & Pellegrino, J. W. (2015). An Analytic Framework for Evaluating the
   Validity of Concept Inventory Claims. Journal of Engineering Education,
-  104(4), 454–496. \url{http://doi.org/10.1002/jee.20104}
+  104(4), 454-496. \url{http://doi.org/10.1002/jee.20104}
 
-Sleeper, Rebecca. 2011. “Keep, Toss or Revise? Tips for Post-Exam
-  Item Analysis.”
+Sleeper, Rebecca. 2011. "Keep, Toss or Revise? Tips for Post-Exam
+  Item Analysis."
   \url{http://www.ttuhsc.edu/sop/administration/enhancement/documents/Sleeper_Handout.ppt}
   (No longer available online)
 }
