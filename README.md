@@ -1,7 +1,7 @@
 # MC Test Analysis
 
 This [R] package provides a nice set of interfaces via [Shiny] for the analysis and review of multiple choice tests.
-View full package documentation at <https://gadenbuie.github.io/mctestanaylsis/>.
+View full package documentation at <https://gadenbuie.github.io/mctestanalysis/>.
 
 ## Try Online
 
