@@ -20,7 +20,7 @@ For the complete features, you can install the package and use the interface loc
 
 ## Installation
 
-For more detailed installation requirements and usage instructions, see [Get Started](https://gadenbuie.github.io/MCTestAnalysis/articles/MCTestAnalysis.html).
+For more detailed installation requirements and usage instructions, see [Get Started](articles/MCTestAnalysis.html).
 
 In general, the package can be installed using [devtools] via
 
@@ -49,7 +49,7 @@ The `report()` function will launch a window within RStudio to guide the user th
 ## Data format
 
 This package requires both an Answer Key and a table of student responses. 
-An example of each table is provided, in the preferred format, in the  [`inst/extdata` folder](inst/extdata) of this repo, or from links on the "Import" tab of the `explore()` or `report()` interfaces.
+An example of each table is provided, in the preferred format, in the  [`inst/extdata` folder](https://github.com/gadenbuie/mctestanalysis/inst/extdata) of this repo, or from links on the "Import" tab of the `explore()` or `report()` interfaces.
 
 A detailed overview of the required data format is available at <http://www.eng.usf.edu/~kaw/MCTestAnalysis/MCTestAnalysis_input.pdf>.
 Additional example [test results](http://www.eng.usf.edu/~kaw/MCTestAnalysis/sample_answer_key.csv) and [answer key](http://www.eng.usf.edu/~kaw/MCTestAnalysis/sample_student_answers.csv) CSV files are also available.
