@@ -3,6 +3,19 @@ authors:
     href: http://garrickadenbuie.com
   Autar Kaw:
     href: http://www.eng.usf.edu/~kaw
+navbar:
+  title: MCTestAnalysis
+  type: default
+  left:
+  - icon: fa-home fa-lg
+    href: index.html
+  - text: Get Started
+    href: articles/MCTestAnalysis.html
+  - text: Reference
+    href: reference/index.html
+  right:
+  - icon: fa-github fa-lg
+    href: https://github.com/gadenbuie/mctestanalysis
 template:
   params:
     bootswatch: lumen

@@ -29,7 +29,7 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="/index.html">
+  <a href="index.html">
     <span class="fa fa-home fa-lg"></span>
      
   </a>
@@ -70,7 +70,7 @@
 <div id="try-online" class="section level2">
 <h2 class="hasAnchor">
 <a href="#try-online" class="anchor"></a>Try Online</h2>
-<p>You can try out the Shiny web interface online at <a href="https://gadenbuie.shinyapps.io/mctestanalysis/" class="uri">https://gadenbuie.shinyapps.io/mctestanalysis/</a>, or you can install the package and use the interface locally (without have to upload your data) by following the instructions below.</p>
+<p>You can try out the Shiny web interface online at <a href="https://gadenbuie.shinyapps.io/mctestanalysis/" class="uri">https://gadenbuie.shinyapps.io/mctestanalysis/</a>, which demonstrates the test results explorer interface but cannot produce the PDF or HTML reports. For the complete features, you can install the package and use the interface locally (without have to upload your data) by following the instructions below.</p>
 </div>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
@@ -90,13 +90,13 @@ devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocument
 <span class="kw"><a href="reference/explore.html">explore</a></span>()
 
 <span class="co"># Create a test analysis report</span>
-<span class="kw"><a href="http://www.rdocumentation.org/packages/MCTestAnalysis/topics/report">report</a></span>()</code></pre></div>
-<p>When running <code><a href="reference/explore.html">explore()</a></code> a browser window will open with the MC Test Analysis exploration application. The <code><a href="http://www.rdocumentation.org/packages/MCTestAnalysis/topics/report">report()</a></code> function will launch a window within RStudio to guide the user through the creation of a PDF report.</p>
+<span class="kw">report</span>()</code></pre></div>
+<p>When running <code><a href="reference/explore.html">explore()</a></code> a browser window will open with the MC Test Analysis exploration application. The <code>report()</code> function will launch a window within RStudio to guide the user through the creation of a PDF report.</p>
 </div>
 <div id="data-format" class="section level2">
 <h2 class="hasAnchor">
 <a href="#data-format" class="anchor"></a>Data format</h2>
-<p>This package requires both an Answer Key and a table of student responses. An example of each table is provided, in the preferred format, in the <a href="inst/extdata"><code>inst/extdata</code> folder</a> of this repo, or from links on the “Import” tab of the <code><a href="reference/explore.html">explore()</a></code> or <code><a href="http://www.rdocumentation.org/packages/MCTestAnalysis/topics/report">report()</a></code> interfaces.</p>
+<p>This package requires both an Answer Key and a table of student responses. An example of each table is provided, in the preferred format, in the <a href="inst/extdata"><code>inst/extdata</code> folder</a> of this repo, or from links on the “Import” tab of the <code><a href="reference/explore.html">explore()</a></code> or <code>report()</code> interfaces.</p>
 <p>A detailed overview of the required data format is available at <a href="http://www.eng.usf.edu/~kaw/MCTestAnalysis/MCTestAnalysis_input.pdf" class="uri">http://www.eng.usf.edu/~kaw/MCTestAnalysis/MCTestAnalysis_input.pdf</a>. Additional example <a href="http://www.eng.usf.edu/~kaw/MCTestAnalysis/sample_answer_key.csv">test results</a> and <a href="http://www.eng.usf.edu/~kaw/MCTestAnalysis/sample_student_answers.csv">answer key</a> CSV files are also available.</p>
 </div>
 
