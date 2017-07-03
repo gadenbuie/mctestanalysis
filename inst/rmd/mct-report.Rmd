@@ -16,6 +16,7 @@ nocite: |
 knitr::opts_chunk$set(message=FALSE, warning=FALSE, echo=FALSE, results = 'asis')
 as_table <- function(x, pander = TRUE, ...) {
   if (pander) {
+    x <- as.data.frame(x)
     pander::pandoc.table(x, split.tables = Inf, ...)
   } else {
     knitr::kable(x, row.names = FALSE, ...)
