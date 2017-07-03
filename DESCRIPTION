@@ -27,7 +27,7 @@ Imports:
     tibble,
     DT,
     rmarkdown,
-    pander,
+    knitr,
     gridExtra,
     rstudioapi,
     survival
@@ -37,7 +37,7 @@ Depends:
     shiny (>= 0.14.0),
     miniUI
 Suggests: ggrepel,
-    knitr
+    pander
 URL: https://github.com/gadenbuie/mctestanalysis
 BugReports: https://github.com/gadenbuie/mctestanalysis/issues
 VignetteBuilder: knitr
