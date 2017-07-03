@@ -12,6 +12,10 @@ At this time CTT results include item difficulty, item discrimination, Cronbach'
 Item response functions include model estimation and item characteristic curves.
 Tetrachoric and scree plots are included with an introductory exploratory factor analysis.
 
+## Try Online
+
+You can try out the Shiny web interface online at <https://gadenbuie.shinyapps.io/mctestanalysis/>, or you can install the package and use the interface locally (without have to upload your data) by following the instructions below.
+
 ## Installation
 
 For more detailed installation requirements and usage instructions, see [Get Started](https://gadenbuie.github.io/MCTestAnalysis/articles/MCTestAnalysis.html).

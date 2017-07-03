@@ -67,6 +67,11 @@
 <p>In a paper in the highly regarded Journal of Engineering Education, Jorion, et al (2016) developed “an analytical framework for evaluating the validity of concept inventory claims”. We believe that we can use this framework to help educators design their multiple-choice tests as well, especially, if they are designed as the final mastery examination in a course. An open source software to analyze a multiple-choice question examination would be encouraging to educators who have minimal programming experience and promising to contributors who would enhance the program.</p>
 <p>This <a href="https://cran.r-project.org/">R</a> package provides useful interfaces and functions to assist with the analysis of data from a typical multiple-choice test. The user needs only to provide an answer key that optionally identifies the concept or topic of each question and a table of responses given by each student to the questions in the test. MCTestAnalysis provides a <a href="http://shiny.rstudio.com/">Shiny</a> web app interface and an automatic report-generation tool featuring concepts from Classical Test Theory (CTT), Item Response Theory (IRT) and structural analysis. We regard this package to be a work-in-progress and encourage contributions. At this time CTT results include item difficulty, item discrimination, Cronbach’s alpha, and alpha-with-item-deleted. Item response functions include model estimation and item characteristic curves. Tetrachoric and scree plots are included with an introductory exploratory factor analysis.</p>
 </div>
+<div id="try-online" class="section level2">
+<h2 class="hasAnchor">
+<a href="#try-online" class="anchor"></a>Try Online</h2>
+<p>You can try out the Shiny web interface online at <a href="https://gadenbuie.shinyapps.io/mctestanalysis/" class="uri">https://gadenbuie.shinyapps.io/mctestanalysis/</a>, or you can install the package and use the interface locally (without have to upload your data) by following the instructions below.</p>
+</div>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
@@ -85,13 +90,13 @@ devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocument
 <span class="kw"><a href="reference/explore.html">explore</a></span>()
 
 <span class="co"># Create a test analysis report</span>
-<span class="kw">report</span>()</code></pre></div>
-<p>When running <code><a href="reference/explore.html">explore()</a></code> a browser window will open with the MC Test Analysis exploration application. The <code>report()</code> function will launch a window within RStudio to guide the user through the creation of a PDF report.</p>
+<span class="kw"><a href="http://www.rdocumentation.org/packages/MCTestAnalysis/topics/report">report</a></span>()</code></pre></div>
+<p>When running <code><a href="reference/explore.html">explore()</a></code> a browser window will open with the MC Test Analysis exploration application. The <code><a href="http://www.rdocumentation.org/packages/MCTestAnalysis/topics/report">report()</a></code> function will launch a window within RStudio to guide the user through the creation of a PDF report.</p>
 </div>
 <div id="data-format" class="section level2">
 <h2 class="hasAnchor">
 <a href="#data-format" class="anchor"></a>Data format</h2>
-<p>This package requires both an Answer Key and a table of student responses. An example of each table is provided, in the preferred format, in the <a href="inst/extdata"><code>inst/extdata</code> folder</a> of this repo, or from links on the “Import” tab of the <code><a href="reference/explore.html">explore()</a></code> or <code>report()</code> interfaces.</p>
+<p>This package requires both an Answer Key and a table of student responses. An example of each table is provided, in the preferred format, in the <a href="inst/extdata"><code>inst/extdata</code> folder</a> of this repo, or from links on the “Import” tab of the <code><a href="reference/explore.html">explore()</a></code> or <code><a href="http://www.rdocumentation.org/packages/MCTestAnalysis/topics/report">report()</a></code> interfaces.</p>
 <p>A detailed overview of the required data format is available at <a href="http://www.eng.usf.edu/~kaw/MCTestAnalysis/MCTestAnalysis_input.pdf" class="uri">http://www.eng.usf.edu/~kaw/MCTestAnalysis/MCTestAnalysis_input.pdf</a>. Additional example <a href="http://www.eng.usf.edu/~kaw/MCTestAnalysis/sample_answer_key.csv">test results</a> and <a href="http://www.eng.usf.edu/~kaw/MCTestAnalysis/sample_student_answers.csv">answer key</a> CSV files are also available.</p>
 </div>
 
