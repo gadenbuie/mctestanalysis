@@ -613,28 +613,43 @@ shinyServer(function(input, output, session) {
       paste0(fname, '.', input$export_o_out_fmt)
     },
     content = function(file) {
+      messages <- c()
+      export_worked <- FALSE
       showModal(modalDialog(title = 'Processing Report',
                             paste('Processing test data and generating report, please wait.',
                                   'Depending on the number of responses and the size of the test,',
                                   'this should only take a few seconds or minutes.'),
                             footer = NULL))
-      MCTestAnalysis:::createReportFromMCTD(
-        mctd(),
-        test_title = input$export_test_title,
-        author = input$export_test_author,
-        file = file,
-        out_fmt = input$export_o_out_fmt,
-        report_options = list(
-          'irt_model_choice' = if (input$export_test_pl_number != 'Auto') input$export_test_pl_number,
-          'icc_group'        = input$export_o_icc_group,
-          'distractor.pct'   = input$export_distractor.pct,
-          'efa.nfactors'     = input$export_o_efa_nfactors,
-          'efa.rotate'       = input$export_o_efa_rotate,
-          'efa.fm'           = input$export_o_efa_fm,
-          'efa.cut'          = input$export_o_efa_cut
+      tryCatch({
+        MCTestAnalysis:::createReportFromMCTD(
+          mctd(),
+          test_title = input$export_test_title,
+          author = input$export_test_author,
+          file = file,
+          out_fmt = input$export_o_out_fmt,
+          report_options = list(
+            'irt_model_choice' = if (input$export_test_pl_number != 'Auto') input$export_test_pl_number,
+            'icc_group'        = input$export_o_icc_group,
+            'distractor.pct'   = input$export_distractor.pct,
+            'efa.nfactors'     = input$export_o_efa_nfactors,
+            'efa.rotate'       = input$export_o_efa_rotate,
+            'efa.fm'           = input$export_o_efa_fm,
+            'efa.cut'          = input$export_o_efa_cut
+          )
         )
-      )
+        export_worked <- TRUE
+      }, 'error' = function(e) {messages <<- c(messages, paste(e$message))})
       removeModal()
+      if (!export_worked) {
+        showModal(
+          modalDialog(
+            title = "Error",
+            tags$p("Unable to create report file due to the following error:"),
+            tags$pre(paste(messages, collaps = '\n')),
+            footer = modalButton("Ok")
+          )
+        )
+      }
     }
   )
 })
