@@ -31,7 +31,10 @@ addIRTfits <- function(mctd) {
     stop("The ltm package is required for fitting IRT models.\n",
          "Please install ltm using: install.packages(\"ltm\")")
   }
-  data('gh', package = 'ltm', envir = environment())
+  # ltm uses package data but doesn't call it correctly inside `gauher`
+  # the two lines below overwrite the internal ltm function to play nice
+  gauher <- function(n) ltm::gh[[n]]
+  assignInNamespace('gauher', gauher, ns = 'ltm')
   tryCatch({
     irt_models[['PL1']] <- ltm::rasch(mctd$item.score, constraint = cbind(length(mctd$AnswerKey$Question)+1, 1))
   },
