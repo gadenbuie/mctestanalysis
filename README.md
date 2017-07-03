@@ -3,6 +3,10 @@
 This [R] package provides a nice set of interfaces via [Shiny] for the analysis and review of multiple choice tests.
 View full package documentation at <https://gadenbuie.github.io/MCTestAnaylsis/>.
 
+## Try Online
+
+You can try out the Shiny web interface online at <https://gadenbuie.shinyapps.io/mctestanalysis/>, or you can install the package and use the interface locally (without have to upload your data) by following the instructions below.
+
 ## Table of contents
 
 - [Required Software](#required-software)

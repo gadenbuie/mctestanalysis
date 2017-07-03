@@ -6,3 +6,4 @@ devnotes.md
 *.pdf
 inst/doc
 *.css
+*rsconnect*
