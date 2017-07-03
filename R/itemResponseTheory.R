@@ -31,6 +31,7 @@ addIRTfits <- function(mctd) {
     stop("The ltm package is required for fitting IRT models.\n",
          "Please install ltm using: install.packages(\"ltm\")")
   }
+  data('gh', package = 'ltm', envir = environment())
   tryCatch({
     irt_models[['PL1']] <- ltm::rasch(mctd$item.score, constraint = cbind(length(mctd$AnswerKey$Question)+1, 1))
   },
