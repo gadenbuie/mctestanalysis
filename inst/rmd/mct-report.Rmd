@@ -15,6 +15,11 @@ nocite: |
 ```{r init-opts, message=FALSE, warning=FALSE, include=FALSE}
 knitr::opts_chunk$set(message=FALSE, warning=FALSE, echo=FALSE, results = 'asis')
 as_table <- function(x, pander = TRUE, ...) {
+  if (pander && !requireNamespace('pander', quietly = TRUE)) {
+    message("pander is not installed. If there are any issues with tables ",
+            "in the final output, try `install.packages('pander')`.")
+    pander <- FALSE
+  }
   if (pander) {
     x <- as.data.frame(x)
     pander::pandoc.table(x, split.tables = Inf, ...)
