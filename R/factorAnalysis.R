@@ -65,8 +65,10 @@ summarizeEFA <- function(mctd, cut = 0.3, ...) {
     unclass %>%
     reshape2::melt() %>%
     rename(Question = Var1, Factor = Var2) %>%
-    mutate(Factor = as.character(Factor),
-           Factor = factor(Factor, levels = sort(unique(Factor)))) %>%
+    mutate(
+      Question = as.character(Question),
+      Factor = as.character(Factor),
+      Factor = factor(Factor, levels = sort(unique(Factor)))) %>%
     filter(abs(value) >= cut) %>%
     reshape2::dcast(Question ~ Factor) %>%
     full_join(., mctd$AnswerKey[, c('Question', 'Concept')], by = 'Question') %>%

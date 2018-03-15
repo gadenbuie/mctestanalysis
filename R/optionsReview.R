@@ -43,6 +43,7 @@ summarizeSelectedOptions <- function(mctd,
   x[, -1] <- mutate_all(x[, -1], function(x) ifelse(is.na(x), 0, x))
   x$Question <- factor(x$Question, levels = mctd$AnswerKey$Question)
   x <- x[order(x$Question), ]
+  x$Question <- as.character(x$Question)
 
   if (as_percentage) {
     x[, -1] <- round(x[, -1]/nrow(mctd$Test)*100, 2)

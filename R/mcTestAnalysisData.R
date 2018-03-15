@@ -78,6 +78,9 @@ loadAnswerKey <- function(mctd = NULL, answer_file, ...) {
   # Missing concepts given "Missing" concept group
   x[is.na(x$Concept), 'Concept'] <- "Missing"
 
+  # Question column is character
+  x$Question <- as.character(x$Question)
+
   mctd[['AnswerKey']] <- x
   return(mctd)
 }
